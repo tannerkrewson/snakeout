@@ -1,11 +1,11 @@
 {
   "name": "spyout",
   "version": "1.0.0",
-  "description": "",
+  "description": "spyout",
   "scripts": {
     "start": "node ./bin/www",
     "dev-start": "nodemon --exec npm start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tape test/*.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "socket.io": "^1.4.8"
   },
   "devDependencies": {
-    "nodemon": "^1.10.2"
+    "nodemon": "^1.10.2",
+    "tape": "^4.6.0"
   }
 }
