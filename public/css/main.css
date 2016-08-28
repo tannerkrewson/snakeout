@@ -1,3 +1,23 @@
 body {
+  background-color: black !important;
+	color: white;
+  font-weight: 100;
+}
 
+#title {
+	font-size: 3.5rem;
+	font-family: 'Lato', sans-serif;
+}
+
+.main-content {
+  margin: 15% auto 0 auto;
+  max-width: 500px;
+}
+
+#root {
+  position: relative;
+  width: 80%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0;
 }
