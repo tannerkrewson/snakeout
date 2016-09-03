@@ -8,6 +8,9 @@ function Player(name, socket, id) {
 	this.id = id;
 	this.isAdmin = false;
 	this.isConnected = true;
+
+	this.isSpy;
+	this.isLeader = false;
 }
 
 Player.prototype.getJson = function () {

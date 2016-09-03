@@ -78,3 +78,31 @@ test('getNumberOfSpies', function(t) {
   t.ok(numSpies < testRound.players.length);
   t.end();
 });
+
+test('assignRoles', function(t) {
+  testRound.assignRoles();
+  var spyCount = 0;
+  var nonSpyCount = 0;
+  var leaderCount = 0;
+  var nonLeaderCount = 0;
+  testRound.players.forEach(function(player) {
+    if (player.isSpy) {
+      spyCount++;
+    } else {
+      nonSpyCount++;
+    }
+
+    if (player.isLeader) {
+      leaderCount++;
+    } else {
+      nonLeaderCount++;
+    }
+  });
+
+  var spyCountShouldBe = testRound.getNumberOfSpies();
+  t.equal(spyCount, spyCountShouldBe);
+  t.equal(nonSpyCount, testRound.players.length - spyCountShouldBe);
+  t.equal(leaderCount, 1);
+  t.equal(nonLeaderCount, testRound.players.length - 1);
+  t.end();
+});
