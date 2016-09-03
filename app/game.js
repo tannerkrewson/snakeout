@@ -31,11 +31,7 @@ Game.prototype.startNewRound = function () {
 
 	var self = this;
 	this.currentRound = new Round(this.getNextRoundNum(), this.players, function () {
-		//ran when results are sent
-		self.inProgress = false;
-		self.viewingResults = true;
-	}, function () {
-		//ran when everyone is done viewing results
+		//ran when the round ends
 		self.sendUpdatedPlayersList();
 		self.viewingResults = false;
 	});
