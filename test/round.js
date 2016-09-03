@@ -70,3 +70,11 @@ test('sendToAll', function(t) {
 
   t.end();
 });
+
+test('getNumberOfSpies', function(t) {
+  var numSpies = testRound.getNumberOfSpies();
+  t.equal(typeof numSpies, 'number');
+  t.ok(numSpies > 0);
+  t.ok(numSpies < testRound.players.length);
+  t.end();
+});
