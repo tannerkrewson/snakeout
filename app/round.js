@@ -52,7 +52,7 @@ Round.prototype.assignRoles = function() {
 	}
 
 	//one random player will be leader
-	var indexOfLeader = Math.floor(Math.random() * this.players.length - 1);
+	var indexOfLeader = Math.floor(Math.random() * this.players.length);
 	this.players[indexOfLeader].isLeader = true;
 
 }
