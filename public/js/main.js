@@ -1,3 +1,28 @@
+
+function Connection() {
+	this.socket = io();
+}
+
+Connection.prototype.newGame = function(name) {
+	this.send('newGame', {
+		name
+	});
+}
+
+Connection.prototype.send = function(event, data) {
+	this.socket.emit(event, data);
+}
+
+Connection.prototype.on = function(event, next) {
+	this.socket.on(event, next);
+}
+
+Connection.prototype.once = function(event, next) {
+	this.socket.once(event, next);
+}
+
+var server = new Connection();
+
 var Spyout = React.createClass({
   getInitialState: function() {
     return {page: MainMenu};
@@ -25,6 +50,11 @@ var MainMenu = React.createClass({
     var goToNewGame = function() {
       this.props.changePage(NewGame);
     };
+		var self = this;
+		server.on('joinGame', function(data) {
+			self.props.changePage(Lobby);
+		});
+
     return (
       <div className="main-menu">
         <SOButton label="Join Game" onClick={goToJoinGame.bind(this)}/>
@@ -55,17 +85,33 @@ var JoinGame = React.createClass({
 });
 
 var NewGame = React.createClass({
+	receiveName: function(name) {
+		this.setState({name});
+	},
   render: function() {
     var goToMainMenu = function() {
       this.props.changePage(MainMenu);
     };
+		var startGame = function(name) {
+			server.newGame(this.state.name);
+		};
     return (
       <div className="new-menu">
         <p>Enter your name:</p>
-        <SOInput placeholder="" />
+        <SOInput placeholder="" onChange={this.receiveName}/>
         <br/><br/>
         <SOButton label="Back" onClick={goToMainMenu.bind(this)}/>
-        <SOButton label="Start" />
+        <SOButton label="Start" onClick={startGame.bind(this)}/>
+      </div>
+    );
+  }
+});
+
+var Lobby = React.createClass({
+  render: function() {
+    return (
+      <div className="lobby">
+        <p>This is the lobby!</p>
       </div>
     );
   }
@@ -83,9 +129,12 @@ var SOButton = React.createClass({
 });
 
 var SOInput = React.createClass({
+	handleChange: function(event) {
+    this.props.onChange(event.target.value);
+  },
   render: function() {
     return (
-      <input type="text" placeholder={this.props.placeholder} />
+      <input type="text" onChange={this.handleChange.bind(this)} placeholder={this.props.placeholder} />
     );
   }
 });
