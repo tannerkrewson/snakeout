@@ -9,6 +9,13 @@ Connection.prototype.newGame = function(name) {
 	});
 }
 
+Connection.prototype.joinGame = function(code, name) {
+	this.send('joinGame', {
+		code,
+		name
+	});
+}
+
 Connection.prototype.send = function(event, data) {
 	this.socket.emit(event, data);
 }
@@ -52,7 +59,11 @@ var MainMenu = React.createClass({
     };
 		var self = this;
 		server.on('joinGame', function(data) {
-			self.props.changePage(Lobby);
+			if (data.success) {
+				self.props.changePage(Lobby);
+			} else {
+				alert('Failed to join game!');
+			}
 		});
 
     return (
@@ -65,20 +76,29 @@ var MainMenu = React.createClass({
 });
 
 var JoinGame = React.createClass({
+	goToMainMenu: function() {
+		this.props.changePage(MainMenu);
+	},
+	joinGame: function() {
+		server.joinGame(this.state.code, this.state.name);;
+	},
+	onGameCode: function(code) {
+		this.setState({code});
+	},
+	onName: function(name) {
+		this.setState({name});
+	},
   render: function() {
-    var goToMainMenu = function() {
-      this.props.changePage(MainMenu);
-    };
     return (
       <div className="join-menu">
         <p>Enter the game code:</p>
-        <SOInput placeholder="" />
+        <SOInput placeholder="" onChange={this.onGameCode}/>
         <br/><br/>
         <p>Enter your name:</p>
-        <SOInput placeholder="" />
+        <SOInput placeholder="" onChange={this.onName}/>
         <br/><br/>
-        <SOButton label="Back" onClick={goToMainMenu.bind(this)}/>
-        <SOButton label="Join" />
+        <SOButton label="Back" onClick={this.goToMainMenu}/>
+        <SOButton label="Join"  onClick={this.joinGame}/>
       </div>
     );
   }

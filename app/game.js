@@ -60,10 +60,10 @@ Game.prototype.initPlayer = function (newPlayer) {
 Game.prototype.onPlayerDisconnect = function (playerThatLeft) {
 	playerThatLeft.isConnected = false;
 
-	if (self.inProgress) {
-		self.currentRound.findReplacementFor(playerThatLeft);
+	if (this.inProgress) {
+		this.currentRound.findReplacementFor(playerThatLeft);
 	} else {
-		self.removePlayer(playerThatLeft.id);
+		this.removePlayer(playerThatLeft.id);
 	}
 
 	//if someone leaves while viewing results, we need to check again
@@ -72,9 +72,9 @@ Game.prototype.onPlayerDisconnect = function (playerThatLeft) {
 		this.currentRound.end();
 	}
 
-	self.checkIfWeNeedANewAdmin(playerThatLeft);
-	self.checkIfTheGameHasNoPlayersLeft();
-	self.sendUpdatedPlayersList();
+	this.checkIfWeNeedANewAdmin(playerThatLeft);
+	this.checkIfTheGameHasNoPlayersLeft();
+	this.sendUpdatedPlayersList();
 
 }
 
