@@ -9,7 +9,7 @@ module.exports = function (app) {
 			game.addPlayer(data.name, socket);
 			socket.emit('joinGame', {
 				success: true,
-				code: game.code
+				game: game.getJsonGame()
 			});
 	  });
 		socket.on('joinGame', function (data) {
@@ -19,7 +19,7 @@ module.exports = function (app) {
 				game.addPlayer(data.name, socket);
 				socket.emit('joinGame', {
 					success: true,
-					code: game.code
+					game: game.getJsonGame()
 				});
 			} else {
 				socket.emit('joinGame', {

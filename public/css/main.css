@@ -36,8 +36,13 @@ hr {
 }
 
 .sobutton {
-  background-color:#000000;
-  color:#ffffff;
+  background-color: black;
+  color: white;
   font-weight: 100;
   margin: 1px;
+}
+
+.list-group-item {
+  background-color: black;
+  color: white;
 }

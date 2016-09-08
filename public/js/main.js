@@ -34,15 +34,15 @@ var Spyout = React.createClass({
   getInitialState: function() {
     return {page: MainMenu};
   },
-  changePage: function(page) {
-    this.setState({page});
+  changePage: function(page, pageData) {
+    this.setState({page, pageData});
   },
   render: function() {
     return (
 			<div className="main-content text-xs-center" id="spyout">
       	<p id="title">SPYOUT</p>
         <hr/>
-        <this.state.page changePage={this.changePage} />
+        <this.state.page changePage={this.changePage} pageData={this.state.pageData}/>
 				<Bottom />
 			</div>
     );
@@ -60,7 +60,8 @@ var MainMenu = React.createClass({
 		var self = this;
 		server.on('joinGame', function(data) {
 			if (data.success) {
-				self.props.changePage(Lobby);
+				console.log(data);
+				self.props.changePage(Lobby, data.game);
 			} else {
 				alert('Failed to join game!');
 			}
@@ -131,8 +132,33 @@ var Lobby = React.createClass({
   render: function() {
     return (
       <div className="lobby">
-        <p>This is the lobby!</p>
+        <p>Game Code: 
+					<span id="game-code">{this.props.pageData.code}</span>
+				</p>
+				<PlayerList players={this.props.pageData.players} />
       </div>
+    );
+  }
+});
+
+var PlayerList = React.createClass({
+  render: function() {
+		var boxes = [];
+		this.props.players.forEach(function(player) {
+			boxes.push(<PlayerBox name={player.name} />);
+		});
+    return (
+			<ul className="list-group">
+			{boxes}
+			</ul>
+    );
+  }
+});
+
+var PlayerBox = React.createClass({
+  render: function() {
+    return (
+			<li className="list-group-item">{this.props.name}</li>
     );
   }
 });
