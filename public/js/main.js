@@ -1,3 +1,6 @@
+//
+// Spyout Client
+//
 
 function Connection() {
 	this.socket = io();
@@ -70,7 +73,7 @@ var MainMenu = React.createClass({
 		});
 
     return (
-      <div className="main-menu">
+      <div className="main-menu noformrefresh">
         <SOButton label="Join Game" onClick={goToJoinGame.bind(this)}/>
         <SOButton label="New Game"  onClick={goToNewGame.bind(this)}/>
       </div>
@@ -79,6 +82,12 @@ var MainMenu = React.createClass({
 });
 
 var JoinGame = React.createClass({
+	componentDidMount: function() {
+		//prevent page from refreshing when Join game buttons are pressed
+		$(".noformrefresh").submit(function(e) {
+		  e.preventDefault();
+		});
+	},
 	goToMainMenu: function() {
 		this.props.changePage(MainMenu);
 	},
@@ -93,7 +102,7 @@ var JoinGame = React.createClass({
 	},
   render: function() {
     return (
-      <div className="join-menu">
+      <form className="join-menu noformrefresh" onSubmit={this.joinGame}>
         <p>Enter the game code:</p>
         <SOInput placeholder="" onChange={this.onGameCode}/>
         <br/><br/>
@@ -101,13 +110,19 @@ var JoinGame = React.createClass({
         <SOInput placeholder="" onChange={this.onName}/>
         <br/><br/>
         <SOButton label="Back" onClick={this.goToMainMenu}/>
-        <SOButton label="Join"  onClick={this.joinGame}/>
-      </div>
+        <SOButton isSubmit={true} label="Join" />
+      </form>
     );
   }
 });
 
 var NewGame = React.createClass({
+	componentDidMount: function() {
+		//prevent page from refreshing when Join game buttons are pressed
+		$(".noformrefresh").submit(function(e) {
+		  e.preventDefault();
+		});
+	},
 	receiveName: function(name) {
 		this.setState({name});
 	},
@@ -119,13 +134,13 @@ var NewGame = React.createClass({
 			server.newGame(this.state.name);
 		};
     return (
-      <div className="new-menu">
-        <p>Enter your name:</p>
-        <SOInput placeholder="" onChange={this.receiveName}/>
-        <br/><br/>
+			<form className="new-menu noformrefresh" onSubmit={startGame.bind(this)}>
+				<p>Enter your name:</p>
+				<SOInput placeholder="" onChange={this.receiveName}/>
+				<br/><br/>
         <SOButton label="Back" onClick={goToMainMenu.bind(this)}/>
-        <SOButton label="Start" onClick={startGame.bind(this)}/>
-      </div>
+        <SOButton label="Start" isSubmit={true}/>
+			</form>
     );
   }
 });
@@ -167,11 +182,19 @@ var PlayerBox = React.createClass({
 
 var SOButton = React.createClass({
   getInitialState: function() {
-    return {disabled: false};
+    return {
+			disabled: false,
+			isSubmit: false
+		};
   },
   render: function() {
     return (
-      <button type="button" className="btn btn-secondary sobutton" disabled={this.state.disabled} onClick={this.props.onClick}>{this.props.label}</button>
+      <button
+				type={this.props.isSubmit ? "submit" : "button"}
+				className="btn btn-secondary sobutton"
+				disabled={this.state.disabled}
+				onClick={this.props.onClick}>{this.props.label}
+			</button>
     );
   }
 });
