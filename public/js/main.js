@@ -150,9 +150,17 @@ var Lobby = React.createClass({
     return (
       <div className="lobby">
         <p>Game Code:
-					<span id="game-code">{this.props.pageData.code}</span>
+					<span className="game-code">{this.props.pageData.code}</span>
 				</p>
+				<p>Players:</p>
 				<PlayerList players={this.props.pageData.players} />
+				<br/>
+				<div className="btn-toolbar">
+					<SOButton label="Leave Game" onClick={function() {
+						location.reload();
+					}} />
+					<SOButton label="Start Game" />
+				</div>
       </div>
     );
   }
@@ -165,9 +173,13 @@ var PlayerList = React.createClass({
 			boxes.push(<PlayerBox name={player.name} />);
 		});
     return (
-			<ul className="list-group">
-			{boxes}
-			</ul>
+			<div className="row">
+				<div className="col-sm-6 offset-sm-3 col-xs-8 offset-xs-2">
+					<ul className="list-unstyled row">
+					{boxes}
+					</ul>
+				</div>
+			</div>
     );
   }
 });
@@ -175,7 +187,7 @@ var PlayerList = React.createClass({
 var PlayerBox = React.createClass({
   render: function() {
     return (
-			<li className="list-group-item">{this.props.name}</li>
+			<li className="col-xs-6 player-box">{this.props.name}</li>
     );
   }
 });
@@ -193,7 +205,9 @@ var SOButton = React.createClass({
 				type={this.props.isSubmit ? "submit" : "button"}
 				className="btn btn-secondary sobutton"
 				disabled={this.state.disabled}
-				onClick={this.props.onClick}>{this.props.label}
+				onClick={this.props.onClick}
+			>
+			{this.props.label}
 			</button>
     );
   }

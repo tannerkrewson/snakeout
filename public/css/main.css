@@ -42,7 +42,16 @@ hr {
   margin: 1px;
 }
 
-.list-group-item {
+.player-box {
   background-color: black;
   color: white;
+  padding: 5px;
+  border: 1px solid white;
+}
+
+.game-code {
+  font-family: monospace;
+  box-shadow: 0 0 10pt 1pt LightGrey;
+  padding: 5px;
+  margin: 8px;
 }
