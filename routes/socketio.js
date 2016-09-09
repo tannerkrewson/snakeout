@@ -13,7 +13,6 @@ module.exports = function (app) {
 			});
 	  });
 		socket.on('joinGame', function (data) {
-			console.log('Game!');
 			var game = so.findGame(data.code);
 			if (game) {
 				game.addPlayer(data.name, socket);

@@ -60,8 +60,10 @@ var MainMenu = React.createClass({
 		var self = this;
 		server.on('joinGame', function(data) {
 			if (data.success) {
-				console.log(data);
 				self.props.changePage(Lobby, data.game);
+				server.on('updatePlayerList', function(data) {
+					self.props.changePage(Lobby, data.game);
+				});
 			} else {
 				alert('Failed to join game!');
 			}
@@ -132,7 +134,7 @@ var Lobby = React.createClass({
   render: function() {
     return (
       <div className="lobby">
-        <p>Game Code: 
+        <p>Game Code:
 					<span id="game-code">{this.props.pageData.code}</span>
 				</p>
 				<PlayerList players={this.props.pageData.players} />

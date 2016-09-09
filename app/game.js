@@ -152,18 +152,15 @@ Game.prototype.getJsonGame = function () {
 };
 
 Game.prototype.sendUpdatedPlayersList = function () {
-	this.sendToAll('updatePlayerList', this.getJsonGame().players);
+	this.sendToAll('updatePlayerList', {
+		game: this.getJsonGame()
+	});
 };
 
 Game.prototype.sendToAll = function (event, data) {
 	var self = this;
 	this.players.forEach(function (player) {
-		player.socket.emit(event, {
-			success: true,
-			gameCode: self.code,
-			player: player.getJson(),
-			data
-		});
+		player.socket.emit(event, data);
 	});
 };
 
