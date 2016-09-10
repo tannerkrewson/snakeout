@@ -46,7 +46,6 @@ hr {
   background-color: black;
   color: white;
   padding: 5px;
-  border: 1px solid white;
 }
 
 .game-code {
@@ -54,4 +53,13 @@ hr {
   box-shadow: 0 0 10pt 1pt LightGrey;
   padding: 5px;
   margin: 8px;
+}
+
+.white-border {
+  border: 1px solid white;
+  border-collapse: collapse;
+}
+
+.in-progress {
+  background-color: DimGrey;
 }

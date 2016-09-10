@@ -118,7 +118,6 @@ test('startSelectionPhase', function (t) {
     t.equal(le.eventName, 'startSelectionPhase');
     t.equal(leData.missions, testRound.missions);
     t.equal(leData.missionNumber, testRound.missionNumber);
-    t.ok(leData.missionPlayerCount);
     t.equal(leData.players.length, testRound.getJsonPlayers().length);
   });
   t.end();

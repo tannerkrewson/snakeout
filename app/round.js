@@ -14,8 +14,11 @@ function Round(roundNumber, players, onEnd) {
 	this.missions = [];
 
 	//add the five missions
+	//i is the mission number
 	for (var i = 1; i <= 5; i++) {
-		this.missions.push(new Mission(i));
+		var numPlayersForMission = getNumberOfPlayersOnMission(this.players.length, i);
+		var newMission = new Mission(i, numPlayersForMission);
+		this.missions.push(newMission);
 	}
 }
 
@@ -105,14 +108,21 @@ Round.prototype.assignNewCaptain = function () {
 Round.prototype.startSelectionPhase = function () {
 	this.missionNumber++;
 
-	var missionPlayerCount = getNumberOfPlayersOnMission(this.players.length, this.missionNumber);
-	var players = this.getJsonPlayers();
+	//remove in progress from last mission, if there was a last mission
+	if (this.missionNumber > 1) {
+		var lastMission = this.missions[this.missionNumber - 2];
+		lastMission.inProgress = false;
+	}
+
+	//set current mission in progress
+	//subtract one because this.missions indexes start at 0
+	var currentMission = this.missions[this.missionNumber - 1];
+	currentMission.inProgress = true;
 
 	this.sendToAll('startSelectionPhase', {
 		missions: this.missions,
 		missionNumber: this.missionNumber,
-		missionPlayerCount,
-		players
+		players: this.getJsonPlayers()
 	});
 };
 
@@ -124,10 +134,15 @@ Round.prototype.getJsonPlayers = function () {
 	return players;
 }
 
+Round.prototype.findReplacementFor = function (player) {
 
-function Mission(number) {
-	this.number;
-	this.whoWon = false;
+}
+
+
+function Mission(number, playersNeeded) {
+	this.number = number;
+	this.playersNeeded = playersNeeded;
+	this.status = false;
 }
 
 module.exports = Round;

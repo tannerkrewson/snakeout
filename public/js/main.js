@@ -81,6 +81,7 @@ var MainMenu = React.createClass({
 		});
 
 		server.on('startSelectionPhase', function(data) {
+			console.log(data);
 			self.props.changePage(SelectionPhase, data);
 		});
 
@@ -159,7 +160,7 @@ var NewGame = React.createClass({
 
 var Lobby = React.createClass({
   render: function() {
-		var gameCode = this.props.pageData.code; 
+		var gameCode = this.props.pageData.code;
 		var startGame = function() {
 			server.startGame(gameCode);
 		}
@@ -218,7 +219,7 @@ var PlayerList = React.createClass({
 var PlayerBox = React.createClass({
   render: function() {
     return (
-			<li className="col-xs-6 player-box">{this.props.name}</li>
+			<li className="col-xs-6 player-box white-border">{this.props.name}</li>
     );
   }
 });
@@ -227,11 +228,21 @@ var MissionBar = React.createClass({
   render: function() {
 		var boxes = [];
 		this.props.missions.forEach(function(mission) {
-			boxes.push(<MissionBox number={mission.number} status={mission.status} />);
+			boxes.push(<MissionBox
+				number={mission.number}
+				status={mission.status}
+				inProgress={mission.inProgress}
+			/>);
 		});
     return (
-			<div className="row mission-bar">
-				{boxes}
+			<div className="mission-bar">
+				<table className="table">
+				  <tbody>
+				    <tr>
+							{boxes}
+				    </tr>
+				  </tbody>
+				</table>
 			</div>
     );
   }
@@ -239,11 +250,15 @@ var MissionBar = React.createClass({
 
 var MissionBox = React.createClass({
   render: function() {
+		var inProgress = '';
+		if (this.props.inProgress) {
+			inProgress = 'in-progress';
+		}
     return (
-			<span className="mission-box">
-			{this.props.number}
-			{this.props.status}
-			</span>
+			<td className={"mission-box white-border " + inProgress}>
+				<p>{this.props.number}</p>
+				<p>{this.props.status}</p>
+			</td>
     );
   }
 });
