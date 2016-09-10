@@ -136,3 +136,27 @@ test('checkIfTheGameHasNoPlayersLeft', function(t) {
 	t.equal(onEmptyCallCount, 2);
 	t.end();
 });
+
+test('startIfReady', function(t) {
+	var startIfReadyTestGame = new Game(testCode);
+
+	//between 0 and 4 players, it should not start the round
+	for (var i = 0; i <= 4; i++) {
+		t.notOk(startIfReadyTestGame.startIfReady());
+		startIfReadyTestGame.addPlayer('TestPlayerName', testSocket);
+	}
+
+	//between 5 and 10 players, it should start the round
+	for (var i = 5; i <= 10; i++) {
+		t.ok(startIfReadyTestGame.startIfReady());
+		startIfReadyTestGame.addPlayer('TestPlayerName', testSocket);
+	}
+
+	//for more than 10 players, it should not start the round
+	for (var i = 11; i <= 15; i++) {
+		t.notOk(startIfReadyTestGame.startIfReady());
+		startIfReadyTestGame.addPlayer('TestPlayerName', testSocket);
+	}
+
+	t.end();
+});

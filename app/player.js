@@ -10,7 +10,8 @@ function Player(name, socket, id) {
 	this.isConnected = true;
 
 	this.isSpy;
-	this.isLeader = false;
+	this.isCaptain = false;
+	this.hasBeenCaptain = false;
 }
 
 Player.prototype.getJson = function () {

@@ -26,6 +26,15 @@ Game.prototype.addPlayer = function (name, socket) {
 	return newPlayer;
 };
 
+Game.prototype.startIfReady = function () {
+	//the game must have [5, 10] players
+	if (this.players.length >= 5 && this.players.length <= 10) {
+		this.startNewRound();
+		return true;
+	}
+	return false;
+}
+
 Game.prototype.startNewRound = function () {
 	this.inProgress = true;
 

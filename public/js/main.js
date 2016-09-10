@@ -19,6 +19,13 @@ Connection.prototype.joinGame = function(code, name) {
 	});
 }
 
+Connection.prototype.startGame = function(code) {
+	this.send('startGame', {
+		code
+	});
+}
+
+
 Connection.prototype.send = function(event, data) {
 	this.socket.emit(event, data);
 }
@@ -60,6 +67,7 @@ var MainMenu = React.createClass({
     var goToNewGame = function() {
       this.props.changePage(NewGame);
     };
+
 		var self = this;
 		server.on('joinGame', function(data) {
 			if (data.success) {
@@ -70,6 +78,10 @@ var MainMenu = React.createClass({
 			} else {
 				alert('Failed to join game!');
 			}
+		});
+
+		server.on('startSelectionPhase', function(data) {
+			self.props.changePage(SelectionPhase, data);
 		});
 
     return (
@@ -147,6 +159,10 @@ var NewGame = React.createClass({
 
 var Lobby = React.createClass({
   render: function() {
+		var gameCode = this.props.pageData.code; 
+		var startGame = function() {
+			server.startGame(gameCode);
+		}
     return (
       <div className="lobby">
         <p>Game Code:
@@ -159,8 +175,23 @@ var Lobby = React.createClass({
 					<SOButton label="Leave Game" onClick={function() {
 						location.reload();
 					}} />
-					<SOButton label="Start Game" />
+					<SOButton label="Start Game" onClick={startGame} />
 				</div>
+      </div>
+    );
+  }
+});
+
+var SelectionPhase = React.createClass({
+  render: function() {
+		var me = this.props.pageData.me;
+		var data = this.props.pageData.data;
+    return (
+      <div className="selection-phase">
+				<p>Missions:</p>
+				<MissionBar missions={data.missions} />
+				<p>Players:</p>
+				<PlayerList players={data.players} />
       </div>
     );
   }
@@ -188,6 +219,31 @@ var PlayerBox = React.createClass({
   render: function() {
     return (
 			<li className="col-xs-6 player-box">{this.props.name}</li>
+    );
+  }
+});
+
+var MissionBar = React.createClass({
+  render: function() {
+		var boxes = [];
+		this.props.missions.forEach(function(mission) {
+			boxes.push(<MissionBox number={mission.number} status={mission.status} />);
+		});
+    return (
+			<div className="row mission-bar">
+				{boxes}
+			</div>
+    );
+  }
+});
+
+var MissionBox = React.createClass({
+  render: function() {
+    return (
+			<span className="mission-box">
+			{this.props.number}
+			{this.props.status}
+			</span>
     );
   }
 });

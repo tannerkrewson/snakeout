@@ -83,8 +83,8 @@ test('assignRoles', function(t) {
   testRound.assignRoles();
   var spyCount = 0;
   var nonSpyCount = 0;
-  var leaderCount = 0;
-  var nonLeaderCount = 0;
+  var captainCount = 0;
+  var nonCaptainCount = 0;
   testRound.players.forEach(function(player) {
     if (player.isSpy) {
       spyCount++;
@@ -92,17 +92,34 @@ test('assignRoles', function(t) {
       nonSpyCount++;
     }
 
-    if (player.isLeader) {
-      leaderCount++;
+    if (player.isCaptain) {
+      captainCount++;
     } else {
-      nonLeaderCount++;
+      nonCaptainCount++;
     }
   });
 
   var spyCountShouldBe = testRound.getNumberOfSpies();
   t.equal(spyCount, spyCountShouldBe);
   t.equal(nonSpyCount, testRound.players.length - spyCountShouldBe);
-  t.equal(leaderCount, 1);
-  t.equal(nonLeaderCount, testRound.players.length - 1);
+  t.equal(captainCount, 1);
+  t.equal(nonCaptainCount, testRound.players.length - 1);
+  t.end();
+});
+
+test('startSelectionPhase', function (t) {
+  var missionNumberBefore = testRound.missionNumber;
+  testRound.startSelectionPhase();
+  t.equal(testRound.missionNumber, missionNumberBefore + 1);
+
+  mockPlayers.forEach(function(player) {
+    var le = player.socket.lastEmit;
+    var leData = le.data.data;
+    t.equal(le.eventName, 'startSelectionPhase');
+    t.equal(leData.missions, testRound.missions);
+    t.equal(leData.missionNumber, testRound.missionNumber);
+    t.ok(leData.missionPlayerCount);
+    t.equal(leData.players.length, testRound.getJsonPlayers().length);
+  });
   t.end();
 });

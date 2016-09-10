@@ -26,6 +26,12 @@ module.exports = function (app) {
 				});
 			}
 	  });
+		socket.on('startGame', function(data) {
+			var game = so.findGame(data.code);
+			if (game) {
+				game.startIfReady();
+			}
+		});
 	});
 
 }
