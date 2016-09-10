@@ -50,7 +50,7 @@ var Spyout = React.createClass({
   render: function() {
     return (
 			<div className="main-content text-xs-center" id="spyout">
-      	<p id="title">SPYOUT</p>
+      	<p className="so-h1">SPYOUT</p>
         <hr/>
         <this.state.page changePage={this.changePage} pageData={this.state.pageData}/>
 				<Bottom />
@@ -214,13 +214,13 @@ var CaptainSelection = React.createClass({
 		var numPlayersToSelect = currentMission.playersNeeded;
     return (
       <div className="captain-selector">
-				<h3>You are captain!</h3>
-				<h4>
+				<p className="so-h2">You are captain!</p>
+				<p className="so-h3">
 					Select
 					<span> {numPlayersToSelect} </span>
 					players to go on Mission
 					<span> {missionNumber}</span>:
-				</h4>
+				</p>
 				<PlayerSelector players={data.players} numPlayersToSelect={numPlayersToSelect}/>
       </div>
     );

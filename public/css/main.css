@@ -17,8 +17,18 @@ hr {
 }
 
 
-#title {
+.so-h1 {
 	font-size: 3.5rem;
+	font-family: 'Lato', sans-serif;
+}
+
+.so-h2 {
+	font-size: 2rem;
+	font-family: 'Lato', sans-serif;
+}
+
+.so-h3 {
+	font-size: 1.5rem;
 	font-family: 'Lato', sans-serif;
 }
 
