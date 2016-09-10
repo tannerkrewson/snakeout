@@ -81,7 +81,6 @@ var MainMenu = React.createClass({
 		});
 
 		server.on('startSelectionPhase', function(data) {
-			console.log(data);
 			self.props.changePage(SelectionPhase, data);
 		});
 
@@ -185,14 +184,54 @@ var Lobby = React.createClass({
 
 var SelectionPhase = React.createClass({
   render: function() {
-		var me = this.props.pageData.me;
+		var me = this.props.pageData.you;
 		var data = this.props.pageData.data;
+
+		var CaptainComponent;
+		if (me.isCaptain) {
+			CaptainComponent = CaptainSelection;
+		} else {
+			CaptainComponent = WaitingForCaptain;
+		}
+
     return (
       <div className="selection-phase">
 				<p>Missions:</p>
 				<MissionBar missions={data.missions} />
 				<p>Players:</p>
 				<PlayerList players={data.players} />
+				<CaptainComponent data={data}/>
+      </div>
+    );
+  }
+});
+
+var CaptainSelection = React.createClass({
+  render: function() {
+		var data = this.props.data;
+		var missionNumber = data.missionNumber;
+		var currentMission = data.missions[missionNumber - 1];
+		console.log(currentMission);
+		var numPlayersToSelect = currentMission.playersNeeded;
+    return (
+      <div className="captain-selector">
+				<h3>You are captain!</h3>
+				<h4>
+					Select
+					<u> {numPlayersToSelect} </u>
+					players to go on Mission
+					<span> {missionNumber}</span>:
+				</h4>
+      </div>
+    );
+  }
+});
+
+var WaitingForCaptain = React.createClass({
+  render: function() {
+    return (
+      <div className="waiting-for-captain">
+				<p>Waiting for the captain to make a selection...</p>
       </div>
     );
   }
