@@ -211,17 +211,17 @@ var CaptainSelection = React.createClass({
 		var data = this.props.data;
 		var missionNumber = data.missionNumber;
 		var currentMission = data.missions[missionNumber - 1];
-		console.log(currentMission);
 		var numPlayersToSelect = currentMission.playersNeeded;
     return (
       <div className="captain-selector">
 				<h3>You are captain!</h3>
 				<h4>
 					Select
-					<u> {numPlayersToSelect} </u>
+					<span> {numPlayersToSelect} </span>
 					players to go on Mission
 					<span> {missionNumber}</span>:
 				</h4>
+				<PlayerSelector players={data.players} numPlayersToSelect={numPlayersToSelect}/>
       </div>
     );
   }
@@ -236,6 +236,51 @@ var WaitingForCaptain = React.createClass({
     );
   }
 });
+
+var PlayerSelector = React.createClass({
+	getInitialState: function() {
+		return {
+			selectedPlayers: []
+		};
+	},
+	onCheck: function(isChecked, player, onValidCheck) {
+		var selectedPlayers = this.state.selectedPlayers;
+		var numPlayersToSelect = this.props.numPlayersToSelect;
+
+		if (!isChecked) {
+			//if we have not already selected the number of players needed
+			if (selectedPlayers.length !== numPlayersToSelect) {
+				selectedPlayers.push(player);
+				onValidCheck();
+			}
+			//if we have, the check is disallowed, so we do nothing.
+		} else {
+			//unchecks are always allowed
+			var index = selectedPlayers.indexOf(player);
+			if (index > -1) {
+				selectedPlayers.splice(index, 1);
+			}
+			onValidCheck();
+		}
+
+	},
+  render: function() {
+		var boxes = [];
+		var self = this;
+		this.props.players.forEach(function(player) {
+			boxes.push(<PlayerButton player={player} onCheck={self.onCheck}/>);
+		});
+    return (
+			<div className="row">
+				<div className="col-sm-6 offset-sm-3 col-xs-8 offset-xs-2">
+					<ul className="list-unstyled row">
+					{boxes}
+					</ul>
+				</div>
+			</div>
+    );
+  }
+})
 
 var PlayerList = React.createClass({
   render: function() {
@@ -259,6 +304,49 @@ var PlayerBox = React.createClass({
   render: function() {
     return (
 			<li className="col-xs-6 player-box white-border">{this.props.name}</li>
+    );
+  }
+});
+
+var PlayerButton = React.createClass({
+	getInitialState: function() {
+		return {
+			checked: false,
+			checkboxIcon: 'fa-square-o'
+		};
+	},
+	onClick: function() {
+		var checked = this.state.checked;
+
+		//this function will be ran if the parent is okay with the check
+		var self = this;
+		this.props.onCheck(this.state.checked, this.props.player, function() {
+			var icon;
+			if (self.state.checked) {
+				icon = 'fa-square-o';
+			} else {
+				icon = 'fa-check-square-o';
+			}
+
+			self.setState({
+				checked: !self.state.checked,
+				checkboxIcon: icon
+			});
+		});
+	},
+  render: function() {
+    return (
+			<li className="col-xs-6">
+				<button
+					type="button"
+					className="btn btn-secondary sobutton"
+					onClick={this.onClick}
+				>
+				<i className={"fa " + this.state.checkboxIcon} aria-hidden="true"></i>
+				&nbsp;&nbsp;
+				{this.props.player.name}
+				</button>
+			</li>
     );
   }
 });
