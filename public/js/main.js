@@ -351,3 +351,9 @@ ReactDOM.render(
   <Spyout />,
   document.getElementById('root')
 );
+
+//try to join the dev game
+var relativeUrl = window.location.pathname + window.location.search;
+if (relativeUrl === '/dev') {
+	server.joinGame('ffff', Math.random().toString().substring(2, 6));
+}

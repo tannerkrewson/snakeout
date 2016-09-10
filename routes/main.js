@@ -6,4 +6,10 @@ module.exports = function (app) {
 		res.render('index', {});
 	});
 
+	if (app.get('env') === 'development') {
+		app.get('/dev', function (req, res) {
+			res.render('index', {});
+		});
+	}
+
 }

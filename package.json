@@ -4,7 +4,7 @@
   "description": "spyout",
   "scripts": {
     "start": "node ./bin/www",
-    "dev-start": "nodemon --exec npm start",
+    "dev-start": "set NODE_ENV=development&& nodemon --exec npm start",
     "test": "tape test/*.js"
   },
   "repository": {

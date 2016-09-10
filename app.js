@@ -10,8 +10,10 @@ var app = express();
 var io = socketio();
 app.io = io;
 
+var devModeEnabled = (app.get('env') === 'development');
+
 var Spyout = require('./app/spyout');
-app.spyout = new Spyout();
+app.spyout = new Spyout(devModeEnabled);
 
 require('./routes')(app);
 
