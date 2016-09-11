@@ -105,6 +105,7 @@ Round.prototype.assignNewCaptain = function () {
 	this.players[indexOfCaptain].hasBeenCaptain = true;
 }
 
+// the first phase of each mission
 Round.prototype.startSelectionPhase = function () {
 	this.missionNumber++;
 
@@ -125,6 +126,12 @@ Round.prototype.startSelectionPhase = function () {
 		players: this.getJsonPlayers()
 	});
 };
+
+// called as a result of receiving the 'captainsSelectedPlayers'
+// event from the captain
+Round.prototype.startVotingPhase = function (selectedPlayers) {
+	
+}
 
 Round.prototype.getJsonPlayers = function () {
 	var players = [];

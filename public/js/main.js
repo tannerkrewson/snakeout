@@ -84,6 +84,10 @@ var MainMenu = React.createClass({
 			self.props.changePage(SelectionPhase, data);
 		});
 
+		server.on('startVotingPhase', function(data) {
+			self.props.changePage(VotingPhase, data);
+		});
+
     return (
       <div className="main-menu noformrefresh">
         <SOButton label="Join Game" onClick={goToJoinGame.bind(this)}/>
@@ -182,6 +186,19 @@ var Lobby = React.createClass({
   }
 });
 
+var RoundInfoBar = React.createClass({
+  render: function() {
+    return (
+      <div className="round-info-bar">
+				<p>Missions:</p>
+				<MissionBar missions={this.props.missions} />
+				<p>Players:</p>
+				<PlayerList players={this.props.players} />
+      </div>
+    );
+  }
+});
+
 var SelectionPhase = React.createClass({
   render: function() {
 		var me = this.props.pageData.you;
@@ -196,10 +213,7 @@ var SelectionPhase = React.createClass({
 
     return (
       <div className="selection-phase">
-				<p>Missions:</p>
-				<MissionBar missions={data.missions} />
-				<p>Players:</p>
-				<PlayerList players={data.players} />
+				<RoundInfoBar missions={data.missions} players={data.players}/>
 				<CaptainComponent data={data}/>
       </div>
     );
@@ -233,6 +247,11 @@ var CaptainSelection = React.createClass({
 			});
 		}
 	},
+	sendSelectedPlayers: function() {
+		server.send('captainsSelectedPlayers', {
+			selectedPlayers: this.selectedPlayers
+		});
+	},
   render: function() {
 		var data = this.props.data;
 		var missionNumber = data.missionNumber;
@@ -248,8 +267,16 @@ var CaptainSelection = React.createClass({
 					players to go on Mission
 					<span> {missionNumber}</span>:
 				</p>
-				<PlayerSelector players={data.players} numPlayersToSelect={numPlayersToSelect} onChange={this.updatePlayerList.bind(this)}/>
-				<SOButton label="Put it to a vote!" disabled={!this.state.ready} />
+				<PlayerSelector
+					players={data.players}
+					numPlayersToSelect={numPlayersToSelect}
+					onChange={this.updatePlayerList.bind(this)}
+				/>
+				<SOButton
+					label="Put it to a vote!"
+					disabled={!this.state.ready}
+					onClick={this.sendSelectedPlayers.bind(this)}
+				/>
       </div>
     );
   }
@@ -328,6 +355,45 @@ var PlayerSelector = React.createClass({
     );
   }
 })
+
+var VotingPhase = React.createClass({
+  render: function() {
+		var me = this.props.pageData.you;
+		var data = this.props.pageData.data;
+		var missionNumber = data.missionNumber;
+		var currentMission = data.missions[missionNumber - 1];
+
+		// data.players is all of the players in the game
+		// currentMission.players is only the players on the mission
+
+		var captain = function() {
+			for (var i = 0; i < data.players.length; i++) {
+				if (data.players[i].isCaptain) {
+					return data.players[i];
+				}
+			}
+		}();
+
+    return (
+			<div className="voting-phase">
+				<RoundInfoBar missions={data.missions} players={data.players}/>
+				<p className="so-h3">
+					<span>{captain.name} </span>
+					has selected:
+				</p>
+				<PlayerList players={currentMission.players} />
+				<p className="so-h3">
+					to go on Mission
+					<span>{currentMission.number}.</span>
+				</p>
+				<div className="btn-toolbar">
+					<SOButton label="Reject" />
+					<SOButton label="Approve" />
+				</div>
+      </div>
+    );
+  }
+});
 
 var PlayerList = React.createClass({
   render: function() {
