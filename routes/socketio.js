@@ -41,7 +41,8 @@ function attachInGameListeners(socket, so, game) {
 	});
 
 	socket.on('captainsSelectedPlayers', function(data) {
-		game.startVotingPhase(data.selectedPlayers);
+		var thisRound = game.currentRound;
+		thisRound.startVotingPhase(data.selectedPlayers);
 	});
 
 }

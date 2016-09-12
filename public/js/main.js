@@ -231,8 +231,7 @@ var CaptainSelection = React.createClass({
 		this.selectedPlayers = selectedPlayers;
 
 		var data = this.props.data;
-		var missionNumber = data.missionNumber;
-		var currentMission = data.missions[missionNumber - 1];
+		var currentMission = data.currentMission;
 		var numPlayersToSelect = currentMission.playersNeeded;
 
 		//if the user has selected the required number of players
@@ -255,7 +254,7 @@ var CaptainSelection = React.createClass({
   render: function() {
 		var data = this.props.data;
 		var missionNumber = data.missionNumber;
-		var currentMission = data.missions[missionNumber - 1];
+		var currentMission = data.currentMission;
 		var numPlayersToSelect = currentMission.playersNeeded;
 
     return (
@@ -360,11 +359,10 @@ var VotingPhase = React.createClass({
   render: function() {
 		var me = this.props.pageData.you;
 		var data = this.props.pageData.data;
-		var missionNumber = data.missionNumber;
-		var currentMission = data.missions[missionNumber - 1];
+		var currentMission = data.currentMission;
 
 		// data.players is all of the players in the game
-		// currentMission.players is only the players on the mission
+		// currentMission.playersOnMission is only the players on the mission
 
 		var captain = function() {
 			for (var i = 0; i < data.players.length; i++) {
@@ -381,7 +379,7 @@ var VotingPhase = React.createClass({
 					<span>{captain.name} </span>
 					has selected:
 				</p>
-				<PlayerList players={currentMission.players} />
+				<PlayerList players={currentMission.playersOnMission} />
 				<p className="so-h3">
 					to go on Mission
 					<span>{currentMission.number}.</span>

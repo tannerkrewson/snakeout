@@ -112,12 +112,34 @@ test('startSelectionPhase', function (t) {
   testRound.startSelectionPhase();
   t.equal(testRound.missionNumber, missionNumberBefore + 1);
 
+  // le is what the function send out to each player
+  // we check to make sure what would be sent is correct
   mockPlayers.forEach(function(player) {
     var le = player.socket.lastEmit;
     var leData = le.data.data;
     t.equal(le.eventName, 'startSelectionPhase');
     t.equal(leData.missions, testRound.missions);
+    t.equal(leData.currentMission, testRound.getCurrentMission());
     t.equal(leData.missionNumber, testRound.missionNumber);
+    t.equal(leData.players.length, testRound.getJsonPlayers().length);
+  });
+  t.end();
+});
+
+test('startVotingPhase', function (t) {
+  var mockSelectedPlayers = [];
+  mockSelectedPlayers.push(mockPlayers[2]);
+  mockSelectedPlayers.push(mockPlayers[0]);
+
+  testRound.startVotingPhase(mockSelectedPlayers);
+
+  mockPlayers.forEach(function(player) {
+    var le = player.socket.lastEmit;
+    var leData = le.data.data;
+    t.equal(le.eventName, 'startVotingPhase');
+    t.equal(leData.missions, testRound.missions);
+    t.equal(leData.currentMission, testRound.getCurrentMission());
+    t.equal(leData.selectedPlayers, mockSelectedPlayers);
     t.equal(leData.players.length, testRound.getJsonPlayers().length);
   });
   t.end();

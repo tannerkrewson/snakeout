@@ -117,11 +117,12 @@ Round.prototype.startSelectionPhase = function () {
 
 	//set current mission in progress
 	//subtract one because this.missions indexes start at 0
-	var currentMission = this.missions[this.missionNumber - 1];
+	var currentMission = this.getCurrentMission();
 	currentMission.inProgress = true;
 
 	this.sendToAll('startSelectionPhase', {
 		missions: this.missions,
+		currentMission,
 		missionNumber: this.missionNumber,
 		players: this.getJsonPlayers()
 	});
@@ -130,7 +131,16 @@ Round.prototype.startSelectionPhase = function () {
 // called as a result of receiving the 'captainsSelectedPlayers'
 // event from the captain
 Round.prototype.startVotingPhase = function (selectedPlayers) {
-	
+
+	var thisMission = this.getCurrentMission();
+	thisMission.playersOnMission = selectedPlayers;
+
+	this.sendToAll('startVotingPhase', {
+		selectedPlayers,
+		players: this.getJsonPlayers(),
+		missions: this.missions,
+		currentMission: this.getCurrentMission()
+	});
 }
 
 Round.prototype.getJsonPlayers = function () {
@@ -145,11 +155,17 @@ Round.prototype.findReplacementFor = function (player) {
 
 }
 
+Round.prototype.getCurrentMission = function () {
+	return this.missions[this.missionNumber - 1];
+}
+
 
 function Mission(number, playersNeeded) {
 	this.number = number;
 	this.playersNeeded = playersNeeded;
 	this.status = false;
+
+	this.playersOnMission = [];
 }
 
 module.exports = Round;
