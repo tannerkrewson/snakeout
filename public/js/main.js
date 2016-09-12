@@ -25,6 +25,12 @@ Connection.prototype.startGame = function(code) {
 	});
 }
 
+Connection.prototype.vote = function(vote) {
+	this.send('vote', {
+		vote
+	});
+}
+
 
 Connection.prototype.send = function(event, data) {
 	this.socket.emit(event, data);
@@ -356,6 +362,12 @@ var PlayerSelector = React.createClass({
 })
 
 var VotingPhase = React.createClass({
+	voteYay: function() {
+		server.vote(true);
+	},
+	voteNay: function() {
+		server.vote(false);
+	},
   render: function() {
 		var me = this.props.pageData.you;
 		var data = this.props.pageData.data;
@@ -379,14 +391,14 @@ var VotingPhase = React.createClass({
 					<span>{captain.name} </span>
 					has selected:
 				</p>
-				<PlayerList players={currentMission.playersOnMission} />
+				<PlayerList players={currentMission.potentialPlayersOnMission} />
 				<p className="so-h3">
 					to go on Mission
 					<span>{currentMission.number}.</span>
 				</p>
 				<div className="btn-toolbar">
-					<SOButton label="Reject" />
-					<SOButton label="Approve" />
+					<SOButton label="Reject" onClick={this.voteNay.bind(this)} />
+					<SOButton label="Approve" onClick={this.voteYay.bind(this)} />
 				</div>
       </div>
     );

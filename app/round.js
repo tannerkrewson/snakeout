@@ -2,6 +2,8 @@
 // Spyout Round
 //
 
+var Mission = require('./mission');
+
 var shuffle = require('knuth-shuffle').knuthShuffle;
 var getNumberOfPlayersOnMission = require('./getNumberOfPlayersOnMission');
 
@@ -17,15 +19,33 @@ function Round(roundNumber, players, onEnd) {
 	//i is the mission number
 	for (var i = 1; i <= 5; i++) {
 		var numPlayersForMission = getNumberOfPlayersOnMission(this.players.length, i);
-		var newMission = new Mission(i, numPlayersForMission);
+		var newMission = new Mission(i, numPlayersForMission, this.players.length);
 		this.missions.push(newMission);
 	}
 }
 
-Round.prototype.start = function() {
+Round.prototype.startRound = function() {
 	this.assignRoles();
-	this.startSelectionPhase();
+	this.assignNewCaptain();
+	this.startNextMission();
 };
+
+Round.prototype.startNextMission = function () {
+	this.missionNumber++;
+
+	//remove in progress from last mission, if there was a last mission
+	if (this.missionNumber > 1) {
+		var lastMission = this.missions[this.missionNumber - 2];
+		lastMission.inProgress = false;
+	}
+
+	//set current mission in progress
+	//subtract one because this.missions indexes start at 0
+	var currentMission = this.getCurrentMission();
+	currentMission.inProgress = true;
+
+	this.startSelectionPhase();
+}
 
 Round.prototype.sendToAll = function (event, data) {
 	this.players.forEach(function (player) {
@@ -63,8 +83,6 @@ Round.prototype.assignRoles = function() {
 			this.players[i].isSpy = false;
 		}
 	}
-
-	this.assignNewCaptain();
 }
 
 Round.prototype.assignNewCaptain = function () {
@@ -107,22 +125,9 @@ Round.prototype.assignNewCaptain = function () {
 
 // the first phase of each mission
 Round.prototype.startSelectionPhase = function () {
-	this.missionNumber++;
-
-	//remove in progress from last mission, if there was a last mission
-	if (this.missionNumber > 1) {
-		var lastMission = this.missions[this.missionNumber - 2];
-		lastMission.inProgress = false;
-	}
-
-	//set current mission in progress
-	//subtract one because this.missions indexes start at 0
-	var currentMission = this.getCurrentMission();
-	currentMission.inProgress = true;
-
 	this.sendToAll('startSelectionPhase', {
 		missions: this.missions,
-		currentMission,
+		currentMission: this.getCurrentMission(),
 		missionNumber: this.missionNumber,
 		players: this.getJsonPlayers()
 	});
@@ -133,14 +138,39 @@ Round.prototype.startSelectionPhase = function () {
 Round.prototype.startVotingPhase = function (selectedPlayers) {
 
 	var thisMission = this.getCurrentMission();
-	thisMission.playersOnMission = selectedPlayers;
+	thisMission.potentialPlayersOnMission = selectedPlayers;
+
+	// runs the processResultsOfVote function once everyone has voted
+	thisMission.startVote(this.processResultsOfVote.bind(this));
 
 	this.sendToAll('startVotingPhase', {
-		selectedPlayers,
+		potentialPlayersOnMission: thisMission.potentialPlayersOnMission,
 		players: this.getJsonPlayers(),
 		missions: this.missions,
 		currentMission: this.getCurrentMission()
 	});
+
+	this.players.forEach(function(player) {
+		player.socket.once('vote', function(data) {
+			thisMission.addVote(player.id, data.vote);
+		});
+	});
+}
+
+Round.prototype.processResultsOfVote = function (wasVoteSuccessful) {
+	if (wasVoteSuccessful) {
+		this.startMissionPhase();
+	} else {
+		// since the vote failed, we'll try the vote again with a new captain
+		// to select players.
+		// the spies win if the team votes fail 5 times in a row.
+		this.assignNewCaptain();
+		this.startSelectionPhase();
+	}
+}
+
+Round.prototype.startMissionPhase = function() {
+	console.log('The mission phase has begun!');
 }
 
 Round.prototype.getJsonPlayers = function () {
@@ -159,13 +189,5 @@ Round.prototype.getCurrentMission = function () {
 	return this.missions[this.missionNumber - 1];
 }
 
-
-function Mission(number, playersNeeded) {
-	this.number = number;
-	this.playersNeeded = playersNeeded;
-	this.status = false;
-
-	this.playersOnMission = [];
-}
 
 module.exports = Round;

@@ -45,7 +45,7 @@ Game.prototype.startNewRound = function () {
 		self.viewingResults = false;
 	});
 
-	this.currentRound.start();
+	this.currentRound.startRound();
 };
 
 Game.prototype.newPlayer = function (name, socket) {

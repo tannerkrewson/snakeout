@@ -19,8 +19,7 @@ MockSocket.prototype.emit = function(eventName, data) {
 MockSocket.prototype.once = function(eventName, next) {
   this.lastOnce = {
     eventName,
-    next,
-    nextRes: next()
+    next
   };
 };
 
@@ -83,15 +82,25 @@ test('assignRoles', function(t) {
   testRound.assignRoles();
   var spyCount = 0;
   var nonSpyCount = 0;
-  var captainCount = 0;
-  var nonCaptainCount = 0;
   testRound.players.forEach(function(player) {
     if (player.isSpy) {
       spyCount++;
     } else {
       nonSpyCount++;
     }
+  });
 
+  var spyCountShouldBe = testRound.getNumberOfSpies();
+  t.equal(spyCount, spyCountShouldBe);
+  t.equal(nonSpyCount, testRound.players.length - spyCountShouldBe);
+  t.end();
+});
+
+test('assignNewCaptain', function(t) {
+  testRound.assignNewCaptain();
+  var captainCount = 0;
+  var nonCaptainCount = 0;
+  testRound.players.forEach(function(player) {
     if (player.isCaptain) {
       captainCount++;
     } else {
@@ -99,18 +108,24 @@ test('assignRoles', function(t) {
     }
   });
 
-  var spyCountShouldBe = testRound.getNumberOfSpies();
-  t.equal(spyCount, spyCountShouldBe);
-  t.equal(nonSpyCount, testRound.players.length - spyCountShouldBe);
   t.equal(captainCount, 1);
   t.equal(nonCaptainCount, testRound.players.length - 1);
   t.end();
 });
 
-test('startSelectionPhase', function (t) {
+test('startNextMission', function(t) {
   var missionNumberBefore = testRound.missionNumber;
-  testRound.startSelectionPhase();
+  testRound.startNextMission();
   t.equal(testRound.missionNumber, missionNumberBefore + 1);
+  t.ok(testRound.missions[testRound.missionNumber - 1].inProgress);
+  t.end();
+});
+
+test('startSelectionPhase', function (t) {
+  // This function should have been ran by the call to
+  // startNewMission in the test above.
+
+  //testRound.startSelectionPhase();
 
   // le is what the function send out to each player
   // we check to make sure what would be sent is correct
@@ -136,10 +151,11 @@ test('startVotingPhase', function (t) {
   mockPlayers.forEach(function(player) {
     var le = player.socket.lastEmit;
     var leData = le.data.data;
+    var ppoml = leData.potentialPlayersOnMission.length;
     t.equal(le.eventName, 'startVotingPhase');
     t.equal(leData.missions, testRound.missions);
     t.equal(leData.currentMission, testRound.getCurrentMission());
-    t.equal(leData.selectedPlayers, mockSelectedPlayers);
+    t.equal(ppoml, mockSelectedPlayers.length);
     t.equal(leData.players.length, testRound.getJsonPlayers().length);
   });
   t.end();
