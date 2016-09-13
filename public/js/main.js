@@ -31,6 +31,12 @@ Connection.prototype.vote = function(vote) {
 	});
 }
 
+Connection.prototype.missionVote = function(vote) {
+	this.send('missionVote', {
+		vote
+	});
+}
+
 
 Connection.prototype.send = function(event, data) {
 	this.socket.emit(event, data);
@@ -92,6 +98,10 @@ var MainMenu = React.createClass({
 
 		server.on('startVotingPhase', function(data) {
 			self.props.changePage(VotingPhase, data);
+		});
+
+		server.on('startMissionPhase', function(data) {
+			self.props.changePage(MissionPhase, data);
 		});
 
     return (
@@ -239,8 +249,9 @@ var VotingPhase = React.createClass({
 		var data = this.props.pageData.data;
 		var currentMission = data.currentMission;
 
-		// data.players is all of the players in the game
-		// currentMission.playersOnMission is only the players on the mission
+		// data.players is all of the players in the game.
+		// currentMission.potentialPlayersOnMission is only
+		// the players that might be on the mission.
 
 		var captain = function() {
 			for (var i = 0; i < data.players.length; i++) {
@@ -275,11 +286,22 @@ var MissionPhase = React.createClass({
   render: function() {
 		var me = this.props.pageData.you;
 		var data = this.props.pageData.data;
+		var currentMission = data.currentMission;
+
+		//figure out if we are on this mission
+		var isOnMission = false;
+		for (var i = 0; i < currentMission.playersOnMission.length; i++) {
+			var thisPlayer = currentMission.playersOnMission[i]
+			if (thisPlayer.id === me.id) {
+				isOnMission = true;
+				break;
+			}
+		}
 
 		var ComponentToShow;
-		var ComponentToShowProps;
-		if (me.isOnMission) {
-			ComponentToShow = CaptainSelection;
+		var ComponentToShowProps = {};
+		if (isOnMission) {
+			ComponentToShow = OnMissionScreen;
 			ComponentToShowProps = data;
 		} else {
 			ComponentToShow = Waiting;
@@ -351,6 +373,43 @@ var CaptainSelection = React.createClass({
 					disabled={!this.state.ready}
 					onClick={this.sendSelectedPlayers.bind(this)}
 				/>
+      </div>
+    );
+  }
+});
+
+var OnMissionScreen = React.createClass({
+	voteYay: function() {
+		server.missionVote(true);
+	},
+	voteNay: function() {
+		server.missionVote(false);
+	},
+  render: function() {
+		var data = this.props.data;
+		var me = data.you;
+		var currentMission = data.currentMission;
+
+		// data.players is all of the players in the game
+		// currentMission.playersOnMission is only the players on the mission
+
+    return (
+			<div className="on-mission-screen">
+				<p className="so-h3">
+					You are on mission
+					<span> {currentMission.number} </span>
+					with:
+				</p>
+				<PlayerList players={currentMission.playersOnMission} />
+				<ul>
+				  <li>All players must pass this mission for it to succeed.</li>
+				  <li>This mission will fail even if just one player fails it.</li>
+				  <li>The other players will not know how you voted.</li>
+				</ul>
+				<div className="btn-toolbar">
+					<SOButton label="Fail" onClick={this.voteNay.bind(this)} />
+					<SOButton label="Pass" onClick={this.voteYay.bind(this)} />
+				</div>
       </div>
     );
   }

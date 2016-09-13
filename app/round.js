@@ -159,6 +159,8 @@ Round.prototype.startVotingPhase = function (selectedPlayers) {
 
 Round.prototype.processResultsOfVote = function (wasVoteSuccessful) {
 	if (wasVoteSuccessful) {
+		var thisMission = this.getCurrentMission();
+		thisMission.putSelectedPlayersOnTheMission();
 		this.startMissionPhase();
 	} else {
 		// since the vote failed, we'll try the vote again with a new captain
@@ -170,7 +172,69 @@ Round.prototype.processResultsOfVote = function (wasVoteSuccessful) {
 }
 
 Round.prototype.startMissionPhase = function() {
-	console.log('The mission phase has begun!');
+	var thisMission = this.getCurrentMission();
+
+	// runs the processResultsOfVote function once everyone has voted
+	thisMission.startMission(this.processResultsOfMission.bind(this));
+
+	this.sendToAll('startMissionPhase', {
+		missions: this.missions,
+		currentMission: this.getCurrentMission(),
+		missionNumber: this.missionNumber,
+		players: this.getJsonPlayers()
+	});
+
+	this.players.forEach(function(player) {
+		player.socket.once('missionVote', function(data) {
+			thisMission.addMissionVote(player.id, data.vote);
+		});
+	});
+}
+
+Round.prototype.processResultsOfMission = function (wasMissionSuccessful) {
+	if (wasMissionSuccessful) {
+		// loyalists win this mission
+		this.getCurrentMission().status = 'loyalist';
+	} else {
+		// spies win this mission
+		this.getCurrentMission().status = 'spy';
+	}
+
+	var gameOver = this.checkForWin();
+	if (!gameOver) {
+		this.assignNewCaptain();
+		this.startNextMission();
+	}
+}
+
+Round.prototype.checkForWin = function() {
+	var spyWins = 0;
+	var loyalistWins = 0;
+	for (var i = 0; i < this.missions.length; i++) {
+		var thisMission = this.missions[i];
+		if (thisMission.status === 'spy') {
+			spyWins++;
+		} else if (thisMission.status === 'loyalist') {
+			loyalistWins++;
+		}
+	}
+	if (spyWins === 3) {
+		this.spyWin();
+		return true;
+	} else if (loyalistWins == 3) {
+		this.loyalistWin();
+		return true;
+	} else {
+		return false;
+	}
+}
+
+Round.prototype.spyWin = function () {
+	console.log('Spies win!');
+}
+
+Round.prototype.loyalistWin = function () {
+	console.log('Loyalists win!');
 }
 
 Round.prototype.getJsonPlayers = function () {

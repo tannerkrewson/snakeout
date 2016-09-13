@@ -141,8 +141,8 @@ test('startSelectionPhase', function (t) {
   t.end();
 });
 
+var mockSelectedPlayers = [];
 test('startVotingPhase', function (t) {
-  var mockSelectedPlayers = [];
   mockSelectedPlayers.push(mockPlayers[2]);
   mockSelectedPlayers.push(mockPlayers[0]);
 
@@ -156,6 +156,22 @@ test('startVotingPhase', function (t) {
     t.equal(leData.missions, testRound.missions);
     t.equal(leData.currentMission, testRound.getCurrentMission());
     t.equal(ppoml, mockSelectedPlayers.length);
+    t.equal(leData.players.length, testRound.getJsonPlayers().length);
+  });
+  t.end();
+});
+
+test('startMissionPhase', function (t) {
+  testRound.getCurrentMission().putSelectedPlayersOnTheMission();
+  testRound.startMissionPhase();
+
+  mockPlayers.forEach(function(player) {
+    var le = player.socket.lastEmit;
+    var leData = le.data.data;
+    t.equal(le.eventName, 'startMissionPhase');
+    t.equal(leData.missions, testRound.missions);
+    t.equal(leData.currentMission, testRound.getCurrentMission());
+    t.equal(leData.currentMission.playersOnMission.length, mockSelectedPlayers.length);
     t.equal(leData.players.length, testRound.getJsonPlayers().length);
   });
   t.end();

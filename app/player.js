@@ -22,6 +22,7 @@ Player.prototype.getJson = function () {
 		isConnected: this.isConnected,
 		isSpy: this.isSpy,
 		isCaptain: this.isCaptain,
+		isOnMission: this.isOnMission,
 		hasBeenCaptain: this.hasBeenCaptain,
 	};
 };
