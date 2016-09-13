@@ -10,7 +10,9 @@ var getNumberOfPlayersOnMission = require('./getNumberOfPlayersOnMission');
 function Round(roundNumber, players, onEnd) {
 	this.roundNumber = roundNumber;
 	this.players = players;
+	this.playersBeingWaitedOn;
 	this.onEnd = onEnd;
+	this.onDoneWaiting;
 
 	this.missionNumber = 0;
 	this.missions = [];
@@ -50,6 +52,14 @@ Round.prototype.startNextMission = function () {
 Round.prototype.sendToAll = function (event, data) {
 	this.players.forEach(function (player) {
 		player.send(event, data);
+	});
+};
+
+Round.prototype.onceOnAll = function (event, next) {
+	this.players.forEach(function (player) {
+		player.socket.once(event, function() {
+			next(player);
+		});
 	});
 };
 
@@ -201,11 +211,81 @@ Round.prototype.processResultsOfMission = function (wasMissionSuccessful) {
 	}
 
 	var gameOver = this.checkForWin();
-	if (!gameOver) {
-		this.assignNewCaptain();
-		this.startNextMission();
-	}
+
+	// wait for everyone to be done viewing the results that
+	// we are about to send
+	var self = this;
+	this.waitForAll(function() {
+		// ran once everyone is done
+		if (!gameOver) {
+			self.assignNewCaptain();
+			self.startNextMission();
+		} else {
+			// game over!
+			self.onEnd();
+		}
+	});
+
+	// send the results
+	this.sendToAll('missionResults', {
+		missions: this.missions,
+		currentMission: this.getCurrentMission(),
+		missionNumber: this.missionNumber,
+		players: this.getJsonPlayers()
+	});
+
+	// ran when the passed player is done viewing results
+	this.onceOnAll('doneViewingResults', function(player) {
+		self.stopWaitingOn(player);
+	});
 }
+
+Round.prototype.waitForAll = function (onDoneWaiting) {
+	//make a copy of the players list
+	this.playersBeingWaitedOn = this.players.slice();
+
+	//this will be ran by stopWaitingOn once the waiting list is empty
+	this.onDoneWaiting = onDoneWaiting;
+}
+
+// waitForAll must be ran once to set this function up
+// this function then must be ran for every player
+Round.prototype.stopWaitingOn = function (player) {
+	// see if this player is in the waiting list
+	var stillWaitingOnThisPlayer = false;
+	var indexOfPlayer;
+	for (var i = 0; i < this.playersBeingWaitedOn.length; i++) {
+		var playerIdToCheck = this.playersBeingWaitedOn[i].id;
+		if (player.id === playerIdToCheck) {
+			stillWaitingOnThisPlayer = true;
+			indexOfPlayer = i;
+			break;
+		}
+	}
+
+	if (stillWaitingOnThisPlayer) {
+		//remove the player from the array
+		this.playersBeingWaitedOn.splice(indexOfPlayer, 1);
+	}
+
+	//if we aren't waiting on any more players, continue with whatever
+	if (this.playersBeingWaitedOn.length === 0) {
+		this.onDoneWaiting();
+		return;
+	}
+
+	// send the updated waiting list to all
+	this.sendToAll('updateWaitingList', {
+		waitingList: this.getJsonWaitingPlayers()
+	});
+}
+
+Round.prototype.updateWaitingList = function () {
+	this.sendToAll('updateWaitingList', {
+		notFinished: this.getListOfNotFinishedPlayers(),
+		disconnected: this.disconnectedPlayers
+	});
+};
 
 Round.prototype.checkForWin = function() {
 	var spyWins = 0;
@@ -240,6 +320,14 @@ Round.prototype.loyalistWin = function () {
 Round.prototype.getJsonPlayers = function () {
 	var players = [];
 	this.players.forEach(function (player) {
+		players.push(player.getJson());
+	});
+	return players;
+}
+
+Round.prototype.getJsonWaitingPlayers = function () {
+	var players = [];
+	this.playersBeingWaitedOn.forEach(function (player) {
 		players.push(player.getJson());
 	});
 	return players;

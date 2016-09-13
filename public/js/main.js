@@ -4,6 +4,11 @@
 
 function Connection() {
 	this.socket = io();
+
+	var self = this;
+	this.socket.on('updateWaitingList', function(data) {
+		self.waitingList = data.waitingList;
+	});
 }
 
 Connection.prototype.newGame = function(name) {
@@ -35,6 +40,20 @@ Connection.prototype.missionVote = function(vote) {
 	this.send('missionVote', {
 		vote
 	});
+}
+
+Connection.prototype.sendSelectedPlayers = function(selectedPlayers) {
+	this.send('captainsSelectedPlayers', {
+		selectedPlayers
+	});
+}
+
+Connection.prototype.doneViewingResults = function() {
+	this.send('doneViewingResults', {});
+}
+
+Connection.prototype.getWaitingList = function() {
+	return this.waitingList;
 }
 
 
@@ -102,6 +121,10 @@ var MainMenu = React.createClass({
 
 		server.on('startMissionPhase', function(data) {
 			self.props.changePage(MissionPhase, data);
+		});
+
+		server.on('missionResults', function(data) {
+			self.props.changePage(Results, data);
 		});
 
     return (
@@ -317,6 +340,65 @@ var MissionPhase = React.createClass({
   }
 });
 
+var Results = React.createClass({
+	doneViewingResults: function() {
+		server.doneViewingResults();
+	},
+  render: function() {
+		var me = this.props.pageData.you;
+		var data = this.props.pageData.data;
+		var currentMission = data.currentMission;
+
+		var topMessage = 'Mission ' + currentMission.number ;
+		var bodyMessage = '';
+		if (currentMission.status === 'loyalist') {
+			topMessage += ' passed';
+		} else if (currentMission.status === 'spy') {
+			topMessage += ' failed';
+		} else {
+			console.log('Results error A: mission status bad type: ' + currentMission.status);
+		}
+
+		// figure out how many missions each team has to pass/fail before they win
+		var passedMissionsToLoyalistWin = 3;
+		var failedMissionsToSpyWin = 3;
+		for (var i = 0; i < data.missions.length; i++) {
+			var thisMission = data.missions[i];
+			if (thisMission.status === 'loyalist') {
+				passedMissionsToLoyalistWin--;
+			} else if (thisMission.status === 'spy') {
+				failedMissionsToSpyWin--;
+			}
+		}
+
+		if (passedMissionsToLoyalistWin === 0) {
+			// loyalists won
+			topMessage = 'Loyalists win!';
+			bodyMessage += 'Spies needed ' + failedMissionsToSpyWin + ' more failing missions to win.\n';
+		} else if (failedMissionsToSpyWin === 0) {
+			// spies won
+			topMessage = 'Spies win!';
+			bodyMessage += 'Loyalists needed ' + passedMissionsToLoyalistWin + ' more passing missions to win.\n';
+		} else {
+			bodyMessage += 'Loyalists need ' + passedMissionsToLoyalistWin + ' more passing missions to win.\n';
+			bodyMessage += 'Spies need ' + failedMissionsToSpyWin + ' more failing missions to win.\n';
+		}
+
+    return (
+      <div className="selection-phase">
+				<RoundInfoBar missions={data.missions} players={data.players}/>
+				<p className="so-h2">{topMessage}</p>
+				<p className="so-h3">{bodyMessage}</p>
+				<SOButton
+					label="Next"
+					onClick={this.doneViewingResults.bind(this)}
+				/>
+      </div>
+    );
+  }
+});
+
+
 var CaptainSelection = React.createClass({
 	getInitialState: function() {
 		return {
@@ -344,9 +426,7 @@ var CaptainSelection = React.createClass({
 		}
 	},
 	sendSelectedPlayers: function() {
-		server.send('captainsSelectedPlayers', {
-			selectedPlayers: this.selectedPlayers
-		});
+		server.sendSelectedPlayers(this.selectedPlayers);
 	},
   render: function() {
 		var data = this.props.data;
@@ -401,11 +481,9 @@ var OnMissionScreen = React.createClass({
 					with:
 				</p>
 				<PlayerList players={currentMission.playersOnMission} />
-				<ul>
-				  <li>All players must pass this mission for it to succeed.</li>
-				  <li>This mission will fail even if just one player fails it.</li>
-				  <li>The other players will not know how you voted.</li>
-				</ul>
+			  <p>All players must pass this mission for it to succeed.</p>
+			  <p>This mission will fail even if just one player fails it.</p>
+			  <p>The other players will not know how you voted.</p>
 				<div className="btn-toolbar">
 					<SOButton label="Fail" onClick={this.voteNay.bind(this)} />
 					<SOButton label="Pass" onClick={this.voteYay.bind(this)} />
