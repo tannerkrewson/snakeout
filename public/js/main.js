@@ -214,13 +214,82 @@ var SelectionPhase = React.createClass({
 		if (me.isCaptain) {
 			CaptainComponent = CaptainSelection;
 		} else {
-			CaptainComponent = WaitingForCaptain;
+			CaptainComponent = Waiting;
+			data.message = "Waiting for the captain to make a selection...";
 		}
 
     return (
       <div className="selection-phase">
 				<RoundInfoBar missions={data.missions} players={data.players}/>
 				<CaptainComponent data={data}/>
+      </div>
+    );
+  }
+});
+
+var VotingPhase = React.createClass({
+	voteYay: function() {
+		server.vote(true);
+	},
+	voteNay: function() {
+		server.vote(false);
+	},
+  render: function() {
+		var me = this.props.pageData.you;
+		var data = this.props.pageData.data;
+		var currentMission = data.currentMission;
+
+		// data.players is all of the players in the game
+		// currentMission.playersOnMission is only the players on the mission
+
+		var captain = function() {
+			for (var i = 0; i < data.players.length; i++) {
+				if (data.players[i].isCaptain) {
+					return data.players[i];
+				}
+			}
+		}();
+
+    return (
+			<div className="voting-phase">
+				<RoundInfoBar missions={data.missions} players={data.players}/>
+				<p className="so-h3">
+					<span>{captain.name} </span>
+					has selected:
+				</p>
+				<PlayerList players={currentMission.potentialPlayersOnMission} />
+				<p className="so-h3">
+					to go on Mission
+					<span>{currentMission.number}.</span>
+				</p>
+				<div className="btn-toolbar">
+					<SOButton label="Reject" onClick={this.voteNay.bind(this)} />
+					<SOButton label="Approve" onClick={this.voteYay.bind(this)} />
+				</div>
+      </div>
+    );
+  }
+});
+
+var MissionPhase = React.createClass({
+  render: function() {
+		var me = this.props.pageData.you;
+		var data = this.props.pageData.data;
+
+		var ComponentToShow;
+		var ComponentToShowProps;
+		if (me.isOnMission) {
+			ComponentToShow = CaptainSelection;
+			ComponentToShowProps = data;
+		} else {
+			ComponentToShow = Waiting;
+			ComponentToShowProps.message = "Waiting for the mission to finish...";
+		}
+
+    return (
+      <div className="selection-phase">
+				<RoundInfoBar missions={data.missions} players={data.players}/>
+				<ComponentToShow data={ComponentToShowProps}/>
       </div>
     );
   }
@@ -287,11 +356,17 @@ var CaptainSelection = React.createClass({
   }
 });
 
-var WaitingForCaptain = React.createClass({
+var Waiting = React.createClass({
   render: function() {
+		var message;
+		if (this.props.data.message) {
+			message = this.props.data.message;
+		} else {
+			message = this.props.message;
+		}
     return (
-      <div className="waiting-for-captain">
-				<p>Waiting for the captain to make a selection...</p>
+      <div className="waiting">
+				<p>{message}</p>
       </div>
     );
   }
@@ -360,50 +435,6 @@ var PlayerSelector = React.createClass({
     );
   }
 })
-
-var VotingPhase = React.createClass({
-	voteYay: function() {
-		server.vote(true);
-	},
-	voteNay: function() {
-		server.vote(false);
-	},
-  render: function() {
-		var me = this.props.pageData.you;
-		var data = this.props.pageData.data;
-		var currentMission = data.currentMission;
-
-		// data.players is all of the players in the game
-		// currentMission.playersOnMission is only the players on the mission
-
-		var captain = function() {
-			for (var i = 0; i < data.players.length; i++) {
-				if (data.players[i].isCaptain) {
-					return data.players[i];
-				}
-			}
-		}();
-
-    return (
-			<div className="voting-phase">
-				<RoundInfoBar missions={data.missions} players={data.players}/>
-				<p className="so-h3">
-					<span>{captain.name} </span>
-					has selected:
-				</p>
-				<PlayerList players={currentMission.potentialPlayersOnMission} />
-				<p className="so-h3">
-					to go on Mission
-					<span>{currentMission.number}.</span>
-				</p>
-				<div className="btn-toolbar">
-					<SOButton label="Reject" onClick={this.voteNay.bind(this)} />
-					<SOButton label="Approve" onClick={this.voteYay.bind(this)} />
-				</div>
-      </div>
-    );
-  }
-});
 
 var PlayerList = React.createClass({
   render: function() {
