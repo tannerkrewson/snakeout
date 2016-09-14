@@ -223,6 +223,24 @@ var Lobby = React.createClass({
 		var startGame = function() {
 			server.startGame(gameCode);
 		}
+
+		// display how many more players are needed to start the game
+		var playersNeededMessage = '';
+		var numPlayersInLobby = this.props.players.length;
+		var notReady = false;
+		if (numPlayersInLobby < 5) {
+			var numPlayersNeeded = 5 - numPlayersInLobby;
+			var s = (numPlayersNeeded === 1 ? '' : 's');
+			playersNeededMessage = numPlayersNeeded + ' more player' + s + ' needed';
+			notReady = true;
+		} else if (numPlayersInLobby > 10) {
+			var numPlayersNeedToLeave = numPlayersInLobby - 10;
+			var s1 = numPlayersNeedToLeave === 1 ? '' : 's';
+			var s2 = s1 === 's' ? '' : 's';
+			playersNeededMessage = (numPlayersInLobby - 10) + ' player' + s1 + ' need' + s2 + ' to leave';
+			notReady = true;
+		}
+
     return (
       <div className="lobby">
         <p>Game Code:
@@ -230,12 +248,12 @@ var Lobby = React.createClass({
 				</p>
 				<p>Players:</p>
 				<PlayerList players={this.props.players} />
-				<br/>
+				<p>{playersNeededMessage}</p>
 				<div className="btn-toolbar">
 					<SOButton label="Leave Game" onClick={function() {
 						location.reload();
 					}} />
-					<SOButton label="Start Game" onClick={startGame} />
+					<SOButton label="Start Game" onClick={startGame} disabled={notReady} />
 				</div>
 				<br/>
       </div>
