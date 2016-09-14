@@ -83,6 +83,7 @@ var Spyout = React.createClass({
 			<div className="main-content text-xs-center" id="spyout">
       	<p className="so-h1">SPYOUT</p>
         <hr/>
+				<br/>
         <this.state.page changePage={this.changePage} pageData={this.state.pageData}/>
 				<Bottom />
 			</div>
@@ -131,6 +132,7 @@ var MainMenu = React.createClass({
       <div className="main-menu noformrefresh">
         <SOButton label="Join Game" onClick={goToJoinGame.bind(this)}/>
         <SOButton label="New Game"  onClick={goToNewGame.bind(this)}/>
+				<br/><br/>
       </div>
     );
   }
@@ -166,6 +168,7 @@ var JoinGame = React.createClass({
         <br/><br/>
         <SOButton label="Back" onClick={this.goToMainMenu}/>
         <SOButton isSubmit={true} label="Join" />
+				<br/>
       </form>
     );
   }
@@ -195,6 +198,7 @@ var NewGame = React.createClass({
 				<br/><br/>
         <SOButton label="Back" onClick={goToMainMenu.bind(this)}/>
         <SOButton label="Start" isSubmit={true}/>
+				<br/>
 			</form>
     );
   }
@@ -220,6 +224,7 @@ var Lobby = React.createClass({
 					}} />
 					<SOButton label="Start Game" onClick={startGame} />
 				</div>
+				<br/>
       </div>
     );
   }
@@ -227,12 +232,22 @@ var Lobby = React.createClass({
 
 var RoundInfoBar = React.createClass({
   render: function() {
+		/*
+			<p>Players:</p>
+			<PlayerList players={this.props.players} />
+		*/
+
+		var ourRole = this.props.me.isSpy ? 'spy' : 'loyalist';
+
     return (
       <div className="round-info-bar">
+				<br/>
+				<hr/>
 				<p>Missions:</p>
 				<MissionBar missions={this.props.missions} />
-				<p>Players:</p>
-				<PlayerList players={this.props.players} />
+				<br/>
+				<RoleViewer role={ourRole} players={this.props.players} me={this.props.me}/>
+				<br/>
       </div>
     );
   }
@@ -243,18 +258,27 @@ var SelectionPhase = React.createClass({
 		var me = this.props.pageData.you;
 		var data = this.props.pageData.data;
 
+		// find out who the captain is
+		var captain;
+		for (var i = 0; i < data.players.length; i++) {
+			var player = data.players[i];
+			if (player.isCaptain) {
+				captain = player;
+			}
+		}
+
 		var CaptainComponent;
 		if (me.isCaptain) {
 			CaptainComponent = CaptainSelection;
 		} else {
 			CaptainComponent = Waiting;
-			data.message = "Waiting for the captain to make a selection...";
+			data.message = 'Waiting for the captain, ' + captain.name + ', to make a selection...';
 		}
 
     return (
       <div className="selection-phase">
-				<RoundInfoBar missions={data.missions} players={data.players}/>
 				<CaptainComponent data={data}/>
+				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
       </div>
     );
   }
@@ -286,7 +310,6 @@ var VotingPhase = React.createClass({
 
     return (
 			<div className="voting-phase">
-				<RoundInfoBar missions={data.missions} players={data.players}/>
 				<p className="so-h3">
 					<span>{captain.name} </span>
 					has selected:
@@ -294,12 +317,13 @@ var VotingPhase = React.createClass({
 				<PlayerList players={currentMission.potentialPlayersOnMission} />
 				<p className="so-h3">
 					to go on Mission
-					<span>{currentMission.number}.</span>
+					<span> {currentMission.number}.</span>
 				</p>
 				<div className="btn-toolbar">
 					<SOButton label="Reject" onClick={this.voteNay.bind(this)} />
 					<SOButton label="Approve" onClick={this.voteYay.bind(this)} />
 				</div>
+				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
       </div>
     );
   }
@@ -333,8 +357,8 @@ var MissionPhase = React.createClass({
 
     return (
       <div className="selection-phase">
-				<RoundInfoBar missions={data.missions} players={data.players}/>
 				<ComponentToShow data={ComponentToShowProps}/>
+				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
       </div>
     );
   }
@@ -386,13 +410,13 @@ var Results = React.createClass({
 
     return (
       <div className="selection-phase">
-				<RoundInfoBar missions={data.missions} players={data.players}/>
 				<p className="so-h2">{topMessage}</p>
 				<p className="so-h3">{bodyMessage}</p>
 				<SOButton
 					label="Next"
 					onClick={this.doneViewingResults.bind(this)}
 				/>
+				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
       </div>
     );
   }
@@ -591,6 +615,54 @@ var PlayerList = React.createClass({
   }
 });
 
+var RoleViewer = React.createClass({
+	showPopup: function() {
+		$('#role-viewer-popup').popover('show');
+	},
+	hidePopup: function() {
+		$('#role-viewer-popup').popover('hide');
+	},
+	render: function() {
+		var roleMessage;
+		if (this.props.role === 'loyalist') {
+			roleMessage = 'You are a loyalist!';
+		} else if (this.props.role === 'spy') {
+			roleMessage = 'You are a spy!';
+			roleMessage += '\nOther spies:';
+			for (var i = 0; i < this.props.players.length; i++) {
+				var thisPlayer = this.props.players[i];
+				// if the player is a spy and it's not us
+				if (thisPlayer.isSpy && thisPlayer.id !== this.props.me.id) {
+					roleMessage += '\n' + thisPlayer.name;
+				}
+			}
+		}
+		return (
+			<div className="role-viewer">
+				<div
+					id="role-viewer-popup"
+					data-container="body"
+					data-toggle="popover"
+					data-placement="top"
+					data-content={roleMessage}
+				>
+				</div>
+				<button
+					type="button"
+					className="btn btn-secondary sobutton"
+					onMouseDown={this.showPopup.bind(this)}
+					onMouseUp={this.hidePopup.bind(this)}
+					onTouchStart={this.showPopup.bind(this)}
+					onTouchEnd={this.hidePopup.bind(this)}
+					onTouchCancel={this.hidePopup.bind(this)}
+				>
+				Tap and hold to view your role
+				</button>
+			</div>
+    );
+	}
+});
+
 var PlayerBox = React.createClass({
   render: function() {
     return (
@@ -627,9 +699,15 @@ var MissionBar = React.createClass({
   render: function() {
 		var boxes = [];
 		this.props.missions.forEach(function(mission) {
+			var missionStatus;
+			if (mission.status) {
+				missionStatus = mission.status;
+			} else {
+				missionStatus = mission.playersNeeded + ' players';
+			}
 			boxes.push(<MissionBox
 				number={mission.number}
-				status={mission.status}
+				status={missionStatus}
 				inProgress={mission.inProgress}
 			/>);
 		});
@@ -655,8 +733,8 @@ var MissionBox = React.createClass({
 		}
     return (
 			<td className={"mission-box white-border " + inProgress}>
-				<p>{this.props.number}</p>
-				<p>{this.props.status}</p>
+				<div>{'#' + this.props.number}</div>
+				<div>{this.props.status}</div>
 			</td>
     );
   }

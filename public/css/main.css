@@ -39,7 +39,7 @@ hr {
 
 #root {
   position: relative;
-  width: 80%;
+  width: 90%;
   max-width: 960px;
   margin: 0 auto;
   padding: 0;
@@ -49,7 +49,23 @@ hr {
   background-color: black;
   color: white;
   font-weight: 100;
-  margin: 1px;
+  margin: 2px;
+}
+
+.sobutton:focus {
+  background-color: black;
+  color: white;
+  outline: none;
+}
+
+.sobutton:hover {
+  background-color: black;
+  color: white;
+}
+
+.sobutton:active {
+  background-color: black;
+  color: white;
 }
 
 .player-box {
@@ -72,4 +88,13 @@ hr {
 
 .in-progress {
   background-color: DimGrey;
+}
+
+.popover-content {
+  color: black;
+}
+
+.mission-box {
+  padding: 4px !important;
+  font-size: 14px;
 }
