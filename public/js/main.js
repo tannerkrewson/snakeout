@@ -359,7 +359,7 @@ var MissionPhase = React.createClass({
 		//figure out if we are on this mission
 		var isOnMission = false;
 		for (var i = 0; i < currentMission.playersOnMission.length; i++) {
-			var thisPlayer = currentMission.playersOnMission[i]
+			var thisPlayer = currentMission.playersOnMission[i];
 			if (thisPlayer.id === me.id) {
 				isOnMission = true;
 				break;
@@ -371,6 +371,7 @@ var MissionPhase = React.createClass({
 		if (isOnMission) {
 			ComponentToShow = OnMissionScreen;
 			ComponentToShowProps = data;
+			ComponentToShowProps.changePage = this.props.changePage;
 		} else {
 			ComponentToShow = Waiting;
 			ComponentToShowProps.message = "Waiting for the mission to finish...";
@@ -378,7 +379,7 @@ var MissionPhase = React.createClass({
 
     return (
       <div className="selection-phase">
-				<ComponentToShow data={ComponentToShowProps}/>
+				<ComponentToShow {...ComponentToShowProps}/>
 				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
       </div>
     );
@@ -509,12 +510,18 @@ var CaptainSelection = React.createClass({
 var OnMissionScreen = React.createClass({
 	voteYay: function() {
 		server.missionVote(true);
+		this.props.changePage(Waiting, {
+			message: 'Waiting for the mission to end...'
+		});
 	},
 	voteNay: function() {
 		server.missionVote(false);
+		this.props.changePage(Waiting, {
+			message: 'Waiting for the mission to end...'
+		});
 	},
   render: function() {
-		var data = this.props.data;
+		var data = this.props;
 		var me = data.you;
 		var currentMission = data.currentMission;
 

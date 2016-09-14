@@ -160,9 +160,13 @@ Round.prototype.startVotingPhase = function (selectedPlayers) {
 		currentMission: this.getCurrentMission()
 	});
 
+	this.waitForAll(this.players);
+
+	var self = this;
 	this.players.forEach(function(player) {
 		player.socket.once('vote', function(data) {
 			thisMission.addVote(player.id, data.vote);
+			self.stopWaitingOn(player);
 		});
 	});
 }
@@ -194,6 +198,8 @@ Round.prototype.startMissionPhase = function() {
 		players: this.getJsonPlayers()
 	});
 
+	this.waitForAll(thisMission.playersOnMission);
+
 	this.players.forEach(function(player) {
 		player.socket.once('missionVote', function(data) {
 			thisMission.addMissionVote(player.id, data.vote);
@@ -215,7 +221,7 @@ Round.prototype.processResultsOfMission = function (wasMissionSuccessful) {
 	// wait for everyone to be done viewing the results that
 	// we are about to send
 	var self = this;
-	this.waitForAll(function() {
+	this.waitForAll(this.players, function() {
 		// ran once everyone is done
 		if (!gameOver) {
 			self.assignNewCaptain();
@@ -240,9 +246,8 @@ Round.prototype.processResultsOfMission = function (wasMissionSuccessful) {
 	});
 }
 
-Round.prototype.waitForAll = function (onDoneWaiting) {
-	//make a copy of the players list
-	this.playersBeingWaitedOn = this.players.slice();
+Round.prototype.waitForAll = function (playersToWaitOn, onDoneWaiting) {
+	this.playersBeingWaitedOn = playersToWaitOn.slice();
 
 	//this will be ran by stopWaitingOn once the waiting list is empty
 	this.onDoneWaiting = onDoneWaiting;
@@ -270,7 +275,9 @@ Round.prototype.stopWaitingOn = function (player) {
 
 	//if we aren't waiting on any more players, continue with whatever
 	if (this.playersBeingWaitedOn.length === 0) {
-		this.onDoneWaiting();
+		if (this.onDoneWaiting) {
+			this.onDoneWaiting();
+		}
 		return;
 	}
 
@@ -328,7 +335,11 @@ Round.prototype.getJsonPlayers = function () {
 Round.prototype.getJsonWaitingPlayers = function () {
 	var players = [];
 	this.playersBeingWaitedOn.forEach(function (player) {
-		players.push(player.getJson());
+		if (player.getJson) {
+			players.push(player.getJson());
+		} else {
+			players.push(player);
+		}
 	});
 	return players;
 }
