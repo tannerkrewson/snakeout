@@ -5,9 +5,14 @@
 function Connection() {
 	this.socket = io();
 
+	this.functionsToRunOnUpdateWaitingList = [];
+
 	var self = this;
 	this.socket.on('updateWaitingList', function(data) {
-		self.waitingList = data.waitingList;
+		self.waitingList = data.data.waitingList;
+		self.functionsToRunOnUpdateWaitingList.forEach(function(funcToRun) {
+			funcToRun(self.waitingList);
+		});
 	});
 }
 
@@ -56,6 +61,14 @@ Connection.prototype.getWaitingList = function() {
 	return this.waitingList;
 }
 
+Connection.prototype.onUpdateWaitingList = function(funcToRun) {
+	this.functionsToRunOnUpdateWaitingList.push(funcToRun);
+}
+
+Connection.prototype.offUpdateWaitingList = function() {
+	this.functionsToRunOnUpdateWaitingList = [];
+}
+
 
 Connection.prototype.send = function(event, data) {
 	this.socket.emit(event, data);
@@ -75,8 +88,8 @@ var Spyout = React.createClass({
   getInitialState: function() {
     return {page: MainMenu};
   },
-  changePage: function(page, pageData) {
-    this.setState({page, pageData});
+  changePage: function(page, pageProps) {
+    this.setState({page, pageProps});
   },
   render: function() {
     return (
@@ -84,7 +97,7 @@ var Spyout = React.createClass({
       	<p className="so-h1">SPYOUT</p>
         <hr/>
 				<br/>
-        <this.state.page changePage={this.changePage} pageData={this.state.pageData}/>
+        <this.state.page changePage={this.changePage} {...this.state.pageProps}/>
 				<Bottom />
 			</div>
     );
@@ -206,17 +219,17 @@ var NewGame = React.createClass({
 
 var Lobby = React.createClass({
   render: function() {
-		var gameCode = this.props.pageData.code;
+		var gameCode = this.props.code;
 		var startGame = function() {
 			server.startGame(gameCode);
 		}
     return (
       <div className="lobby">
         <p>Game Code:
-					<span className="game-code">{this.props.pageData.code}</span>
+					<span className="game-code">{this.props.code}</span>
 				</p>
 				<p>Players:</p>
-				<PlayerList players={this.props.pageData.players} />
+				<PlayerList players={this.props.players} />
 				<br/>
 				<div className="btn-toolbar">
 					<SOButton label="Leave Game" onClick={function() {
@@ -255,8 +268,8 @@ var RoundInfoBar = React.createClass({
 
 var SelectionPhase = React.createClass({
   render: function() {
-		var me = this.props.pageData.you;
-		var data = this.props.pageData.data;
+		var me = this.props.you;
+		var data = this.props.data;
 
 		// find out who the captain is
 		var captain;
@@ -268,16 +281,18 @@ var SelectionPhase = React.createClass({
 		}
 
 		var CaptainComponent;
+		var props = {};
 		if (me.isCaptain) {
 			CaptainComponent = CaptainSelection;
+			props.data = data;
 		} else {
 			CaptainComponent = Waiting;
-			data.message = 'Waiting for the captain, ' + captain.name + ', to make a selection...';
+			props.message = 'Waiting for the captain, ' + captain.name + ', to make a selection...';
 		}
 
     return (
       <div className="selection-phase">
-				<CaptainComponent data={data}/>
+				<CaptainComponent {...props}/>
 				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
       </div>
     );
@@ -287,13 +302,19 @@ var SelectionPhase = React.createClass({
 var VotingPhase = React.createClass({
 	voteYay: function() {
 		server.vote(true);
+		this.props.changePage(Waiting, {
+			message: 'Waiting for everyone to vote...'
+		});
 	},
 	voteNay: function() {
 		server.vote(false);
+		this.props.changePage(Waiting, {
+			message: 'Waiting for everyone to vote...'
+		});
 	},
   render: function() {
-		var me = this.props.pageData.you;
-		var data = this.props.pageData.data;
+		var me = this.props.you;
+		var data = this.props.data;
 		var currentMission = data.currentMission;
 
 		// data.players is all of the players in the game.
@@ -331,8 +352,8 @@ var VotingPhase = React.createClass({
 
 var MissionPhase = React.createClass({
   render: function() {
-		var me = this.props.pageData.you;
-		var data = this.props.pageData.data;
+		var me = this.props.you;
+		var data = this.props.data;
 		var currentMission = data.currentMission;
 
 		//figure out if we are on this mission
@@ -367,10 +388,13 @@ var MissionPhase = React.createClass({
 var Results = React.createClass({
 	doneViewingResults: function() {
 		server.doneViewingResults();
+		this.props.changePage(Waiting, {
+			message: 'Waiting for everyone to finish viewing the results...'
+		});
 	},
   render: function() {
-		var me = this.props.pageData.you;
-		var data = this.props.pageData.data;
+		var me = this.props.you;
+		var data = this.props.data;
 		var currentMission = data.currentMission;
 
 		var topMessage = 'Mission ' + currentMission.number ;
@@ -518,16 +542,26 @@ var OnMissionScreen = React.createClass({
 });
 
 var Waiting = React.createClass({
+	getInitialState: function() {
+		var self = this;
+		server.onUpdateWaitingList(this.onUpdateWaitingList.bind(this));
+		return {
+			waitingList: []
+		};
+	},
+	onUpdateWaitingList: function(waitingList) {
+		this.setState({
+			waitingList
+		});
+	},
+	componentWillUnmount: function() {
+		server.offUpdateWaitingList();
+	},
   render: function() {
-		var message;
-		if (this.props.data.message) {
-			message = this.props.data.message;
-		} else {
-			message = this.props.message;
-		}
     return (
       <div className="waiting">
-				<p>{message}</p>
+				<p>{this.props.message}</p>
+				<PlayerList players={this.state.waitingList} />
       </div>
     );
   }
