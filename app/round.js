@@ -31,10 +31,10 @@ function Round(roundNumber, players, onEnd) {
 Round.prototype.startRound = function() {
 	this.assignRoles();
 	this.assignNewCaptain();
-	this.startNextMission();
+	this.startNextMission(true);
 };
 
-Round.prototype.startNextMission = function () {
+Round.prototype.startNextMission = function (isNewGame) {
 	this.missionNumber++;
 
 	//remove in progress from last mission, if there was a last mission
@@ -48,7 +48,7 @@ Round.prototype.startNextMission = function () {
 	var currentMission = this.getCurrentMission();
 	currentMission.inProgress = true;
 
-	this.startSelectionPhase();
+	this.startSelectionPhase(isNewGame);
 }
 
 Round.prototype.sendToAll = function (event, data) {
@@ -136,12 +136,13 @@ Round.prototype.assignNewCaptain = function () {
 }
 
 // the first phase of each mission
-Round.prototype.startSelectionPhase = function () {
+Round.prototype.startSelectionPhase = function (isNewGame) {
 	this.sendToAll('startSelectionPhase', {
 		missions: this.missions,
 		currentMission: this.getCurrentMission(),
 		missionNumber: this.missionNumber,
-		players: this.getJsonPlayers()
+		players: this.getJsonPlayers(),
+		isNewGame
 	});
 };
 

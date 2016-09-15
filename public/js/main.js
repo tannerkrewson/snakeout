@@ -131,7 +131,11 @@ var MainMenu = React.createClass({
 		});
 
 		server.on('startSelectionPhase', function(data) {
-			self.props.changePage(SelectionPhase, data);
+			if (data.data.isNewGame) {
+				self.props.changePage(StartPage, data);
+			} else {
+				self.props.changePage(SelectionPhase, data);
+			}
 		});
 
 		server.on('startVotingPhase', function(data) {
@@ -289,6 +293,33 @@ var RoundInfoBar = React.createClass({
   }
 });
 
+var StartPage = React.createClass({
+	goToSelectionPhase: function() {
+		this.props.changePage(SelectionPhase, this.props)
+	},
+  render: function() {
+		var me = this.props.you;
+		var data = this.props.data;
+
+		var ourRole = me.isSpy ? 'spy' : 'loyalist';
+
+    return (
+      <div className="round-info-bar">
+				<p className="so-h2">Welcome to SPYOUT!</p>
+				<RoleViewer role={ourRole} players={data.players} me={me}/>
+				<br/>
+				<p>Missions:</p>
+				<MissionBar missions={data.missions} />
+				<br/>
+				<p>Players:</p>
+				<PlayerList players={data.players} />
+				<br/>
+				<SOButton label="Begin" onClick={this.goToSelectionPhase} />
+      </div>
+    );
+  }
+});
+
 var SelectionPhase = React.createClass({
   render: function() {
 		var me = this.props.you;
@@ -424,9 +455,9 @@ var Results = React.createClass({
 		var topMessage = 'Mission ' + currentMission.number ;
 		var bodyMessage = '';
 		if (currentMission.status === 'loyalist') {
-			topMessage += ' passed';
+			topMessage += ' passed!';
 		} else if (currentMission.status === 'spy') {
-			topMessage += ' failed';
+			topMessage += ' failed.';
 		} else {
 			console.log('Results error A: mission status bad type: ' + currentMission.status);
 		}
