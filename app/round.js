@@ -10,9 +10,11 @@ var getNumberOfPlayersOnMission = require('./getNumberOfPlayersOnMission');
 function Round(roundNumber, players, onEnd) {
 	this.roundNumber = roundNumber;
 	this.players = players;
-	this.playersBeingWaitedOn;
 	this.onEnd = onEnd;
+
 	this.onDoneWaiting;
+	this.disconnectedPlayers = [];
+	this.playersBeingWaitedOn = [];
 
 	this.missionNumber = 0;
 	this.missions = [];
@@ -282,15 +284,13 @@ Round.prototype.stopWaitingOn = function (player) {
 	}
 
 	// send the updated waiting list to all
-	this.sendToAll('updateWaitingList', {
-		waitingList: this.getJsonWaitingPlayers()
-	});
+	this.updateWaitingList();
 }
 
 Round.prototype.updateWaitingList = function () {
 	this.sendToAll('updateWaitingList', {
-		notFinished: this.getListOfNotFinishedPlayers(),
-		disconnected: this.disconnectedPlayers
+		waitingList: this.getJsonWaitingPlayers(),
+		disconnectedList: this.disconnectedPlayers
 	});
 };
 
@@ -345,8 +345,50 @@ Round.prototype.getJsonWaitingPlayers = function () {
 }
 
 Round.prototype.findReplacementFor = function (player) {
+	this.disconnectedPlayers.push(player.getJson());
+	this.updateWaitingList();
+};
 
-}
+Round.prototype.getPlayersThatNeedToBeReplaced = function () {
+	return this.disconnectedPlayers;
+};
+Round.prototype.getPlayerIndexById = function (id) {
+	for (var i = 0; i < this.players.length; i++) {
+		if (this.players[i].id === id) {
+			return i;
+		}
+	}
+	return false;
+};
+
+Round.prototype.canBeReplaced = function (playerToReplaceId) {
+	for (var i = 0; i < this.disconnectedPlayers.length; i++) {
+		if (this.disconnectedPlayers[i].id === playerToReplaceId) {
+			return true;
+		}
+	}
+	return false;
+};
+
+Round.prototype.replacePlayer = function (playerToReplaceId, newPlayer) {
+	for (var i = 0; i < this.disconnectedPlayers.length; i++) {
+		if (this.disconnectedPlayers[i].id === playerToReplaceId) {
+			//give 'em the id of the old player
+			newPlayer.id = this.disconnectedPlayers[i].id;
+
+			//replace 'em
+			var playerToReplaceIndex = this.getPlayerIndexById(playerToReplaceId);
+			this.players[playerToReplaceIndex] = newPlayer;
+
+			//delete 'em from disconnectedPlayers
+			this.disconnectedPlayers.splice(i, 1);
+
+			//TODO: get the player back to where they should be on their screen
+
+			return this.players[playerToReplaceIndex];
+		}
+	}
+};
 
 Round.prototype.getCurrentMission = function () {
 	return this.missions[this.missionNumber - 1];

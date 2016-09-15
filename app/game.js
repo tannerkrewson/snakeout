@@ -69,17 +69,15 @@ Game.prototype.initPlayer = function (newPlayer) {
 Game.prototype.onPlayerDisconnect = function (playerThatLeft) {
 	playerThatLeft.isConnected = false;
 
-	if (this.inProgress) {
+	/*if (this.inProgress) {
 		this.currentRound.findReplacementFor(playerThatLeft);
 	} else {
 		this.removePlayer(playerThatLeft.id);
-	}
+	}*/
 
-	//if someone leaves while viewing results, we need to check again
-	//  or everyone will get stuck on the Thanks for playing screen
-	if (this.viewingResults) {
-		this.currentRound.end();
-	}
+	//TODO: temporary before player replacement is implemented
+	this.removePlayer(playerThatLeft.id);
+	this.currentRound.onEnd();
 
 	this.checkIfWeNeedANewAdmin(playerThatLeft);
 	this.checkIfTheGameHasNoPlayersLeft();
