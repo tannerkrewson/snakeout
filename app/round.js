@@ -305,23 +305,11 @@ Round.prototype.checkForWin = function() {
 			loyalistWins++;
 		}
 	}
-	if (spyWins === 3) {
-		this.spyWin();
-		return true;
-	} else if (loyalistWins == 3) {
-		this.loyalistWin();
+	if (spyWins === 3 || loyalistWins === 3) {
 		return true;
 	} else {
 		return false;
 	}
-}
-
-Round.prototype.spyWin = function () {
-	console.log('Spies win!');
-}
-
-Round.prototype.loyalistWin = function () {
-	console.log('Loyalists win!');
 }
 
 Round.prototype.getJsonPlayers = function () {

@@ -14,6 +14,11 @@ function Connection() {
 			funcToRun(self.waitingList);
 		});
 	});
+
+	this.socket.on('disconnect', function () {
+		//refresh the page
+		location.reload();
+	});
 }
 
 Connection.prototype.newGame = function(name) {
