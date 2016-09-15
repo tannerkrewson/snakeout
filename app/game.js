@@ -77,7 +77,9 @@ Game.prototype.onPlayerDisconnect = function (playerThatLeft) {
 
 	//TODO: temporary before player replacement is implemented
 	this.removePlayer(playerThatLeft.id);
-	this.currentRound.onEnd();
+	if (this.currentRound) {
+		this.currentRound.onEnd();
+	}
 
 	this.checkIfWeNeedANewAdmin(playerThatLeft);
 	this.checkIfTheGameHasNoPlayersLeft();

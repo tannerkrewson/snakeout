@@ -17,7 +17,9 @@ module.exports = function (app) {
 
 		socket.on('joinGame', function (data) {
 			var game = so.findGame(data.code);
-			if (game) {
+
+			// if the game exists and is not in progress
+			if (game && !game.inProgress) {
 				game.addPlayer(data.name, socket);
 				socket.emit('joinGame', {
 					success: true,
