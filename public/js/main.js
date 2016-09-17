@@ -620,10 +620,13 @@ var OnMissionScreen = React.createClass({
 
 var Waiting = React.createClass({
   render: function() {
+		var me = this.props.you;
+		var data = this.props.round;
     return (
       <div className="waiting">
 				<p>{this.props.message}</p>
 				<PlayerList players={this.props.round.waitingList} />
+				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
       </div>
     );
   }
