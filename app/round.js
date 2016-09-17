@@ -301,10 +301,11 @@ Round.prototype.assignNewCaptain = function () {
 Round.prototype.startRound = function() {
 	this.assignRoles();
 	this.assignNewCaptain();
-	this.startNextMission(true);
+	this.prepNextMission(true);
+	this.showStartPage();
 };
 
-Round.prototype.startNextMission = function () {
+Round.prototype.prepNextMission = function () {
 	this.missionNumber++;
 
 	//remove in progress from last mission, if there was a last mission
@@ -317,8 +318,24 @@ Round.prototype.startNextMission = function () {
 	//subtract one because this.missions indexes start at 0
 	var currentMission = this.getCurrentMission();
 	currentMission.inProgress = true;
+}
 
-	this.startSelectionPhase();
+Round.prototype.showStartPage = function () {
+	this.changePhase('start');
+
+	// what the parameters do:
+	// (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone)
+	// *all done is not used b/c it is handled in the mission object
+	var self = this;
+	this.waitFor(this.players, 'doneViewingStart', function(player, data) {
+		//ran everytime a player hits next
+		self.sendStateToAll();
+	}, function() {
+		//ran once everyone is ready to start
+		self.startSelectionPhase();
+	});
+
+	this.sendStateToAll();
 }
 
 // the first phase of each mission
@@ -445,7 +462,8 @@ Round.prototype.processResultsOfMission = function (wasMissionSuccessful) {
 		// ran once everyone is done
 		if (!gameOver) {
 			self.assignNewCaptain();
-			self.startNextMission();
+			self.prepNextMission();
+			self.startSelectionPhase();
 		} else {
 			// game over!
 			self.onEnd();

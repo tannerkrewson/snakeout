@@ -55,6 +55,10 @@ Connection.prototype.sendSelectedPlayers = function(selectedPlayers) {
 	});
 }
 
+Connection.prototype.doneViewingStart = function() {
+	this.send('doneViewingStart', {});
+}
+
 Connection.prototype.doneViewingResults = function() {
 	this.send('doneViewingResults', {});
 }
@@ -109,18 +113,31 @@ var MainMenu = React.createClass({
 			var round = data.round;
 			var me = data.you;
 
-			switch (data.round.phase) {
+			//determine if the server is waiting on us
+			var isWaiting = (function() {
+				for (var i = 0; i < round.waitingList.length; i++) {
+					if (me.id === round.waitingList[i].id) {
+						return true;
+					}
+				}
+				return false;
+			})();
+
+			switch (round.phase) {
 				case 'start':
-					/*TODO
-					if (data.round.isNewGame) {
+					if (isWaiting) {
 						self.props.changePage(StartPage, data);
-					} else {*/
+					} else {
+						data.message = 'Waiting to begin the game...';
+						self.props.changePage(Waiting, data);
+					}
 					break;
 				case 'selection':
 					if (me.isCaptain) {
 						self.props.changePage(SelectionPhase, data);
 					} else {
-						data.message = 'Waiting for the captain to make a selection...';
+						data.message = 'Waiting for the captain to make a selection for ';
+						data.message += 'mission ' + round.currentMission.number + '...';
 						self.props.changePage(Waiting, data);
 					}
 
@@ -137,11 +154,11 @@ var MainMenu = React.createClass({
 						}
 					}
 
-					if (alreadyVoted) {
+					if (!alreadyVoted) {
+						self.props.changePage(VotingPhase, data);
+					} else {
 						data.message = "Waiting for players to vote...";
 						self.props.changePage(Waiting, data);
-					} else {
-						self.props.changePage(VotingPhase, data);
 					}
 					break;
 				case 'voting_results':
@@ -180,16 +197,6 @@ var MainMenu = React.createClass({
 
 					break;
 				case 'mission_results':
-					//determine if the server is waiting on us
-					var isWaiting = false;
-					var waiting = round.waitingList;
-					for (var i = 0; i < waiting.length; i++) {
-						if (me.id === waiting[i].id) {
-							isWaiting = true;
-							break;
-						}
-					}
-
 					if (isWaiting) {
 						self.props.changePage(Results, data);
 					} else {
@@ -354,8 +361,8 @@ var RoundInfoBar = React.createClass({
 });
 
 var StartPage = React.createClass({
-	goToSelectionPhase: function() {
-		this.props.changePage(SelectionPhase, this.props)
+	doneViewingStart: function() {
+		server.doneViewingStart();
 	},
   render: function() {
 		var me = this.props.you;
@@ -374,7 +381,7 @@ var StartPage = React.createClass({
 				<p>Players:</p>
 				<PlayerList players={data.players} />
 				<br/>
-				<SOButton label="Begin" onClick={this.goToSelectionPhase} />
+				<SOButton label="Begin" onClick={this.doneViewingStart} />
       </div>
     );
   }

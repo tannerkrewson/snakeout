@@ -125,19 +125,16 @@ test('assignNewCaptain', function(t) {
   t.end();
 });
 
-test('startNextMission', function(t) {
+test('prepNextMission', function(t) {
   var missionNumberBefore = testRound.missionNumber;
-  testRound.startNextMission();
+  testRound.prepNextMission();
   t.equal(testRound.missionNumber, missionNumberBefore + 1);
   t.ok(testRound.missions[testRound.missionNumber - 1].inProgress);
   t.end();
 });
 
 test('startSelectionPhase', function (t) {
-  // This function should have been ran by the call to
-  // startNewMission in the test above.
-
-  //testRound.startSelectionPhase();
+  testRound.startSelectionPhase();
 
   t.equal(testRound.phase, 'selection');
 
