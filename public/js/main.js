@@ -168,7 +168,20 @@ var MainMenu = React.createClass({
 						}
 					}
 
+					//if we are on the mission, figure out if we've voted already
+					var hasntVotedYet;
+					var missionVotes = round.currentMission.missionVotes;
 					if (isOnMission) {
+						hasntVotedYet = true;
+						for (var i = 0; i < missionVotes.length; i++) {
+							if (missionVotes[i].playerId === me.id) {
+								hasntVotedYet = false;
+								break;
+							}
+						}
+					}
+
+					if (isOnMission && hasntVotedYet) {
 						self.props.changePage(MissionPhase, data);
 					} else {
 						data.message = 'Waiting for the mission to complete...';
