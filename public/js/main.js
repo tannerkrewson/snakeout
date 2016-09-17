@@ -63,6 +63,10 @@ Connection.prototype.doneViewingResults = function() {
 	this.send('doneViewingResults', {});
 }
 
+Connection.prototype.doneViewingVoteResults = function() {
+	this.send('doneViewingVoteResults', {});
+}
+
 
 Connection.prototype.send = function(event, data) {
 	this.socket.emit(event, data);
@@ -75,6 +79,18 @@ Connection.prototype.on = function(event, next) {
 Connection.prototype.once = function(event, next) {
 	this.socket.once(event, next);
 }
+
+
+function getPlayerById(playerList, id) {
+	for (var i = 0; i < playerList.length; i++) {
+		var player = playerList[i];
+		if (player.id === id) {
+			return player;
+		}
+	}
+	return false;
+}
+
 
 var server;
 
@@ -162,8 +178,13 @@ var MainMenu = React.createClass({
 					}
 					break;
 				case 'voting_results':
-					//TODO
-					//break;
+					if (isWaiting) {
+						self.props.changePage(VotingResults, data);
+					} else {
+						data.message = 'Waiting for everyone to finish viewing the results...';
+						self.props.changePage(Waiting, data);
+					}
+					break;
 				case 'mission':
 					//figure out if we are on this mission
 					var isOnMission = false;
@@ -446,6 +467,57 @@ var VotingPhase = React.createClass({
   }
 });
 
+var VotingResults = React.createClass({
+	doneViewingResults: function() {
+		server.doneViewingVoteResults();
+	},
+  render: function() {
+		var me = this.props.you;
+		var round = this.props.round;
+
+		var approveVotes = [];
+		var rejectVotes = [];
+		for (var i = 0; i < round.currentMission.votes.length; i++) {
+			var ballot = round.currentMission.votes[i];
+			var player = getPlayerById(round.players, ballot.playerId);
+			if (ballot.vote && player) {
+				approveVotes.push(player);
+			} else if (!ballot.vote && player){
+				rejectVotes.push(player);
+			} else {
+				console.log('Results error: invalid player');
+			}
+		}
+
+		var votePassed = (approveVotes.length > rejectVotes.length);
+		var topMessage = '';
+		var bodyMessage = '';
+		if (votePassed) {
+			topMessage += 'Vote passed!';
+			bodyMessage += 'The mission will now commence.'
+		} else {
+			topMessage += 'Vote failed.'
+			bodyMessage += 'A new captain will now select players.';
+		}
+
+    return (
+      <div className="selection-phase">
+				<p className="so-h2">{topMessage}</p>
+				<p className="so-h3">{bodyMessage}</p>
+				<p>Approve votes:</p>
+				<PlayerList players={approveVotes} />
+				<p>Reject votes:</p>
+				<PlayerList players={rejectVotes} />
+				<SOButton
+					label="Next"
+					onClick={this.doneViewingResults.bind(this)}
+				/>
+				<RoundInfoBar missions={round.missions} players={round.players} me={me}/>
+      </div>
+    );
+  }
+});
+
 var MissionPhase = React.createClass({
   render: function() {
 		var me = this.props.you;
@@ -493,6 +565,18 @@ var Results = React.createClass({
 			}
 		}
 
+		// count types of votes
+		var passVotes = 0;
+		var failVotes = 0;
+		for (var i = 0; i < currentMission.missionVotes.length; i++) {
+			var ballot = currentMission.missionVotes[i];
+			if (ballot.vote) {
+				passVotes++;
+			} else {
+				failVotes++;
+			}
+		}
+
 		if (passedMissionsToLoyalistWin === 0) {
 			// loyalists won
 			topMessage = 'Loyalists win!';
@@ -509,8 +593,6 @@ var Results = React.createClass({
 		// if the game is over, reveal who was a spy
 		var SpyList = <div />;
 		if (passedMissionsToLoyalistWin === 0 || failedMissionsToSpyWin === 0) {
-			bodyMessage += '\nThe spies this round were: ';
-
 			//get this round's spies
 			var spies = [];
 			data.players.forEach(function (player) {
@@ -519,12 +601,18 @@ var Results = React.createClass({
 				}
 			});
 
-			SpyList = <PlayerList players={spies} />
+			SpyList = (
+				<div>
+					<p className="so-h3">The spies this round were:</p>
+					<PlayerList players={spies} />
+				</div>
+			);
 		}
 
     return (
       <div className="selection-phase">
 				<p className="so-h2">{topMessage}</p>
+				<p className="so-h3">{passVotes + ' pass votes | ' + failVotes + ' fail votes'}</p>
 				<p className="so-h3">{bodyMessage}</p>
 				{SpyList}
 				<SOButton
