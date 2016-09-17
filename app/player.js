@@ -27,10 +27,10 @@ Player.prototype.getJson = function () {
 	};
 };
 
-Player.prototype.send = function (event, data) {
+Player.prototype.send = function (event, round) {
 	this.socket.emit(event, {
 		you: this.getJson(),
-		data
+		round
 	});
 };
 

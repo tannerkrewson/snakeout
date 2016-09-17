@@ -2,17 +2,14 @@
 // Spyout Client
 //
 
-function Connection() {
+function Connection(onStateUpdate) {
 	this.socket = io();
 
 	this.functionsToRunOnUpdateWaitingList = [];
 
 	var self = this;
-	this.socket.on('updateWaitingList', function(data) {
-		self.waitingList = data.data.waitingList;
-		self.functionsToRunOnUpdateWaitingList.forEach(function(funcToRun) {
-			funcToRun(self.waitingList);
-		});
+	this.socket.on('updateState', function(data) {
+		onStateUpdate(data);
 	});
 
 	this.socket.on('disconnect', function () {
@@ -62,18 +59,6 @@ Connection.prototype.doneViewingResults = function() {
 	this.send('doneViewingResults', {});
 }
 
-Connection.prototype.getWaitingList = function() {
-	return this.waitingList;
-}
-
-Connection.prototype.onUpdateWaitingList = function(funcToRun) {
-	this.functionsToRunOnUpdateWaitingList.push(funcToRun);
-}
-
-Connection.prototype.offUpdateWaitingList = function() {
-	this.functionsToRunOnUpdateWaitingList = [];
-}
-
 
 Connection.prototype.send = function(event, data) {
 	this.socket.emit(event, data);
@@ -87,7 +72,7 @@ Connection.prototype.once = function(event, next) {
 	this.socket.once(event, next);
 }
 
-var server = new Connection();
+var server;
 
 var Spyout = React.createClass({
   getInitialState: function() {
@@ -119,6 +104,31 @@ var MainMenu = React.createClass({
     };
 
 		var self = this;
+
+		server = new Connection(function (data) {
+			console.log(data);
+			switch (data.round.phase) {
+				case 'selection':
+					if (data.round.isNewGame) {
+						self.props.changePage(StartPage, data);
+					} else {
+						self.props.changePage(SelectionPhase, data);
+					}
+					break;
+				case 'voting':
+					self.props.changePage(VotingPhase, data);
+					break;
+				case 'voting_results':
+					//TODO
+					break;
+				case 'mission':
+					self.props.changePage(MissionPhase, data);
+					break;
+				case 'mission_results':
+					self.props.changePage(Results, data);
+					break;
+			}
+		});
 		server.on('joinGame', function(data) {
 			if (data.success) {
 				self.props.changePage(Lobby, data.game);
@@ -128,26 +138,6 @@ var MainMenu = React.createClass({
 			} else {
 				alert('Failed to join game!');
 			}
-		});
-
-		server.on('startSelectionPhase', function(data) {
-			if (data.data.isNewGame) {
-				self.props.changePage(StartPage, data);
-			} else {
-				self.props.changePage(SelectionPhase, data);
-			}
-		});
-
-		server.on('startVotingPhase', function(data) {
-			self.props.changePage(VotingPhase, data);
-		});
-
-		server.on('startMissionPhase', function(data) {
-			self.props.changePage(MissionPhase, data);
-		});
-
-		server.on('missionResults', function(data) {
-			self.props.changePage(Results, data);
 		});
 
     return (

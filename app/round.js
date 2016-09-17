@@ -325,17 +325,29 @@ Round.prototype.startVotingPhase = function (selectedPlayers) {
 }
 
 Round.prototype.processResultsOfVote = function (wasVoteSuccessful) {
-	if (wasVoteSuccessful) {
-		var thisMission = this.getCurrentMission();
-		thisMission.putSelectedPlayersOnTheMission();
-		this.startMissionPhase();
-	} else {
-		// since the vote failed, we'll try the vote again with a new captain
-		// to select players.
-		// the spies win if the team votes fail 5 times in a row.
-		this.assignNewCaptain();
-		this.startSelectionPhase();
-	}
+
+	var thisMission = this.getCurrentMission();
+
+	// wait for everyone to be done viewing the results that
+	// we are about to send
+	var self = this;
+	this.waitFor(this.players, 'doneViewingVoteResults', undefined, function () {
+		// ran once, once everyone is done
+		if (wasVoteSuccessful) {
+			thisMission.putSelectedPlayersOnTheMission();
+			this.startMissionPhase();
+		} else {
+			// since the vote failed, we'll try the vote again with a new captain
+			// to select players.
+			// the spies win if the team votes fail 5 times in a row.
+			this.assignNewCaptain();
+			this.startSelectionPhase();
+		}
+	});
+
+	//send the results
+	this.changePhase('vote_results');
+	this.sendStateToAll();
 }
 
 Round.prototype.startMissionPhase = function() {

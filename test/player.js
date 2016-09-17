@@ -54,7 +54,7 @@ test('send', function(t) {
   //  but I just check the name to keep it short
   t.equal(emitResults.data.you.name, 'Arthur');
 
-  t.equal(emitResults.data.data, 'qwertyuiop');
+  t.equal(emitResults.data.round, 'qwertyuiop');
   t.end();
 
   emitResults = undefined;
@@ -71,7 +71,7 @@ test('sendThen', function(t) {
   //  but I just check the name to keep it short
   t.equal(emitResults.data.you.name, 'Arthur');
 
-  t.equal(emitResults.data.data, 'asdfghjkl');
+  t.equal(emitResults.data.round, 'asdfghjkl');
   t.equal(onceResults.eventName, 'receivedEvent-test');
   t.equal(onceResults.next, runMe);
   t.equal(onceResults.nextRes, 'Yay, I ran!');
