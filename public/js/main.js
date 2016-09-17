@@ -38,7 +38,7 @@ Connection.prototype.startGame = function(code) {
 }
 
 Connection.prototype.vote = function(vote) {
-	this.send('vote', {
+	this.send('selectionVote', {
 		vote
 	});
 }
@@ -106,26 +106,93 @@ var MainMenu = React.createClass({
 		var self = this;
 
 		server = new Connection(function (data) {
-			console.log(data);
+			var round = data.round;
+			var me = data.you;
+
 			switch (data.round.phase) {
-				case 'selection':
+				case 'start':
+					/*TODO
 					if (data.round.isNewGame) {
 						self.props.changePage(StartPage, data);
-					} else {
-						self.props.changePage(SelectionPhase, data);
+					} else {*/
+					break;
+				case 'selection':
+					// find out who the captain is
+					var captain;
+					for (var i = 0; i < round.players.length; i++) {
+						var player = round.players[i];
+						if (player.isCaptain) {
+							captain = player;
+							break;
+						}
 					}
+
+					if (me.isCaptain) {
+						self.props.changePage(SelectionPhase, data);
+					} else {
+						data.message = 'Waiting for the captain, ' + captain.name + ', to make a selection...';
+						self.props.changePage(Waiting, data);
+					}
+
 					break;
 				case 'voting':
-					self.props.changePage(VotingPhase, data);
+					//determine if we have already voted
+					var alreadyVoted = false;
+					var votes = round.currentMission.votes;
+					var me = data.you;
+					for (var i = 0; i < votes.length; i++) {
+						if (votes[i].playerId === me.id) {
+							alreadyVoted = true;
+							break;
+						}
+					}
+
+					if (alreadyVoted) {
+						data.message = "Waiting for players to vote...";
+						self.props.changePage(Waiting, data);
+					} else {
+						self.props.changePage(VotingPhase, data);
+					}
 					break;
 				case 'voting_results':
 					//TODO
-					break;
+					//break;
 				case 'mission':
-					self.props.changePage(MissionPhase, data);
+					//figure out if we are on this mission
+					var isOnMission = false;
+					for (var i = 0; i < round.currentMission.playersOnMission.length; i++) {
+						var thisPlayer = round.currentMission.playersOnMission[i];
+						if (thisPlayer.id === me.id) {
+							isOnMission = true;
+							break;
+						}
+					}
+
+					if (isOnMission) {
+						self.props.changePage(MissionPhase, data);
+					} else {
+						data.message = 'Waiting for the mission to complete...';
+						self.props.changePage(Waiting, data);
+					}
+
 					break;
 				case 'mission_results':
-					self.props.changePage(Results, data);
+					//determine if the server is waiting on us
+					var isWaiting = false;
+					var waiting = round.waitingList;
+					for (var i = 0; i < waiting.length; i++) {
+						if (me.id === waiting[i].id) {
+							isWaiting = true;
+							break;
+						}
+					}
+
+					if (isWaiting) {
+						self.props.changePage(Results, data);
+					} else {
+						data.message = 'Waiting for everyone to finish viewing the results...';
+						self.props.changePage(Waiting, data);
+					}
 					break;
 			}
 		});
@@ -289,7 +356,7 @@ var StartPage = React.createClass({
 	},
   render: function() {
 		var me = this.props.you;
-		var data = this.props.data;
+		var data = this.props.round;
 
 		var ourRole = me.isSpy ? 'spy' : 'loyalist';
 
@@ -313,30 +380,11 @@ var StartPage = React.createClass({
 var SelectionPhase = React.createClass({
   render: function() {
 		var me = this.props.you;
-		var data = this.props.data;
-
-		// find out who the captain is
-		var captain;
-		for (var i = 0; i < data.players.length; i++) {
-			var player = data.players[i];
-			if (player.isCaptain) {
-				captain = player;
-			}
-		}
-
-		var CaptainComponent;
-		var props = {};
-		if (me.isCaptain) {
-			CaptainComponent = CaptainSelection;
-			props.data = data;
-		} else {
-			CaptainComponent = Waiting;
-			props.message = 'Waiting for the captain, ' + captain.name + ', to make a selection...';
-		}
+		var data = this.props.round;
 
     return (
       <div className="selection-phase">
-				<CaptainComponent {...props}/>
+				<CaptainSelection {...this.props}/>
 				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
       </div>
     );
@@ -346,19 +394,13 @@ var SelectionPhase = React.createClass({
 var VotingPhase = React.createClass({
 	voteYay: function() {
 		server.vote(true);
-		this.props.changePage(Waiting, {
-			message: 'Waiting for everyone to vote...'
-		});
 	},
 	voteNay: function() {
 		server.vote(false);
-		this.props.changePage(Waiting, {
-			message: 'Waiting for everyone to vote...'
-		});
 	},
   render: function() {
 		var me = this.props.you;
-		var data = this.props.data;
+		var data = this.props.round;
 		var currentMission = data.currentMission;
 
 		// data.players is all of the players in the game.
@@ -397,33 +439,13 @@ var VotingPhase = React.createClass({
 var MissionPhase = React.createClass({
   render: function() {
 		var me = this.props.you;
-		var data = this.props.data;
-		var currentMission = data.currentMission;
+		var data = this.props.round;
 
-		//figure out if we are on this mission
-		var isOnMission = false;
-		for (var i = 0; i < currentMission.playersOnMission.length; i++) {
-			var thisPlayer = currentMission.playersOnMission[i];
-			if (thisPlayer.id === me.id) {
-				isOnMission = true;
-				break;
-			}
-		}
-
-		var ComponentToShow;
-		var ComponentToShowProps = {};
-		if (isOnMission) {
-			ComponentToShow = OnMissionScreen;
-			ComponentToShowProps = data;
-			ComponentToShowProps.changePage = this.props.changePage;
-		} else {
-			ComponentToShow = Waiting;
-			ComponentToShowProps.message = "Waiting for the mission to finish...";
-		}
+		data.changePage = this.props.changePage;
 
     return (
       <div className="selection-phase">
-				<ComponentToShow {...ComponentToShowProps}/>
+				<OnMissionScreen {...this.props}/>
 				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
       </div>
     );
@@ -433,13 +455,10 @@ var MissionPhase = React.createClass({
 var Results = React.createClass({
 	doneViewingResults: function() {
 		server.doneViewingResults();
-		this.props.changePage(Waiting, {
-			message: 'Waiting for everyone to finish viewing the results...'
-		});
 	},
   render: function() {
 		var me = this.props.you;
-		var data = this.props.data;
+		var data = this.props.round;
 		var currentMission = data.currentMission;
 
 		var topMessage = 'Mission ' + currentMission.number ;
@@ -502,7 +521,7 @@ var CaptainSelection = React.createClass({
 	updatePlayerList: function(selectedPlayers) {
 		this.selectedPlayers = selectedPlayers;
 
-		var data = this.props.data;
+		var data = this.props.round;
 		var currentMission = data.currentMission;
 		var numPlayersToSelect = currentMission.playersNeeded;
 
@@ -522,9 +541,9 @@ var CaptainSelection = React.createClass({
 		server.sendSelectedPlayers(this.selectedPlayers);
 	},
   render: function() {
-		var data = this.props.data;
-		var missionNumber = data.missionNumber;
+		var data = this.props.round;
 		var currentMission = data.currentMission;
+		var missionNumber = currentMission.number;
 		var numPlayersToSelect = currentMission.playersNeeded;
 
     return (
@@ -554,19 +573,13 @@ var CaptainSelection = React.createClass({
 var OnMissionScreen = React.createClass({
 	voteYay: function() {
 		server.missionVote(true);
-		this.props.changePage(Waiting, {
-			message: 'Waiting for the mission to end...'
-		});
 	},
 	voteNay: function() {
 		server.missionVote(false);
-		this.props.changePage(Waiting, {
-			message: 'Waiting for the mission to end...'
-		});
 	},
   render: function() {
-		var data = this.props;
-		var me = data.you;
+		var me = this.props.you;
+		var data = this.props.round;
 		var currentMission = data.currentMission;
 
 		// data.players is all of the players in the game
@@ -593,26 +606,11 @@ var OnMissionScreen = React.createClass({
 });
 
 var Waiting = React.createClass({
-	getInitialState: function() {
-		var self = this;
-		server.onUpdateWaitingList(this.onUpdateWaitingList.bind(this));
-		return {
-			waitingList: []
-		};
-	},
-	onUpdateWaitingList: function(waitingList) {
-		this.setState({
-			waitingList
-		});
-	},
-	componentWillUnmount: function() {
-		server.offUpdateWaitingList();
-	},
   render: function() {
     return (
       <div className="waiting">
 				<p>{this.props.message}</p>
-				<PlayerList players={this.state.waitingList} />
+				<PlayerList players={this.props.round.waitingList} />
       </div>
     );
   }

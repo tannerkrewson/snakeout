@@ -68,10 +68,18 @@ Round.prototype.waitFor = function (playersToWaitOn, eventToWaitFor, onPlayerDon
 		eventToWaitFor = 'done';
 	}
 
+	// if the inputed player list does not have sockets attached,
+	// we get 'em because we need 'em
+	if (!this.playersBeingWaitedOn[0].socket) {
+		this.playersBeingWaitedOn = this.getPlayerListWithSockets(this.playersBeingWaitedOn);
+	}
+
 	var self = this;
 	this.playersBeingWaitedOn.forEach(function (player) {
 		player.socket.once(eventToWaitFor, function (data) {
-			onPlayerDone(player, data);
+			if (onPlayerDone) {
+				onPlayerDone(player, data);
+			}
 
 			// see if this player is in the waiting list
 			var stillWaitingOnThisPlayer = false;
@@ -91,9 +99,11 @@ Round.prototype.waitFor = function (playersToWaitOn, eventToWaitFor, onPlayerDon
 			}
 
 			//if we aren't waiting on any more players, continue with whatever
-			if (self.playersBeingWaitedOn.length === 0 && onDoneWaiting) {
+			if (self.playersBeingWaitedOn.length === 0 && onAllDone) {
 				onAllDone();
 			}
+
+			self.sendStateToAll();
 
 		});
 	});
@@ -157,6 +167,20 @@ Round.prototype.getPlayerIndexById = function (id) {
 		}
 	}
 	return false;
+};
+
+Round.prototype.getPlayerListWithSockets = function (jsonPlayerList) {
+	var newPlayersList = [];
+	var self = this;
+	jsonPlayerList.forEach(function (jsonPlayer) {
+		var realPlayerIndex = self.getPlayerIndexById(jsonPlayer.id);
+		if (realPlayerIndex > -1) {
+			newPlayersList.push(self.players[realPlayerIndex]);
+		} else {
+			console.log('getPlayerListWithSockets error: invalid index');
+		}
+	});
+	return newPlayersList;
 };
 
 Round.prototype.canBeReplaced = function (playerToReplaceId) {
@@ -318,7 +342,7 @@ Round.prototype.startVotingPhase = function (selectedPlayers) {
 	// (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone)
 	// *all done is not used b/c it is handled in the mission object
 	var self = this;
-	this.waitFor(this.players, 'vote', function (player, data) {
+	this.waitFor(this.players, 'selectionVote', function (player, data) {
 		// ran when a single player's vote is submitted
 		thisMission.addVote(player.id, data.vote);
 	});
@@ -328,26 +352,38 @@ Round.prototype.processResultsOfVote = function (wasVoteSuccessful) {
 
 	var thisMission = this.getCurrentMission();
 
+	// ran once, once everyone is done
+	if (wasVoteSuccessful) {
+		thisMission.putSelectedPlayersOnTheMission();
+		this.startMissionPhase();
+	} else {
+		// since the vote failed, we'll try the vote again with a new captain
+		// to select players.
+		// the spies win if the team votes fail 5 times in a row.
+		this.assignNewCaptain();
+		this.startSelectionPhase();
+	}
+
 	// wait for everyone to be done viewing the results that
 	// we are about to send
-	var self = this;
+	/*var self = this;
 	this.waitFor(this.players, 'doneViewingVoteResults', undefined, function () {
 		// ran once, once everyone is done
 		if (wasVoteSuccessful) {
 			thisMission.putSelectedPlayersOnTheMission();
-			this.startMissionPhase();
+			self.startMissionPhase();
 		} else {
 			// since the vote failed, we'll try the vote again with a new captain
 			// to select players.
 			// the spies win if the team votes fail 5 times in a row.
-			this.assignNewCaptain();
-			this.startSelectionPhase();
+			self.assignNewCaptain();
+			self.startSelectionPhase();
 		}
 	});
 
 	//send the results
-	this.changePhase('vote_results');
-	this.sendStateToAll();
+	this.changePhase('voting_results');
+	this.sendStateToAll();*/
 }
 
 Round.prototype.startMissionPhase = function() {
