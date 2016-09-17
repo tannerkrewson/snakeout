@@ -10,28 +10,26 @@ html
     // Bootstrap CSS
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css', crossorigin='anonymous')
 
-
     // Lato Font
     link(href='https://fonts.googleapis.com/css?family=Lato:100', rel='stylesheet')
+    // Font Awesome
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css', rel='stylesheet')
     // Spyout CSS
-    link(rel='stylesheet', href='/css/main.css')
+    link(href='/css/main.css', rel='stylesheet')
       
   body
     block content
     #root
 
     // React JS Block
-    script(src='https://unpkg.com/react@15.3.1/dist/react.min.js')
-    script(src='https://unpkg.com/react-dom@15.3.1/dist/react-dom.min.js')
-    script(src='https://unpkg.com/babel-core@5.8.38/browser.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.38/browser.min.js')
       
     // Bootstrap 4 JS Block
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js', crossorigin='anonymous')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js', crossorigin='anonymous')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js', crossorigin='anonymous')
-      
-    // Font Awesome
-    script(src='https://use.fontawesome.com/6429bef05a.js')
 
     // Socket IO
     script(src='https://cdn.socket.io/socket.io-1.4.5.js')
