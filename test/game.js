@@ -8,6 +8,7 @@ var testCode = 'abcd';
 var testName = 'Bob';
 var testSocket = {
 	on: function() {},
+	once: function() {},
 	emit: function() {}
 };
 

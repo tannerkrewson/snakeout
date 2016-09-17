@@ -16,6 +16,7 @@ function Round(roundNumber, players, onEnd) {
 	this.playersBeingWaitedOn = [];
 	this.missionNumber = 0;
 	this.missions = [];
+	this.currentCaptain;
 	this.phase = 'lobby';
 	/* Phase List:
 		lobby
@@ -292,6 +293,8 @@ Round.prototype.assignNewCaptain = function () {
 
 	this.players[indexOfCaptain].isCaptain = true;
 	this.players[indexOfCaptain].hasBeenCaptain = true;
+
+	this.currentCaptain = this.players[indexOfCaptain];
 }
 
 
@@ -301,7 +304,7 @@ Round.prototype.startRound = function() {
 	this.startNextMission(true);
 };
 
-Round.prototype.startNextMission = function (isNewGame) {
+Round.prototype.startNextMission = function () {
 	this.missionNumber++;
 
 	//remove in progress from last mission, if there was a last mission
@@ -315,12 +318,26 @@ Round.prototype.startNextMission = function (isNewGame) {
 	var currentMission = this.getCurrentMission();
 	currentMission.inProgress = true;
 
-	this.startSelectionPhase(isNewGame);
+	this.startSelectionPhase();
 }
 
 // the first phase of each mission
-Round.prototype.startSelectionPhase = function (isNewGame) {
+Round.prototype.startSelectionPhase = function () {
 	this.changePhase('selection');
+
+	// this list is only going to contain one player, but I do it because
+	// waitFor requires an array of players
+	var captainList = [this.currentCaptain];
+
+	// what the parameters do:
+	// (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone)
+	// *all done is not used b/c it is handled in the mission object
+	var self = this;
+	this.waitFor(captainList, 'captainsSelectedPlayers', function(player, data) {
+		// ran once the captain has selected players
+		self.startVotingPhase(data.selectedPlayers);
+	});
+
 	this.sendStateToAll();
 };
 

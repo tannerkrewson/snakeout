@@ -117,20 +117,10 @@ var MainMenu = React.createClass({
 					} else {*/
 					break;
 				case 'selection':
-					// find out who the captain is
-					var captain;
-					for (var i = 0; i < round.players.length; i++) {
-						var player = round.players[i];
-						if (player.isCaptain) {
-							captain = player;
-							break;
-						}
-					}
-
 					if (me.isCaptain) {
 						self.props.changePage(SelectionPhase, data);
 					} else {
-						data.message = 'Waiting for the captain, ' + captain.name + ', to make a selection...';
+						data.message = 'Waiting for the captain to make a selection...';
 						self.props.changePage(Waiting, data);
 					}
 

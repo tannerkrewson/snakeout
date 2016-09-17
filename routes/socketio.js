@@ -46,11 +46,6 @@ function attachInGameListeners(so, game, player) {
 		game.startIfReady();
 	});
 
-	socket.on('captainsSelectedPlayers', function(data) {
-		var thisRound = game.currentRound;
-		thisRound.startVotingPhase(data.selectedPlayers);
-	});
-
 	socket.on('getState', function(data) {
 		var thisRound = game.currentRound;
 		thisRound.sendState(player);
