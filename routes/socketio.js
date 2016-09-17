@@ -5,14 +5,16 @@ module.exports = function (app) {
 
 	io.on('connection', function (socket) {
 
+		var player;
+
 	  socket.on('newGame', function (data) {
 	    var game = so.newGame();
-			game.addPlayer(data.name, socket);
+			player = game.addPlayer(data.name, socket);
 			socket.emit('joinGame', {
 				success: true,
 				game: game.getJsonGame()
 			});
-			attachInGameListeners(socket, so, game);
+			attachInGameListeners(so, game, player);
 	  });
 
 		socket.on('joinGame', function (data) {
@@ -20,12 +22,12 @@ module.exports = function (app) {
 
 			// if the game exists and is not in progress
 			if (game && !game.inProgress) {
-				game.addPlayer(data.name, socket);
+				player = game.addPlayer(data.name, socket);
 				socket.emit('joinGame', {
 					success: true,
 					game: game.getJsonGame()
 				});
-				attachInGameListeners(socket, so, game);
+				attachInGameListeners(so, game, player);
 			} else {
 				socket.emit('joinGame', {
 					success: false
@@ -36,7 +38,9 @@ module.exports = function (app) {
 	});
 }
 
-function attachInGameListeners(socket, so, game) {
+function attachInGameListeners(so, game, player) {
+
+	var socket = player.socket;
 
 	socket.on('startGame', function(data) {
 		game.startIfReady();
@@ -45,6 +49,11 @@ function attachInGameListeners(socket, so, game) {
 	socket.on('captainsSelectedPlayers', function(data) {
 		var thisRound = game.currentRound;
 		thisRound.startVotingPhase(data.selectedPlayers);
+	});
+
+	socket.on('getState', function(data) {
+		var thisRound = game.currentRound;
+		thisRound.sendState(player);
 	});
 
 }

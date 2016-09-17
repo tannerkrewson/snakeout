@@ -7,6 +7,8 @@ var Player = require('../app/player.js');
 function MockSocket() {
   this.lastEmit;
   this.lastOnce;
+  this.onEmit;
+  this.onOnce;
 }
 
 MockSocket.prototype.emit = function(eventName, data) {
@@ -14,6 +16,9 @@ MockSocket.prototype.emit = function(eventName, data) {
     eventName,
     data
   };
+  if (this.onEmit) {
+    this.onEmit(this.lastEmit);
+  }
 };
 
 MockSocket.prototype.once = function(eventName, next) {
@@ -21,7 +26,30 @@ MockSocket.prototype.once = function(eventName, next) {
     eventName,
     next
   };
+  if (this.onOnce) {
+    this.onOnce(this.lastOnce);
+  }
 };
+
+MockSocket.prototype.bindOnEmit = function (funcToRun) {
+  this.onEmit = funcToRun;
+}
+
+MockSocket.prototype.bindOnOnce = function (funcToRun) {
+  this.onOnce = funcToRun;
+}
+
+function bindOnEmitOnPlayers (players, onEmit) {
+  players.forEach(function (player) {
+    player.socket.bindOnEmit(onEmit);
+  });
+}
+
+function bindOnOnceOnPlayers (players, onOnce) {
+  players.forEach(function (player) {
+    player.socket.bindOnce(onOnce);
+  });
+}
 
 var mockPlayers = [];
 
@@ -51,22 +79,6 @@ test('create round', function(t) {
   t.equal(testRound.roundNumber, 2);
   t.equal(testRound.players, mockPlayers);
   t.equal(testRound.onEnd, onEnd);
-  t.end();
-});
-
-test('sendToAll', function(t) {
-  var exampleData = {
-    example: 'kjbfsbsk'
-  };
-  testRound.sendToAll('exampleEvent', exampleData);
-
-  mockPlayers.forEach(function(player) {
-    var lastEmit = player.socket.lastEmit;
-    t.equal(lastEmit.eventName, 'exampleEvent');
-    t.ok(lastEmit.data.you);
-    t.equal(lastEmit.data.data, exampleData);
-  });
-
   t.end();
 });
 
@@ -127,17 +139,9 @@ test('startSelectionPhase', function (t) {
 
   //testRound.startSelectionPhase();
 
-  // le is what the function send out to each player
-  // we check to make sure what would be sent is correct
-  mockPlayers.forEach(function(player) {
-    var le = player.socket.lastEmit;
-    var leData = le.data.data;
-    t.equal(le.eventName, 'startSelectionPhase');
-    t.equal(leData.missions, testRound.missions);
-    t.equal(leData.currentMission, testRound.getCurrentMission());
-    t.equal(leData.missionNumber, testRound.missionNumber);
-    t.equal(leData.players.length, testRound.getJsonPlayers().length);
-  });
+  t.equal(testRound.phase, 'selection');
+
+
   t.end();
 });
 
@@ -148,16 +152,6 @@ test('startVotingPhase', function (t) {
 
   testRound.startVotingPhase(mockSelectedPlayers);
 
-  mockPlayers.forEach(function(player) {
-    var le = player.socket.lastEmit;
-    var leData = le.data.data;
-    var ppoml = leData.potentialPlayersOnMission.length;
-    t.equal(le.eventName, 'startVotingPhase');
-    t.equal(leData.missions, testRound.missions);
-    t.equal(leData.currentMission, testRound.getCurrentMission());
-    t.equal(ppoml, mockSelectedPlayers.length);
-    t.equal(leData.players.length, testRound.getJsonPlayers().length);
-  });
   t.end();
 });
 
@@ -165,14 +159,25 @@ test('startMissionPhase', function (t) {
   testRound.getCurrentMission().putSelectedPlayersOnTheMission();
   testRound.startMissionPhase();
 
-  mockPlayers.forEach(function(player) {
-    var le = player.socket.lastEmit;
-    var leData = le.data.data;
-    t.equal(le.eventName, 'startMissionPhase');
-    t.equal(leData.missions, testRound.missions);
-    t.equal(leData.currentMission, testRound.getCurrentMission());
-    t.equal(leData.currentMission.playersOnMission.length, mockSelectedPlayers.length);
-    t.equal(leData.players.length, testRound.getJsonPlayers().length);
+  t.end();
+});
+
+test('sendStateToAll', function (t) {
+  t.plan(mockPlayers.length);
+
+  bindOnEmitOnPlayers(mockPlayers, function () {
+    t.pass('state emitted');
   });
+
+  testRound.sendStateToAll();
+
+  t.end();
+});
+
+test('getState', function (t) {
+  var state = testRound.getState();
+
+  // fail the test if params are removed
+  t.ok(Object.keys(state).length >= 7);
   t.end();
 });

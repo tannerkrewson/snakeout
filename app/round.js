@@ -11,13 +11,19 @@ function Round(roundNumber, players, onEnd) {
 	this.roundNumber = roundNumber;
 	this.players = players;
 	this.onEnd = onEnd;
-
 	this.onDoneWaiting;
 	this.disconnectedPlayers = [];
 	this.playersBeingWaitedOn = [];
-
 	this.missionNumber = 0;
 	this.missions = [];
+	this.phase;
+	/* Phase List:
+		selection
+		voting
+		voting_results
+		mission
+		mission_results
+	*/
 
 	//add the five missions
 	//i is the mission number
@@ -28,32 +34,22 @@ function Round(roundNumber, players, onEnd) {
 	}
 }
 
-Round.prototype.startRound = function() {
-	this.assignRoles();
-	this.assignNewCaptain();
-	this.startNextMission(true);
-};
-
-Round.prototype.startNextMission = function (isNewGame) {
-	this.missionNumber++;
-
-	//remove in progress from last mission, if there was a last mission
-	if (this.missionNumber > 1) {
-		var lastMission = this.missions[this.missionNumber - 2];
-		lastMission.inProgress = false;
-	}
-
-	//set current mission in progress
-	//subtract one because this.missions indexes start at 0
-	var currentMission = this.getCurrentMission();
-	currentMission.inProgress = true;
-
-	this.startSelectionPhase(isNewGame);
+Round.prototype.getCurrentMission = function () {
+	return this.missions[this.missionNumber - 1];
 }
 
-Round.prototype.sendToAll = function (event, data) {
+Round.prototype.changePhase = function (phase) {
+	this.phase = phase;
+}
+
+Round.prototype.sendState = function (player) {
+	player.send('updateState', this.getState());
+}
+
+Round.prototype.sendStateToAll = function () {
+	var self = this;
 	this.players.forEach(function (player) {
-		player.send(event, data);
+		self.sendState(player);
 	});
 };
 
@@ -64,6 +60,146 @@ Round.prototype.onceOnAll = function (event, next) {
 		});
 	});
 };
+
+Round.prototype.waitFor = function (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone) {
+	this.playersBeingWaitedOn = playersToWaitOn.slice();
+
+	if (!eventToWaitFor) {
+		eventToWaitFor = 'done';
+	}
+
+	var self = this;
+	this.playersBeingWaitedOn.forEach(function (player) {
+		player.socket.once(eventToWaitFor, function (data) {
+			onPlayerDone(player, data);
+
+			// see if this player is in the waiting list
+			var stillWaitingOnThisPlayer = false;
+			var indexOfPlayer;
+			for (var i = 0; i < self.playersBeingWaitedOn.length; i++) {
+				var playerIdToCheck = self.playersBeingWaitedOn[i].id;
+				if (player.id === playerIdToCheck) {
+					stillWaitingOnThisPlayer = true;
+					indexOfPlayer = i;
+					break;
+				}
+			}
+
+			if (stillWaitingOnThisPlayer) {
+				//remove the player from the array
+				self.playersBeingWaitedOn.splice(indexOfPlayer, 1);
+			}
+
+			//if we aren't waiting on any more players, continue with whatever
+			if (self.playersBeingWaitedOn.length === 0 && onDoneWaiting) {
+				onAllDone();
+			}
+
+		});
+	});
+}
+
+Round.prototype.onDone = function () {
+
+}
+
+Round.prototype.checkForWin = function() {
+	var spyWins = 0;
+	var loyalistWins = 0;
+	for (var i = 0; i < this.missions.length; i++) {
+		var thisMission = this.missions[i];
+		if (thisMission.status === 'spy') {
+			spyWins++;
+		} else if (thisMission.status === 'loyalist') {
+			loyalistWins++;
+		}
+	}
+	if (spyWins === 3 || loyalistWins === 3) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+Round.prototype.getJsonPlayers = function () {
+	var players = [];
+	this.players.forEach(function (player) {
+		players.push(player.getJson());
+	});
+	return players;
+}
+
+Round.prototype.getJsonWaitingPlayers = function () {
+	var players = [];
+	this.playersBeingWaitedOn.forEach(function (player) {
+		if (player.getJson) {
+			players.push(player.getJson());
+		} else {
+			players.push(player);
+		}
+	});
+	return players;
+}
+
+Round.prototype.findReplacementFor = function (player) {
+	this.disconnectedPlayers.push(player.getJson());
+	this.sendStateToAll();
+};
+
+Round.prototype.getPlayersThatNeedToBeReplaced = function () {
+	return this.disconnectedPlayers;
+};
+
+Round.prototype.getPlayerIndexById = function (id) {
+	for (var i = 0; i < this.players.length; i++) {
+		if (this.players[i].id === id) {
+			return i;
+		}
+	}
+	return false;
+};
+
+Round.prototype.canBeReplaced = function (playerToReplaceId) {
+	for (var i = 0; i < this.disconnectedPlayers.length; i++) {
+		if (this.disconnectedPlayers[i].id === playerToReplaceId) {
+			return true;
+		}
+	}
+	return false;
+};
+
+Round.prototype.replacePlayer = function (playerToReplaceId, newPlayer) {
+	for (var i = 0; i < this.disconnectedPlayers.length; i++) {
+		if (this.disconnectedPlayers[i].id === playerToReplaceId) {
+			//give 'em the id of the old player
+			newPlayer.id = this.disconnectedPlayers[i].id;
+
+			//replace 'em
+			var playerToReplaceIndex = this.getPlayerIndexById(playerToReplaceId);
+			this.players[playerToReplaceIndex] = newPlayer;
+
+			//delete 'em from disconnectedPlayers
+			this.disconnectedPlayers.splice(i, 1);
+
+			//TODO: get the player back to where they should be on their screen
+
+			return this.players[playerToReplaceIndex];
+		}
+	}
+};
+
+Round.prototype.getState = function () {
+	var currentMission = this.getCurrentMission();
+	return {
+		currentMission,
+		disconnectedList: this.disconnectedPlayers,
+		missions: this.missions,
+		phase: this.phase,
+		players: this.getJsonPlayers(),
+		potentialPlayersOnMission: currentMission.potentialPlayersOnMission,
+		waitingList: this.getJsonWaitingPlayers()
+	};
+}
 
 Round.prototype.getNumberOfSpies = function() {
 	var numOfPlayers = this.players.length;
@@ -135,15 +271,34 @@ Round.prototype.assignNewCaptain = function () {
 	this.players[indexOfCaptain].hasBeenCaptain = true;
 }
 
+
+Round.prototype.startRound = function() {
+	this.assignRoles();
+	this.assignNewCaptain();
+	this.startNextMission(true);
+};
+
+Round.prototype.startNextMission = function (isNewGame) {
+	this.missionNumber++;
+
+	//remove in progress from last mission, if there was a last mission
+	if (this.missionNumber > 1) {
+		var lastMission = this.missions[this.missionNumber - 2];
+		lastMission.inProgress = false;
+	}
+
+	//set current mission in progress
+	//subtract one because this.missions indexes start at 0
+	var currentMission = this.getCurrentMission();
+	currentMission.inProgress = true;
+
+	this.startSelectionPhase(isNewGame);
+}
+
 // the first phase of each mission
 Round.prototype.startSelectionPhase = function (isNewGame) {
-	this.sendToAll('startSelectionPhase', {
-		missions: this.missions,
-		currentMission: this.getCurrentMission(),
-		missionNumber: this.missionNumber,
-		players: this.getJsonPlayers(),
-		isNewGame
-	});
+	this.changePhase('selection');
+	this.sendStateToAll();
 };
 
 // called as a result of receiving the 'captainsSelectedPlayers'
@@ -156,21 +311,16 @@ Round.prototype.startVotingPhase = function (selectedPlayers) {
 	// runs the processResultsOfVote function once everyone has voted
 	thisMission.startVote(this.processResultsOfVote.bind(this));
 
-	this.sendToAll('startVotingPhase', {
-		potentialPlayersOnMission: thisMission.potentialPlayersOnMission,
-		players: this.getJsonPlayers(),
-		missions: this.missions,
-		currentMission: this.getCurrentMission()
-	});
+	this.changePhase('voting');
+	this.sendStateToAll();
 
-	this.waitForAll(this.players);
-
+	// what the parameters do:
+	// (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone)
+	// *all done is not used b/c it is handled in the mission object
 	var self = this;
-	this.players.forEach(function(player) {
-		player.socket.once('vote', function(data) {
-			thisMission.addVote(player.id, data.vote);
-			self.stopWaitingOn(player);
-		});
+	this.waitFor(this.players, 'vote', function (player, data) {
+		// ran when a single player's vote is submitted
+		thisMission.addVote(player.id, data.vote);
 	});
 }
 
@@ -194,20 +344,17 @@ Round.prototype.startMissionPhase = function() {
 	// runs the processResultsOfVote function once everyone has voted
 	thisMission.startMission(this.processResultsOfMission.bind(this));
 
-	this.sendToAll('startMissionPhase', {
-		missions: this.missions,
-		currentMission: this.getCurrentMission(),
-		missionNumber: this.missionNumber,
-		players: this.getJsonPlayers()
+	this.changePhase('mission');
+	this.sendStateToAll();
+
+	// what the parameters do:
+	// (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone)
+	// *onAllDone is not used because it is handled in the mission object
+	this.waitFor(thisMission.playersOnMission, 'missionVote', function (player, data) {
+		//ran when a single player is done
+		thisMission.addMissionVote(player.id, data.vote);
 	});
 
-	this.waitForAll(thisMission.playersOnMission);
-
-	this.players.forEach(function(player) {
-		player.socket.once('missionVote', function(data) {
-			thisMission.addMissionVote(player.id, data.vote);
-		});
-	});
 }
 
 Round.prototype.processResultsOfMission = function (wasMissionSuccessful) {
@@ -224,7 +371,7 @@ Round.prototype.processResultsOfMission = function (wasMissionSuccessful) {
 	// wait for everyone to be done viewing the results that
 	// we are about to send
 	var self = this;
-	this.waitForAll(this.players, function() {
+	this.waitFor(this.players, 'doneViewingResults', undefined, function () {
 		// ran once everyone is done
 		if (!gameOver) {
 			self.assignNewCaptain();
@@ -236,152 +383,8 @@ Round.prototype.processResultsOfMission = function (wasMissionSuccessful) {
 	});
 
 	// send the results
-	this.sendToAll('missionResults', {
-		missions: this.missions,
-		currentMission: this.getCurrentMission(),
-		missionNumber: this.missionNumber,
-		players: this.getJsonPlayers()
-	});
-
-	// ran when the passed player is done viewing results
-	this.onceOnAll('doneViewingResults', function(player) {
-		self.stopWaitingOn(player);
-	});
+	this.changePhase('mission_results');
+	this.sendStateToAll();
 }
-
-Round.prototype.waitForAll = function (playersToWaitOn, onDoneWaiting) {
-	this.playersBeingWaitedOn = playersToWaitOn.slice();
-
-	//this will be ran by stopWaitingOn once the waiting list is empty
-	this.onDoneWaiting = onDoneWaiting;
-}
-
-// waitForAll must be ran once to set this function up
-// this function then must be ran for every player
-Round.prototype.stopWaitingOn = function (player) {
-	// see if this player is in the waiting list
-	var stillWaitingOnThisPlayer = false;
-	var indexOfPlayer;
-	for (var i = 0; i < this.playersBeingWaitedOn.length; i++) {
-		var playerIdToCheck = this.playersBeingWaitedOn[i].id;
-		if (player.id === playerIdToCheck) {
-			stillWaitingOnThisPlayer = true;
-			indexOfPlayer = i;
-			break;
-		}
-	}
-
-	if (stillWaitingOnThisPlayer) {
-		//remove the player from the array
-		this.playersBeingWaitedOn.splice(indexOfPlayer, 1);
-	}
-
-	//if we aren't waiting on any more players, continue with whatever
-	if (this.playersBeingWaitedOn.length === 0) {
-		if (this.onDoneWaiting) {
-			this.onDoneWaiting();
-		}
-		return;
-	}
-
-	// send the updated waiting list to all
-	this.updateWaitingList();
-}
-
-Round.prototype.updateWaitingList = function () {
-	this.sendToAll('updateWaitingList', {
-		waitingList: this.getJsonWaitingPlayers(),
-		disconnectedList: this.disconnectedPlayers
-	});
-};
-
-Round.prototype.checkForWin = function() {
-	var spyWins = 0;
-	var loyalistWins = 0;
-	for (var i = 0; i < this.missions.length; i++) {
-		var thisMission = this.missions[i];
-		if (thisMission.status === 'spy') {
-			spyWins++;
-		} else if (thisMission.status === 'loyalist') {
-			loyalistWins++;
-		}
-	}
-	if (spyWins === 3 || loyalistWins === 3) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
-Round.prototype.getJsonPlayers = function () {
-	var players = [];
-	this.players.forEach(function (player) {
-		players.push(player.getJson());
-	});
-	return players;
-}
-
-Round.prototype.getJsonWaitingPlayers = function () {
-	var players = [];
-	this.playersBeingWaitedOn.forEach(function (player) {
-		if (player.getJson) {
-			players.push(player.getJson());
-		} else {
-			players.push(player);
-		}
-	});
-	return players;
-}
-
-Round.prototype.findReplacementFor = function (player) {
-	this.disconnectedPlayers.push(player.getJson());
-	this.updateWaitingList();
-};
-
-Round.prototype.getPlayersThatNeedToBeReplaced = function () {
-	return this.disconnectedPlayers;
-};
-Round.prototype.getPlayerIndexById = function (id) {
-	for (var i = 0; i < this.players.length; i++) {
-		if (this.players[i].id === id) {
-			return i;
-		}
-	}
-	return false;
-};
-
-Round.prototype.canBeReplaced = function (playerToReplaceId) {
-	for (var i = 0; i < this.disconnectedPlayers.length; i++) {
-		if (this.disconnectedPlayers[i].id === playerToReplaceId) {
-			return true;
-		}
-	}
-	return false;
-};
-
-Round.prototype.replacePlayer = function (playerToReplaceId, newPlayer) {
-	for (var i = 0; i < this.disconnectedPlayers.length; i++) {
-		if (this.disconnectedPlayers[i].id === playerToReplaceId) {
-			//give 'em the id of the old player
-			newPlayer.id = this.disconnectedPlayers[i].id;
-
-			//replace 'em
-			var playerToReplaceIndex = this.getPlayerIndexById(playerToReplaceId);
-			this.players[playerToReplaceIndex] = newPlayer;
-
-			//delete 'em from disconnectedPlayers
-			this.disconnectedPlayers.splice(i, 1);
-
-			//TODO: get the player back to where they should be on their screen
-
-			return this.players[playerToReplaceIndex];
-		}
-	}
-};
-
-Round.prototype.getCurrentMission = function () {
-	return this.missions[this.missionNumber - 1];
-}
-
 
 module.exports = Round;
