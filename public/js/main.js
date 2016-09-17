@@ -509,10 +509,27 @@ var Results = React.createClass({
 			bodyMessage += 'Spies need ' + failedMissionsToSpyWin + ' more failing missions to win.\n';
 		}
 
+		// if the game is over, reveal who was a spy
+		var SpyList = <div />;
+		if (passedMissionsToLoyalistWin === 0 || failedMissionsToSpyWin === 0) {
+			bodyMessage += '\nThe spies this round were: ';
+
+			//get this round's spies
+			var spies = [];
+			data.players.forEach(function (player) {
+				if (player.isSpy) {
+					spies.push(player);
+				}
+			});
+
+			SpyList = <PlayerList players={spies} />
+		}
+
     return (
       <div className="selection-phase">
 				<p className="so-h2">{topMessage}</p>
 				<p className="so-h3">{bodyMessage}</p>
+				{SpyList}
 				<SOButton
 					label="Next"
 					onClick={this.doneViewingResults.bind(this)}
