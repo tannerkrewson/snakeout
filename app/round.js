@@ -16,8 +16,9 @@ function Round(roundNumber, players, onEnd) {
 	this.playersBeingWaitedOn = [];
 	this.missionNumber = 0;
 	this.missions = [];
-	this.phase;
+	this.phase = 'lobby';
 	/* Phase List:
+		lobby
 		selection
 		voting
 		voting_results
@@ -77,10 +78,6 @@ Round.prototype.waitFor = function (playersToWaitOn, eventToWaitFor, onPlayerDon
 	var self = this;
 	this.playersBeingWaitedOn.forEach(function (player) {
 		player.socket.once(eventToWaitFor, function (data) {
-			if (onPlayerDone) {
-				onPlayerDone(player, data);
-			}
-
 			// see if this player is in the waiting list
 			var stillWaitingOnThisPlayer = false;
 			var indexOfPlayer;
@@ -98,13 +95,15 @@ Round.prototype.waitFor = function (playersToWaitOn, eventToWaitFor, onPlayerDon
 				self.playersBeingWaitedOn.splice(indexOfPlayer, 1);
 			}
 
-			//if we aren't waiting on any more players, continue with whatever
-			if (self.playersBeingWaitedOn.length === 0 && onAllDone) {
-				onAllDone();
+			//if the onPlayerDone function was passed, run it
+			if (onPlayerDone) {
+				onPlayerDone(player, data);
 			}
 
-			self.sendStateToAll();
-
+			//if we aren't waiting on any more players, continue with whatever
+			if (onAllDone && self.playersBeingWaitedOn.length === 0) {
+				onAllDone();
+			}
 		});
 	});
 }
@@ -345,6 +344,7 @@ Round.prototype.startVotingPhase = function (selectedPlayers) {
 	this.waitFor(this.players, 'selectionVote', function (player, data) {
 		// ran when a single player's vote is submitted
 		thisMission.addVote(player.id, data.vote);
+		self.sendStateToAll();
 	});
 }
 
@@ -398,9 +398,11 @@ Round.prototype.startMissionPhase = function() {
 	// what the parameters do:
 	// (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone)
 	// *onAllDone is not used because it is handled in the mission object
+	var self = this;
 	this.waitFor(thisMission.playersOnMission, 'missionVote', function (player, data) {
 		//ran when a single player is done
 		thisMission.addMissionVote(player.id, data.vote);
+		self.sendStateToAll();
 	});
 
 }
@@ -419,7 +421,10 @@ Round.prototype.processResultsOfMission = function (wasMissionSuccessful) {
 	// wait for everyone to be done viewing the results that
 	// we are about to send
 	var self = this;
-	this.waitFor(this.players, 'doneViewingResults', undefined, function () {
+	this.waitFor(this.players, 'doneViewingResults', function () {
+		// ran everytime a player hits next
+		self.sendStateToAll();
+	}, function () {
 		// ran once everyone is done
 		if (!gameOver) {
 			self.assignNewCaptain();
