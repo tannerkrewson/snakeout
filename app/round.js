@@ -189,6 +189,13 @@ Round.prototype.replacePlayer = function (playerToReplaceId, name, socket) {
 		var playerToReplace = this.disconnectedPlayers[i];
 		if (playerToReplace.id === playerToReplaceId) {
 			playerToReplace.name = name;
+
+			// copy the event listeners from the old socket to the new one
+			// i'd like to say that i came up with this all by myself saving
+			// what could have been hours of work to come up with a different
+			// solution. ✌️
+			socket._events = playerToReplace.socket._events;
+
 			playerToReplace.replaceConnection(socket);
 
 			this.removePlayerFromWaitingList(playerToReplace);
