@@ -198,8 +198,6 @@ Round.prototype.replacePlayer = function (playerToReplaceId, name, socket) {
 
 			playerToReplace.replaceConnection(socket);
 
-			this.removePlayerFromWaitingList(playerToReplace);
-
 			//delete the player from from disconnectedPlayers
 			this.disconnectedPlayers.splice(i, 1);
 
