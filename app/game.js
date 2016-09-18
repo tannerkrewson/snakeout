@@ -42,7 +42,7 @@ Game.prototype.startNewRound = function () {
 	this.currentRound = new Round(this.getNextRoundNum(), this.players, function () {
 		//ran when the round ends
 		self.sendUpdatedPlayersList();
-		self.viewingResults = false;
+		self.inProgress = false;
 	});
 
 	this.currentRound.startRound();
@@ -69,23 +69,15 @@ Game.prototype.initPlayer = function (newPlayer) {
 Game.prototype.onPlayerDisconnect = function (playerThatLeft) {
 	playerThatLeft.isConnected = false;
 
-	/*if (this.inProgress) {
+	if (this.inProgress) {
 		this.currentRound.findReplacementFor(playerThatLeft);
 	} else {
 		this.removePlayer(playerThatLeft.id);
-	}*/
-
-	//TODO: temporary before player replacement is implemented
-	this.removePlayer(playerThatLeft.id);
-	if (this.currentRound) {
-		this.inProgress = false;
-		this.currentRound.onEnd();
+		this.sendUpdatedPlayersList();
 	}
 
 	this.checkIfWeNeedANewAdmin(playerThatLeft);
 	this.checkIfTheGameHasNoPlayersLeft();
-	this.sendUpdatedPlayersList();
-
 }
 
 Game.prototype.checkIfWeNeedANewAdmin = function (playerThatWasJustRemoved) {

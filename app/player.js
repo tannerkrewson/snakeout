@@ -8,7 +8,6 @@ function Player(name, socket, id) {
 	this.id = id;
 	this.isAdmin = false;
 	this.isConnected = true;
-
 	this.isSpy;
 	this.isCaptain = false;
 	this.hasBeenCaptain = false;
@@ -42,5 +41,10 @@ Player.prototype.sendThen = function (event, data, onEvent, next) {
 Player.prototype.makeAdmin = function () {
 	this.isAdmin = true;
 };
+
+Player.prototype.replaceConnection = function (socket) {
+	this.socket = socket;
+	this.isConnected = true;
+}
 
 module.exports = Player;

@@ -67,6 +67,10 @@ Connection.prototype.doneViewingVoteResults = function() {
 	this.send('doneViewingVoteResults', {});
 }
 
+Connection.prototype.tryReplace = function(data) {
+	this.send('tryReplace', data);
+}
+
 
 Connection.prototype.send = function(event, data) {
 	this.socket.emit(event, data);
@@ -237,6 +241,9 @@ var MainMenu = React.createClass({
 				alert('Failed to join game!');
 			}
 		});
+		server.on('replace', function(data) {
+			self.props.changePage(Replace, data);
+		});
 
     return (
       <div className="main-menu noformrefresh">
@@ -352,6 +359,42 @@ var Lobby = React.createClass({
 					}} />
 					<SOButton label="Start Game" onClick={startGame} disabled={notReady} />
 				</div>
+				<br/>
+      </div>
+    );
+  }
+});
+
+var Replace = React.createClass({
+	tryReplace: function () {
+		server.tryReplace({
+			playerIdToReplace: this.selectedPlayers[0].id
+		});
+	},
+	getInitialState: function() {
+		return {
+			ready: false
+		};
+	},
+	selectedPlayers: [],
+	updatePlayerList: function(selectedPlayers) {
+		this.selectedPlayers = selectedPlayers;
+
+		// if one player has been selected, ready is true
+		this.setState({
+			ready: (this.selectedPlayers.length === 1)
+		});
+	},
+  render: function() {
+		return (
+      <div className="replace">
+				<p>Select a player to replace:</p>
+				<PlayerSelector players={this.props.disconnectedList} onChange={this.updatePlayerList.bind(this)}/>
+				<SOButton
+					label="Replace"
+					disabled={!this.state.ready}
+					onClick={this.tryReplace.bind(this)}
+				/>
 				<br/>
       </div>
     );
@@ -734,6 +777,8 @@ var Waiting = React.createClass({
   }
 });
 
+
+// props: players, onChange, numPlayersToSelect
 var PlayerSelector = React.createClass({
 	getInitialState: function() {
 		return {

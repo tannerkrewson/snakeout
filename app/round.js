@@ -63,6 +63,28 @@ Round.prototype.onceOnAll = function (event, next) {
 	});
 };
 
+Round.prototype.getIndexOfPlayerOnWaitingList = function (player) {
+	for (var i = 0; i < this.playersBeingWaitedOn.length; i++) {
+		var playerIdToCheck = this.playersBeingWaitedOn[i].id;
+		if (player.id === playerIdToCheck) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+Round.prototype.removePlayerFromWaitingList = function (player) {
+	// see if this player is in the waiting list
+	var indexOfPlayer = this.getIndexOfPlayerOnWaitingList(player);
+
+	if (indexOfPlayer > -1) {
+		//remove the player from the array
+		this.playersBeingWaitedOn.splice(indexOfPlayer, 1);
+		return true;
+	}
+	return false;
+}
+
 Round.prototype.waitFor = function (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone) {
 	this.playersBeingWaitedOn = playersToWaitOn.slice();
 
@@ -79,22 +101,8 @@ Round.prototype.waitFor = function (playersToWaitOn, eventToWaitFor, onPlayerDon
 	var self = this;
 	this.playersBeingWaitedOn.forEach(function (player) {
 		player.socket.once(eventToWaitFor, function (data) {
-			// see if this player is in the waiting list
-			var stillWaitingOnThisPlayer = false;
-			var indexOfPlayer;
-			for (var i = 0; i < self.playersBeingWaitedOn.length; i++) {
-				var playerIdToCheck = self.playersBeingWaitedOn[i].id;
-				if (player.id === playerIdToCheck) {
-					stillWaitingOnThisPlayer = true;
-					indexOfPlayer = i;
-					break;
-				}
-			}
 
-			if (stillWaitingOnThisPlayer) {
-				//remove the player from the array
-				self.playersBeingWaitedOn.splice(indexOfPlayer, 1);
-			}
+			self.removePlayerFromWaitingList(player);
 
 			//if the onPlayerDone function was passed, run it
 			if (onPlayerDone) {
@@ -131,29 +139,66 @@ Round.prototype.checkForWin = function() {
 	}
 }
 
-Round.prototype.getJsonPlayers = function () {
-	var players = [];
-	this.players.forEach(function (player) {
-		players.push(player.getJson());
+Round.prototype.getJsonPlayersOf = function (oldPlayerList) {
+	var newPlayersList = [];
+	oldPlayerList.forEach(function (player) {
+		if (player.getJson) {
+			newPlayersList.push(player.getJson());
+		} else {
+			newPlayersList.push(player);
+		}
 	});
-	return players;
+	return newPlayersList;
+}
+
+Round.prototype.getJsonPlayers = function () {
+	return this.getJsonPlayersOf(this.players);
 }
 
 Round.prototype.getJsonWaitingPlayers = function () {
-	var players = [];
-	this.playersBeingWaitedOn.forEach(function (player) {
-		if (player.getJson) {
-			players.push(player.getJson());
-		} else {
-			players.push(player);
-		}
-	});
-	return players;
+	return this.getJsonPlayersOf(this.playersBeingWaitedOn);
+}
+
+Round.prototype.getJsonDisconnectedPlayers = function () {
+	return this.getJsonPlayersOf(this.disconnectedPlayers);
 }
 
 Round.prototype.findReplacementFor = function (player) {
-	this.disconnectedPlayers.push(player.getJson());
+	this.disconnectedPlayers.push(player);
+	var indexOfPlayer = this.getIndexOfPlayerOnWaitingList(player);
+
+	// if the player is not currently being waited on by the server
+	if (indexOfPlayer === -1) {
+		this.playersBeingWaitedOn.push(player);
+	}
+
 	this.sendStateToAll();
+};
+
+Round.prototype.canBeReplaced = function (playerToReplaceId) {
+	for (var i = 0; i < this.disconnectedPlayers.length; i++) {
+		if (this.disconnectedPlayers[i].id === playerToReplaceId) {
+			return true;
+		}
+	}
+	return false;
+};
+
+Round.prototype.replacePlayer = function (playerToReplaceId, name, socket) {
+	for (var i = 0; i < this.disconnectedPlayers.length; i++) {
+		var playerToReplace = this.disconnectedPlayers[i];
+		if (playerToReplace.id === playerToReplaceId) {
+			playerToReplace.name = name;
+			playerToReplace.replaceConnection(socket);
+
+			this.removePlayerFromWaitingList(playerToReplace);
+
+			//delete the player from from disconnectedPlayers
+			this.disconnectedPlayers.splice(i, 1);
+
+			this.sendStateToAll();
+		}
+	}
 };
 
 Round.prototype.getPlayersThatNeedToBeReplaced = function () {
@@ -183,40 +228,11 @@ Round.prototype.getPlayerListWithSockets = function (jsonPlayerList) {
 	return newPlayersList;
 };
 
-Round.prototype.canBeReplaced = function (playerToReplaceId) {
-	for (var i = 0; i < this.disconnectedPlayers.length; i++) {
-		if (this.disconnectedPlayers[i].id === playerToReplaceId) {
-			return true;
-		}
-	}
-	return false;
-};
-
-Round.prototype.replacePlayer = function (playerToReplaceId, newPlayer) {
-	for (var i = 0; i < this.disconnectedPlayers.length; i++) {
-		if (this.disconnectedPlayers[i].id === playerToReplaceId) {
-			//give 'em the id of the old player
-			newPlayer.id = this.disconnectedPlayers[i].id;
-
-			//replace 'em
-			var playerToReplaceIndex = this.getPlayerIndexById(playerToReplaceId);
-			this.players[playerToReplaceIndex] = newPlayer;
-
-			//delete 'em from disconnectedPlayers
-			this.disconnectedPlayers.splice(i, 1);
-
-			//TODO: get the player back to where they should be on their screen
-
-			return this.players[playerToReplaceIndex];
-		}
-	}
-};
-
 Round.prototype.getState = function () {
 	var currentMission = this.getCurrentMission();
 	return {
 		currentMission,
-		disconnectedList: this.disconnectedPlayers,
+		disconnectedList: this.getJsonDisconnectedPlayers(),
 		missions: this.missions,
 		phase: this.phase,
 		players: this.getJsonPlayers(),
