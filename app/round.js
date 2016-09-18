@@ -417,9 +417,6 @@ Round.prototype.startMissionPhase = function() {
 	// runs the processResultsOfVote function once everyone has voted
 	thisMission.startMission(this.processResultsOfMission.bind(this));
 
-	this.changePhase('mission');
-	this.sendStateToAll();
-
 	// what the parameters do:
 	// (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone)
 	// *onAllDone is not used because it is handled in the mission object
@@ -430,6 +427,8 @@ Round.prototype.startMissionPhase = function() {
 		self.sendStateToAll();
 	});
 
+	this.changePhase('mission');
+	this.sendStateToAll();
 }
 
 Round.prototype.processResultsOfMission = function (wasMissionSuccessful) {
