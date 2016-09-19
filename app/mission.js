@@ -81,8 +81,11 @@ Mission.prototype.addMissionVote = function (playerId, vote) {
 			}
 		}
 
-		//TODO: Add cases for missions that need two rejects to fail
 		if (rejectCount === 0) {
+			wasVoteSuccessful = true;
+		} else if (this.number === 4 && this.numberOfPlayersInTheGame >= 7 && rejectCount === 1) {
+			// if it is the 4th mission and the game has 7 or more players,
+			// the mission needs two fail votes to fail
 			wasVoteSuccessful = true;
 		} else {
 			wasVoteSuccessful = false;
