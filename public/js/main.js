@@ -157,6 +157,7 @@ var MainMenu = React.createClass({
 				return false;
 			})();
 
+			data.message = '';
 			switch (round.phase) {
 				case 'start':
 					if (isWaiting) {
@@ -170,9 +171,15 @@ var MainMenu = React.createClass({
 					if (me.isCaptain) {
 						self.props.changePage(SelectionPhase, data);
 					} else {
-						data.message = 'Waiting for the captain to make a selection for ';
+						//find out who's captain
+						for (var i = 0; i < round.players.length; i++) {
+							if (round.players[i].isCaptain) {
+								data.message += round.players[i].name + ' is selecting players for ';
+								break;
+							}
+						}
 						data.message += 'mission ' + round.currentMission.number + '...';
-						self.props.changePage(Waiting, data);
+						self.props.changePage(CaptainWaiting, data);
 					}
 
 					break;
@@ -792,6 +799,22 @@ var Waiting = React.createClass({
   }
 });
 
+var CaptainWaiting = React.createClass({
+  render: function() {
+		var me = this.props.you;
+		var data = this.props.round;
+    return (
+      <div className="waiting">
+				<p>{this.props.message}</p>
+				<PlayerCheckboxes players={data.players} selectedPlayers={data.captainsSelectedPlayers} />
+				<p>Players being waited on:</p>
+				<PlayerList players={data.waitingList} />
+				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
+      </div>
+    );
+  }
+});
+
 
 // props: players, onChange, numPlayersToSelect
 var PlayerSelector = React.createClass({
@@ -846,6 +869,10 @@ var PlayerSelector = React.createClass({
 // onCheck, function that gets passed the player that was checked
 var PlayerCheckboxes = React.createClass({
   render: function() {
+		//prevent error if oncheck not passed
+		if (!this.props.onCheck) {
+			this.props.onCheck = function() {};
+		}
 		var boxes = [];
 		var self = this;
 		this.props.players.forEach(function(player) {
