@@ -17,6 +17,7 @@ function Round(roundNumber, players, onEnd) {
 	this.missionNumber = 0;
 	this.missions = [];
 	this.currentCaptain;
+	this.captainsSelectedPlayers = [];
 	this.phase = 'lobby';
 	/* Phase List:
 		lobby
@@ -236,6 +237,7 @@ Round.prototype.getPlayerListWithSockets = function (jsonPlayerList) {
 Round.prototype.getState = function () {
 	var currentMission = this.getCurrentMission();
 	return {
+		captainsSelectedPlayers: this.captainsSelectedPlayers,
 		currentMission,
 		disconnectedList: this.getJsonDisconnectedPlayers(),
 		missions: this.missions,
@@ -362,16 +364,23 @@ Round.prototype.showStartPage = function () {
 // the first phase of each mission
 Round.prototype.startSelectionPhase = function () {
 	this.changePhase('selection');
+	this.captainsSelectedPlayers = [];
 
 	// this list is only going to contain one player, but I do it because
 	// waitFor requires an array of players
-	var captainList = [this.currentCaptain];
+	var captainList = [ this.currentCaptain ];
+
+	// this is for the live updating check list showed on everyone elses screens
+	var self = this;
+	this.currentCaptain.socket.on('updateSelectedPlayers', function(data) {
+		self.captainsSelectedPlayers = data.selectedPlayers;
+		self.sendStateToAll();
+	});
 
 	// what the parameters do:
 	// (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone)
 	// *all done is not used b/c it is handled in the mission object
-	var self = this;
-	this.waitFor(captainList, 'captainsSelectedPlayers', function(player, data) {
+	this.waitFor(captainList, 'submitSelectedPlayers', function(player, data) {
 		// ran once the captain has selected players
 		self.startVotingPhase(data.selectedPlayers);
 	});

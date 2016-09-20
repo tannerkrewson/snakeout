@@ -31,6 +31,8 @@ MockSocket.prototype.once = function(eventName, next) {
   }
 };
 
+MockSocket.prototype.on = function() {}
+
 MockSocket.prototype.bindOnEmit = function (funcToRun) {
   this.onEmit = funcToRun;
 }
@@ -138,7 +140,6 @@ test('startSelectionPhase', function (t) {
 
   t.equal(testRound.phase, 'selection');
 
-
   t.end();
 });
 
@@ -175,6 +176,6 @@ test('getState', function (t) {
   var state = testRound.getState();
 
   // fail the test if params are removed
-  t.ok(Object.keys(state).length >= 6);
+  t.ok(Object.keys(state).length >= 7);
   t.end();
 });

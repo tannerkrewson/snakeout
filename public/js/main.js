@@ -49,8 +49,14 @@ Connection.prototype.missionVote = function(vote) {
 	});
 }
 
-Connection.prototype.sendSelectedPlayers = function(selectedPlayers) {
-	this.send('captainsSelectedPlayers', {
+Connection.prototype.updateSelectedPlayers = function(selectedPlayers) {
+	this.send('updateSelectedPlayers', {
+		selectedPlayers
+	});
+}
+
+Connection.prototype.submitSelectedPlayers = function(selectedPlayers) {
+	this.send('submitSelectedPlayers', {
 		selectedPlayers
 	});
 }
@@ -86,13 +92,21 @@ Connection.prototype.once = function(event, next) {
 
 
 function getPlayerById(playerList, id) {
+	var index = getPlayerIndexById(playerList, id);
+	if (index > -1) {
+		return playerList[index];
+	}
+	return false;
+}
+
+function getPlayerIndexById(playerList, id) {
 	for (var i = 0; i < playerList.length; i++) {
 		var player = playerList[i];
 		if (player.id === id) {
-			return player;
+			return i;
 		}
 	}
-	return false;
+	return -1;
 }
 
 
@@ -675,9 +689,9 @@ var CaptainSelection = React.createClass({
 			ready: false
 		};
 	},
-	selectedPlayers: [],
 	updatePlayerList: function(selectedPlayers) {
-		this.selectedPlayers = selectedPlayers;
+		// send the update list to the server
+		server.updateSelectedPlayers(selectedPlayers);
 
 		var data = this.props.round;
 		var currentMission = data.currentMission;
@@ -685,7 +699,7 @@ var CaptainSelection = React.createClass({
 
 		//if the user has selected the required number of players
 		var ready;
-		if (this.selectedPlayers.length === numPlayersToSelect) {
+		if (selectedPlayers.length === numPlayersToSelect) {
 			this.setState({
 				ready: true
 			});
@@ -695,8 +709,8 @@ var CaptainSelection = React.createClass({
 			});
 		}
 	},
-	sendSelectedPlayers: function() {
-		server.sendSelectedPlayers(this.selectedPlayers);
+	submitSelectedPlayers: function() {
+		server.submitSelectedPlayers(this.props.round.captainsSelectedPlayers);
 	},
   render: function() {
 		var data = this.props.round;
@@ -715,13 +729,14 @@ var CaptainSelection = React.createClass({
 				</p>
 				<PlayerSelector
 					players={data.players}
+					selectedPlayers={data.captainsSelectedPlayers}
 					numPlayersToSelect={numPlayersToSelect}
 					onChange={this.updatePlayerList.bind(this)}
 				/>
 				<SOButton
 					label="Put it to a vote!"
 					disabled={!this.state.ready}
-					onClick={this.sendSelectedPlayers.bind(this)}
+					onClick={this.submitSelectedPlayers.bind(this)}
 				/>
       </div>
     );
@@ -780,7 +795,7 @@ var Waiting = React.createClass({
 
 // props: players, onChange, numPlayersToSelect
 var PlayerSelector = React.createClass({
-	getInitialState: function() {
+	getInitialState: function () {
 		return {
 			selectedPlayers: []
 		};
@@ -790,44 +805,60 @@ var PlayerSelector = React.createClass({
 		var numPlayersToSelect = this.props.numPlayersToSelect;
 
 		//see if this player has been selected
-		var isChecked = false;
-		var index = selectedPlayers.indexOf(player);
-		if (index > -1) {
-			isChecked = true;
-		}
+		var playerIsChecked = !!getPlayerById(selectedPlayers, player.id);
 
-		if (!isChecked) {
+		if (!playerIsChecked) {
 			//if we have not already selected the number of players needed
 			if (selectedPlayers.length !== numPlayersToSelect) {
+				// add the to the selectedPlayers list, checking their box
 				selectedPlayers.push(player);
 			}
 			//if we have, the check is disallowed, so we do nothing.
 		} else {
-			//unchecks are always allowed
-			var index = selectedPlayers.indexOf(player);
+			// remove the from the selectedPlayers list, unchecking their box
+			var index = getPlayerIndexById(selectedPlayers, player.id);
 			if (index > -1) {
 				selectedPlayers.splice(index, 1);
+			} else {
+				console.log('PlayerSelector error: player doesnt exist');
 			}
 		}
+
 		this.setState({selectedPlayers});
 		this.props.onChange(selectedPlayers);
 	},
+  render: function() {
+		var selectedPlayers;
+		if (this.props.selectedPlayers) {
+			selectedPlayers = this.props.selectedPlayers;
+		} else {
+			selectedPlayers = this.state.selectedPlayers;
+		}
+    return (
+			<PlayerCheckboxes players={this.props.players} selectedPlayers={selectedPlayers} onCheck={this.onCheck}/>
+    );
+  }
+})
+
+// props:
+// players, list of players
+// selectedPlayers, the players from the above list that should be checked
+// onCheck, function that gets passed the player that was checked
+var PlayerCheckboxes = React.createClass({
   render: function() {
 		var boxes = [];
 		var self = this;
 		this.props.players.forEach(function(player) {
 			//see if this player has been selected
-			var selected = false;
-			var index = self.state.selectedPlayers.indexOf(player);
-			if (index > -1) {
-				selected = true;
-			}
+			var playerIsSelected = !!getPlayerById(self.props.selectedPlayers, player.id);
+
 			var thisPlayerOnCheck = function() {
-				self.onCheck(player);
+				self.props.onCheck(player);
 			}
+
 			boxes.push(<CheckableButton
 				label={player.name}
-				checked={selected}
+				checked={playerIsSelected}
 				onCheck={thisPlayerOnCheck}
 			/>);
 		});
