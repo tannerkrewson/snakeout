@@ -39,7 +39,7 @@ Game.prototype.startNewRound = function () {
 	this.inProgress = true;
 
 	var self = this;
-	this.currentRound = new Round(this.getNextRoundNum(), this.players, function () {
+	this.currentRound = new Round(this.getNextRoundNum(), this.code, this.players, function () {
 		//ran when the round ends
 		self.sendUpdatedPlayersList();
 		self.inProgress = false;

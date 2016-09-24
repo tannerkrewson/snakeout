@@ -76,7 +76,7 @@ test('create round', function(t) {
   var onEnd = function() {
     onEndCalled = true;
   };
-  testRound = new Round(2, mockPlayers, onEnd);
+  testRound = new Round(2, 'abcd', mockPlayers, onEnd);
   t.ok(testRound);
   t.equal(testRound.roundNumber, 2);
   t.equal(testRound.players, mockPlayers);

@@ -7,8 +7,9 @@ var Mission = require('./mission');
 var shuffle = require('knuth-shuffle').knuthShuffle;
 var getNumberOfPlayersOnMission = require('./getNumberOfPlayersOnMission');
 
-function Round(roundNumber, players, onEnd) {
+function Round(roundNumber, code, players, onEnd) {
 	this.roundNumber = roundNumber;
+	this.code = code;
 	this.players = players;
 	this.onEnd = onEnd;
 	this.onDoneWaiting;
@@ -242,6 +243,7 @@ Round.prototype.getState = function () {
 	var currentMission = this.getCurrentMission();
 	return {
 		captainsSelectedPlayers: this.captainsSelectedPlayers,
+		gameCode: this.code,
 		currentMission,
 		disconnectedList: this.getJsonDisconnectedPlayers(),
 		missions: this.missions,

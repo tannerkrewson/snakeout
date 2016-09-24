@@ -368,9 +368,7 @@ var Lobby = React.createClass({
 
     return (
       <div className="lobby">
-        <p>Game Code:
-					<span className="game-code">{this.props.code}</span>
-				</p>
+				<GameCode code={this.props.code} />
 				<p>Players:</p>
 				<PlayerList players={this.props.players} />
 				<p>{playersNeededMessage}</p>
@@ -424,22 +422,19 @@ var Replace = React.createClass({
 
 var RoundInfoBar = React.createClass({
   render: function() {
-		/*
-			<p>Players:</p>
-			<PlayerList players={this.props.players} />
-		*/
-
+		var me = this.props.me;
+		var round = this.props.round;
 		var ourRole = this.props.me.isSpy ? 'spy' : 'loyalist';
-
     return (
       <div className="round-info-bar">
 				<br/>
 				<hr/>
 				<p>Missions:</p>
-				<MissionBar missions={this.props.missions} />
+				<MissionBar missions={round.missions} />
 				<br/>
-				<RoleViewer role={ourRole} players={this.props.players} me={this.props.me}/>
+				<RoleViewer role={ourRole} players={round.players} me={me}/>
 				<br/>
+				<GameCode code={round.gameCode} />
       </div>
     );
   }
@@ -480,7 +475,7 @@ var SelectionPhase = React.createClass({
     return (
       <div className="selection-phase">
 				<CaptainSelection {...this.props}/>
-				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
+				<RoundInfoBar round={data} me={me}/>
       </div>
     );
   }
@@ -525,7 +520,7 @@ var VotingPhase = React.createClass({
 					<SOButton label="Reject" onClick={this.voteNay.bind(this)} />
 					<SOButton label="Approve" onClick={this.voteYay.bind(this)} />
 				</div>
-				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
+				<RoundInfoBar round={data} me={me}/>
       </div>
     );
   }
@@ -576,7 +571,7 @@ var VotingResults = React.createClass({
 					label="Next"
 					onClick={this.doneViewingResults.bind(this)}
 				/>
-				<RoundInfoBar missions={round.missions} players={round.players} me={me}/>
+				<RoundInfoBar round={round} me={me}/>
       </div>
     );
   }
@@ -592,7 +587,7 @@ var MissionPhase = React.createClass({
     return (
       <div className="selection-phase">
 				<OnMissionScreen {...this.props}/>
-				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
+				<RoundInfoBar round={data} me={me}/>
       </div>
     );
   }
@@ -683,7 +678,7 @@ var Results = React.createClass({
 					label="Next"
 					onClick={this.doneViewingResults.bind(this)}
 				/>
-				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
+				<RoundInfoBar round={data} me={me}/>
       </div>
     );
   }
@@ -793,7 +788,7 @@ var Waiting = React.createClass({
       <div className="waiting">
 				<p>{this.props.message}</p>
 				<PlayerList players={this.props.round.waitingList} />
-				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
+				<RoundInfoBar round={data} me={me}/>
       </div>
     );
   }
@@ -809,7 +804,7 @@ var CaptainWaiting = React.createClass({
 				<PlayerCheckboxes players={data.players} selectedPlayers={data.captainsSelectedPlayers} />
 				<p>Players being waited on:</p>
 				<PlayerList players={data.waitingList} />
-				<RoundInfoBar missions={data.missions} players={data.players} me={me}/>
+				<RoundInfoBar round={data} me={me}/>
       </div>
     );
   }
@@ -1068,6 +1063,16 @@ var SOInput = React.createClass({
       <input type="text" onChange={this.handleChange.bind(this)} placeholder={this.props.placeholder} />
     );
   }
+});
+
+var GameCode = React.createClass({
+	render: function() {
+		return (
+			<p>Game Code:
+				<span className="game-code">{this.props.code}</span>
+			</p>
+		);
+	}
 });
 
 var Bottom = React.createClass({
