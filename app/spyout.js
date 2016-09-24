@@ -58,6 +58,11 @@ Spyout.prototype.generateCode = function () {
 Spyout.prototype.removeGame = function (code) {
 	var game = this.findGame(code);
 
+	if (game.code === 'ffff') {
+		//if its a dev game, recreate it
+		this.newGame('ffff');
+	}
+
 	var index = this.games.indexOf(game);
 	if (index > -1) {
 		this.games.splice(index, 1);
