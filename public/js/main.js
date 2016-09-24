@@ -140,6 +140,9 @@ var MainMenu = React.createClass({
     var goToNewGame = function() {
       this.props.changePage(NewGame);
     };
+		var goToHowToPlay = function() {
+      window.location.href = '/how-to-play';
+    };
 
 		var self = this;
 
@@ -268,8 +271,9 @@ var MainMenu = React.createClass({
 
     return (
       <div className="main-menu noformrefresh">
+			  <SOButton label="New Game"  onClick={goToNewGame.bind(this)}/>
         <SOButton label="Join Game" onClick={goToJoinGame.bind(this)}/>
-        <SOButton label="New Game"  onClick={goToNewGame.bind(this)}/>
+				<SOButton label="How to Play"  onClick={goToHowToPlay.bind(this)}/>
 				<br/><br/>
       </div>
     );
