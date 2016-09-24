@@ -88,6 +88,7 @@ Round.prototype.removePlayerFromWaitingList = function (player) {
 
 Round.prototype.waitFor = function (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone) {
 	this.playersBeingWaitedOn = playersToWaitOn.slice();
+	this.onAllDone = onAllDone;
 
 	if (!eventToWaitFor) {
 		eventToWaitFor = 'done';
@@ -111,15 +112,13 @@ Round.prototype.waitFor = function (playersToWaitOn, eventToWaitFor, onPlayerDon
 			}
 
 			//if we aren't waiting on any more players, continue with whatever
-			if (onAllDone && self.playersBeingWaitedOn.length === 0) {
-				onAllDone();
+			// and no players are disconnected
+			if (self.onAllDone && self.playersBeingWaitedOn.length === 0 && self.disconnectedPlayers.length === 0) {
+				self.onAllDone();
+				self.onAllDone = undefined;
 			}
 		});
 	});
-}
-
-Round.prototype.onDone = function () {
-
 }
 
 Round.prototype.checkForWin = function() {
@@ -166,12 +165,6 @@ Round.prototype.getJsonDisconnectedPlayers = function () {
 
 Round.prototype.findReplacementFor = function (player) {
 	this.disconnectedPlayers.push(player);
-	var indexOfPlayer = this.getIndexOfPlayerOnWaitingList(player);
-
-	// if the player is not currently being waited on by the server
-	if (indexOfPlayer === -1) {
-		this.playersBeingWaitedOn.push(player);
-	}
 
 	this.sendStateToAll();
 };
@@ -195,12 +188,23 @@ Round.prototype.replacePlayer = function (playerToReplaceId, name, socket) {
 			// i'd like to say that i came up with this all by myself saving
 			// what could have been hours of work to come up with a different
 			// solution. ✌️
+			// UPDATE: i ended up doing hours of work to fix a bug that I thought
+			// was caused by this, but ended up being something unrelated, so i
+			// reinstated this and deleted the other stuff. oops.
 			socket._events = playerToReplace.socket._events;
 
 			playerToReplace.replaceConnection(socket);
 
 			//delete the player from from disconnectedPlayers
 			this.disconnectedPlayers.splice(i, 1);
+
+			// if there are not players being waited on, and the player we just replaced
+			// was the last person on the disconnectedPlayers list, run the onAllDone
+			// function from the call to waitFor
+			if (this.onAllDone && this.playersBeingWaitedOn.length === 0 && this.disconnectedPlayers.length === 0) {
+				this.onAllDone();
+				this.onAllDone = undefined;
+			}
 
 			this.sendStateToAll();
 		}
