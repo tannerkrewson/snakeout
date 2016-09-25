@@ -7,8 +7,18 @@ module.exports = function (app) {
 	});
 
 	app.get('/how-to-play', function (req, res) {
-		res.render('howtoplay', {});
+		res.render('how-to-play', {});
 	});
+
+	app.get('/more-games', function (req, res) {
+		res.render('more-games', {});
+	});
+
+
+	app.get('/screenshots', function (req, res) {
+		res.render('screenshots', {});
+	});
+
 
 	if (app.get('env') === 'development') {
 		app.get('/dev', function (req, res) {

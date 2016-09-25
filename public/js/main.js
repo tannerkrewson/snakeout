@@ -143,6 +143,12 @@ var MainMenu = React.createClass({
 		var goToHowToPlay = function() {
       window.location.href = '/how-to-play';
     };
+		var goToMoreGames = function() {
+      window.location.href = '/more-games';
+    };
+		var goToScreenshots = function() {
+      window.location.href = '/screenshots';
+    };
 
 		var self = this;
 
@@ -271,9 +277,16 @@ var MainMenu = React.createClass({
 
     return (
       <div className="main-menu noformrefresh">
-			  <SOButton label="New Game"  onClick={goToNewGame.bind(this)}/>
-        <SOButton label="Join Game" onClick={goToJoinGame.bind(this)}/>
-				<SOButton label="How to Play"  onClick={goToHowToPlay.bind(this)}/>
+				<p>
+					<SOButton label="Join Game" onClick={goToJoinGame.bind(this)}/>
+					<SOButton label="New Game" onClick={goToNewGame.bind(this)}/>
+				</p>
+				<br/>
+				<div className="btn-group-vertical" role="group" aria-label="...">
+					<SOButton label="How to Play" isGroup={true} onClick={goToHowToPlay.bind(this)}/>
+					<SOButton label="Screenshots" isGroup={true} onClick={goToScreenshots.bind(this)}/>
+					<SOButton label="More Games Like Spyout" isGroup={true} onClick={goToMoreGames.bind(this)}/>
+				</div>
 				<br/><br/>
       </div>
     );
@@ -1045,10 +1058,14 @@ var MissionBox = React.createClass({
 
 var SOButton = React.createClass({
   render: function() {
+		var groupClass = '';
+		if (!this.props.isGroup) {
+			groupClass = 'sobutton-nongroup';
+		}
     return (
       <button
 				type={this.props.isSubmit ? "submit" : "button"}
-				className="btn btn-secondary sobutton"
+				className={"btn btn-secondary sobutton " + groupClass}
 				disabled={this.props.disabled}
 				onClick={this.props.onClick}
 			>
