@@ -362,13 +362,16 @@ var NewGame = React.createClass({
 var Lobby = React.createClass({
   render: function() {
 		var gameCode = this.props.code;
+		var numPlayersInLobby = this.props.players.length;
 		var startGame = function() {
 			server.startGame(gameCode);
+			gtag('event', 'game_start', {
+				'number_of_players': numPlayersInLobby
+			});
 		}
 
 		// display how many more players are needed to start the game
 		var playersNeededMessage = '';
-		var numPlayersInLobby = this.props.players.length;
 		var notReady = false;
 		if (numPlayersInLobby < 5) {
 			var numPlayersNeeded = 5 - numPlayersInLobby;
