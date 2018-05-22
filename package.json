@@ -1,8 +1,6 @@
 {
-  "name": "simple-react-full-stack",
+  "name": "spyout",
   "version": "1.0.0",
-  "description":
-    "Boilerplate to build a full stack web application using React, Node.js, Express and Webpack.",
   "main": "src/server/index.js",
   "scripts": {
     "start": "node src/server/index.js",
@@ -11,8 +9,8 @@
     "server": "nodemon src/server/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
-  "author": "Sandeep Raveesh",
-  "license": "ISC",
+  "author": "Tanner Krewson",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.16.3",
     "react": "^16.3.1",
