@@ -22,6 +22,11 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.pug$/,
+        include: path.join(__dirname, 'src'),
+        loaders: [ 'pug-loader' ]
       }
     ]
   },
@@ -35,8 +40,8 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin([outputDirectory]),
     new HtmlWebpackPlugin({
-      template: './public/index.html',
-      favicon: './public/favicon.ico'
+      template: './src/server/views/index.pug',
+      inject: true
     })
   ]
 };
