@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "src/server/app.js",
   "scripts": {
-    "start": "node src/server/app.js",
+    "start": "node src/server/bin/www",
     "build": "webpack --mode production",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-    "server": "nodemon src/server/app.js",
+    "server": "set NODE_ENV=development&& nodemon --exec npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Tanner Krewson",

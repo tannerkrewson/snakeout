@@ -31,17 +31,17 @@ module.exports = {
     ]
   },
   devServer: {
-    port: 4000,
+    port: 3000,
     open: true,
     proxy: {
-      '/api': 'http://localhost:4001'
+      '/api': 'http://localhost:8080'
     }
   },
   plugins: [
     new CleanWebpackPlugin([outputDirectory]),
     new HtmlWebpackPlugin({
-      template: './src/server/views/index.pug',
-      inject: true
+      template: './public/index.html',
+      favicon: './public/favicon.ico'
     })
   ]
 };
