@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import SOButton from './SOButton';
+import Connection from '../utils/Connection'
 
 export default class MainMenu extends Component {
   constructor(props) {
@@ -24,8 +25,8 @@ export default class MainMenu extends Component {
     };
 
     var self = this;
-    /*
-    server = new Connection(function(data) {
+    
+    let server = new Connection(function(data) {
       var round = data.round;
       var me = data.you;
 
@@ -154,7 +155,6 @@ export default class MainMenu extends Component {
     server.on("replace", function(data) {
       self.props.changePage(Replace, data);
     });
-    */
 
     return (
       <div className="main-menu noformrefresh">

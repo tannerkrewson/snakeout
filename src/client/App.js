@@ -5,11 +5,10 @@ import Footer from './components/Footer';
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-  }
-
-  getInitialState() {
-    return {page: MainMenu};
+    this.state = {
+      page: MainMenu,
+      server: {}
+    };
   }
 
   changePage(page, pageProps) {
@@ -22,7 +21,7 @@ export default class App extends Component {
       	<p className="so-h1">SPYOUT</p>
         <hr/>
 				<br/>
-        <MainMenu changePage={this.changePage} {...this.state.pageProps}/>
+        <this.state.page changePage={this.changePage} server={this.state.server} {...this.state.pageProps}/>
 				<Footer />
 			</div>
     );
