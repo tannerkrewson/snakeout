@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import SOButton from './SOButton';
 import JoinGame from './JoinGame';
 import NewGame from './NewGame';
+import Lobby from './Lobby';
 
 export default class MainMenu extends Component {
   constructor(props) {
