@@ -2,9 +2,7 @@ import io from 'socket.io-client';
 
 function Connection(onStateUpdate) {
     this.socket = io();
-    console.log(this.socket);
     
-
 	this.functionsToRunOnUpdateWaitingList = [];
 
 	var self = this;
