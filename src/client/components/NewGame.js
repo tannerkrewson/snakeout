@@ -15,14 +15,14 @@ export default class NewGame extends Component {
     }
     onFormSubmit(event) {
         event.preventDefault();
-        server.newGame(this.state.name);
+        this.props.server.newGame(this.state.name);
     }
     render() {
         var goToMainMenu = function() {
             this.props.changePage(MainMenu);
         };
         return (
-                <form className="new-menu noformrefresh" onSubmit={this.onFormSubmit.bind(this)}>
+                <form className="new-menu" onSubmit={this.onFormSubmit.bind(this)}>
                     <p>Enter your name:</p>
                     <SOInput placeholder="" onChange={this.receiveName.bind(this)}/>
                     <br/><br/>

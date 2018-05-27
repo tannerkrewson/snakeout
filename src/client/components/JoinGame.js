@@ -14,7 +14,7 @@ export default class JoinGame extends Component {
         this.props.changePage(MainMenu);
     }
     joinGame() {
-        server.joinGame(this.state.code, this.state.name);;
+        this.props.server.joinGame(this.state.code, this.state.name);;
     }
     onGameCode(code) {
         this.setState({code});
@@ -28,7 +28,7 @@ export default class JoinGame extends Component {
     }
     render() {
         return (
-        <form className="join-menu noformrefresh" onSubmit={this.onFormSubmit.bind(this)}>
+        <form className="join-menu" onSubmit={this.onFormSubmit.bind(this)}>
             <p>Enter the game code:</p>
             <SOInput placeholder="" onChange={this.onGameCode.bind(this)}/>
             <br/><br/>
