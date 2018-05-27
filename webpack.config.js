@@ -22,11 +22,6 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
-      },
-      {
-        test: /\.pug$/,
-        include: path.join(__dirname, 'src'),
-        loaders: [ 'pug-loader' ]
       }
     ]
   },
