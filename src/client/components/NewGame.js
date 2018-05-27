@@ -10,29 +10,24 @@ export default class NewGame extends Component {
         super(props);
         this.state = {};
     }
-    componentDidMount() {
-        //prevent page from refreshing when Join game buttons are pressed
-        /*$(".noformrefresh").submit(function(e) {
-            e.preventDefault();
-        });*/
-    }
     receiveName(name) {
         this.setState({name});
+    }
+    onFormSubmit(event) {
+        event.preventDefault();
+        server.newGame(this.state.name);
     }
     render() {
         var goToMainMenu = function() {
             this.props.changePage(MainMenu);
         };
-        var startGame = function(name) {
-            server.newGame(this.state.name);
-        };
         return (
-                <form className="new-menu noformrefresh" onSubmit={startGame.bind(this)}>
+                <form className="new-menu noformrefresh" onSubmit={this.onFormSubmit.bind(this)}>
                     <p>Enter your name:</p>
-                    <SOInput placeholder="" onChange={this.receiveName}/>
+                    <SOInput placeholder="" onChange={this.receiveName.bind(this)}/>
                     <br/><br/>
-            <SOButton label="Back" onClick={goToMainMenu.bind(this)}/>
-            <SOButton label="Start" isSubmit={true}/>
+                    <SOButton label="Back" onClick={goToMainMenu.bind(this)}/>
+                    <SOButton label="Start" isSubmit={true}/>
                     <br/>
                 </form>
         );
