@@ -9,10 +9,9 @@ export default class App extends Component {
       page: MainMenu,
       server: {}
     };
-  }
-
-  changePage(page, pageProps) {
-    this.setState({page, pageProps});
+    this.changePage = (page, pageProps) => {
+      this.setState({page, pageProps});
+    }
   }
 
   render() {

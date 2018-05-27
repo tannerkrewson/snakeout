@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import SOButton from './SOButton';
+import JoinGame from './JoinGame';
+import NewGame from './NewGame';
 import Connection from '../utils/Connection'
 
 export default class MainMenu extends Component {
