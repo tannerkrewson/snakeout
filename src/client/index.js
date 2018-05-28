@@ -5,4 +5,6 @@ import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './main.css';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+var isDev = window.location.href.includes('dev');
+
+ReactDOM.render(<App isDev={isDev} />, document.getElementById('root'));

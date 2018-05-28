@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import MainMenu from './components/MainMenu';
 import Footer from './components/Footer';
 
@@ -128,6 +130,12 @@ export default class App extends Component {
     });
     this.changePage = (page, pageProps) => {
       this.setState({page, pageProps});
+    }
+
+    //join the dev game if path was /dev
+    if (this.props.isDev) {
+      console.log("Attempting to join dev game");
+      this.server.joinGame('ffff', Math.random().toString().substring(2, 6));
     }
   }
 
