@@ -31,7 +31,7 @@ export default class MainMenu extends Component {
     this.props.server.on("joinGame", function(data) {
       if (data.success) {
         self.props.changePage(Lobby, data.game);
-        server.on("updatePlayerList", function(data) {
+        self.props.server.on("updatePlayerList", function(data) {
           self.props.changePage(Lobby, data.game);
         });
       } else {

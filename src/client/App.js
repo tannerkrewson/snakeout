@@ -3,6 +3,14 @@ import PropTypes from 'prop-types';
 
 import MainMenu from './components/MainMenu';
 import Footer from './components/Footer';
+import StartPage from './components/StartPage';
+import Waiting from './components/Waiting';
+import SelectionPhase from './components/SelectionPhase';
+import CaptainWaiting from './components/CaptainWaiting';
+import VotingPhase from './components/VotingPhase';
+import VotingResults from './components/VotingResults';
+import MissionPhase from './components/MissionPhase';
+import Results from './components/Results';
 
 import Connection from './utils/Connection';
 
