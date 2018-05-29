@@ -9,10 +9,10 @@ export default class OnMissionScreen extends Component {
         this.state = {};
     }
     voteYay() {
-		server.missionVote(true);
+		this.props.server.missionVote(true);
 	}
 	voteNay() {
-		server.missionVote(false);
+		this.props.server.missionVote(false);
 	}
     render() {
         var me = this.props.you;

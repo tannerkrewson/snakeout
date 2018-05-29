@@ -11,7 +11,7 @@ export default class VotingResults extends Component {
         this.state = {};
     }
     doneViewingResults() {
-		server.doneViewingVoteResults();
+		this.props.server.doneViewingVoteResults();
 	}
     render() {
 		var me = this.props.you;
@@ -21,7 +21,7 @@ export default class VotingResults extends Component {
 		var rejectVotes = [];
 		for (var i = 0; i < round.currentMission.votes.length; i++) {
 			var ballot = round.currentMission.votes[i];
-			var player = getPlayer.byId(round.players, ballot.playerId);
+			var player = GetPlayer.byId(round.players, ballot.playerId);
 			if (ballot.vote && player) {
 				approveVotes.push(player);
 			} else if (!ballot.vote && player){
