@@ -20,6 +20,12 @@ export default class App extends Component {
     this.state = {
       page: MainMenu
     };
+
+    this.changePage = (page, pageProps) => {
+      this.setState({page, pageProps});
+    }
+
+    var self = this;
     this.server = new Connection(function(data) {
       var round = data.round;
       var me = data.you;
@@ -38,15 +44,15 @@ export default class App extends Component {
       switch (round.phase) {
         case "start":
           if (isWaiting) {
-            self.props.changePage(StartPage, data);
+            self.changePage(StartPage, data);
           } else {
             data.message = "Waiting to begin the game...";
-            self.props.changePage(Waiting, data);
+            self.changePage(Waiting, data);
           }
           break;
         case "selection":
           if (me.isCaptain) {
-            self.props.changePage(SelectionPhase, data);
+            self.changePage(SelectionPhase, data);
           } else {
             //find out who's captain
             for (var i = 0; i < round.players.length; i++) {
@@ -57,7 +63,7 @@ export default class App extends Component {
               }
             }
             data.message += "mission " + round.currentMission.number + "...";
-            self.props.changePage(CaptainWaiting, data);
+            self.changePage(CaptainWaiting, data);
           }
 
           break;
@@ -74,19 +80,19 @@ export default class App extends Component {
           }
 
           if (!alreadyVoted) {
-            self.props.changePage(VotingPhase, data);
+            self.changePage(VotingPhase, data);
           } else {
             data.message = "Waiting for players to vote...";
-            self.props.changePage(Waiting, data);
+            self.changePage(Waiting, data);
           }
           break;
         case "voting_results":
           if (isWaiting) {
-            self.props.changePage(VotingResults, data);
+            self.changePage(VotingResults, data);
           } else {
             data.message =
               "Waiting for everyone to finish viewing the results...";
-            self.props.changePage(Waiting, data);
+            self.changePage(Waiting, data);
           }
           break;
         case "mission":
@@ -118,27 +124,24 @@ export default class App extends Component {
           }
 
           if (isOnMission && hasntVotedYet) {
-            self.props.changePage(MissionPhase, data);
+            self.changePage(MissionPhase, data);
           } else {
             data.message = "Waiting for the mission to complete...";
-            self.props.changePage(Waiting, data);
+            self.changePage(Waiting, data);
           }
 
           break;
         case "mission_results":
           if (isWaiting) {
-            self.props.changePage(Results, data);
+            self.changePage(Results, data);
           } else {
             data.message =
               "Waiting for everyone to finish viewing the results...";
-            self.props.changePage(Waiting, data);
+            self.changePage(Waiting, data);
           }
           break;
       }
     });
-    this.changePage = (page, pageProps) => {
-      this.setState({page, pageProps});
-    }
 
     //join the dev game if path was /dev
     if (this.props.isDev) {
