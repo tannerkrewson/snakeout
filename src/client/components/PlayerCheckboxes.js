@@ -19,12 +19,11 @@ export default class PlayerCheckboxes extends Component {
             //see if this player has been selected
             var playerIsSelected = !!GetPlayer.byId(self.props.selectedPlayers, player.id);
 
-            var thisPlayerOnCheck;
-            if (self.props.onCheck) {
-                thisPlayerOnCheck = self.props.onCheck;
-            } else {
-                thisPlayerOnCheck = function() {};
-            }
+            var thisPlayerOnCheck = function() {
+                if (self.props.onCheck) {
+                    self.props.onCheck(player);
+                }
+			}
 
             boxes.push(<CheckableButton
                 label={player.name}
