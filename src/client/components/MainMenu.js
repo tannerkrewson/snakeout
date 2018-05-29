@@ -3,6 +3,7 @@ import SOButton from './SOButton';
 import JoinGame from './JoinGame';
 import NewGame from './NewGame';
 import Lobby from './Lobby';
+import Replace from './Replace';
 
 export default class MainMenu extends Component {
   constructor(props) {

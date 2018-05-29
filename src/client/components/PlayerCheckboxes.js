@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import GetPlayer from '../utils/GetPlayer';
+import CheckableButton from './CheckableButton';
+
 // props:
 // players, list of players
 // selectedPlayers, the players from the above list that should be checked
@@ -10,24 +13,24 @@ export default class PlayerCheckboxes extends Component {
         this.state = {};
     }
     render() {
-        //prevent error if oncheck not passed
-        if (!this.props.onCheck) {
-            this.props.onCheck = function() {};
-        }
         var boxes = [];
         var self = this;
-        this.props.players.forEach(function(player) {
+        this.props.players.forEach(function(player, i) {
             //see if this player has been selected
-            var playerIsSelected = !!getPlayerById(self.props.selectedPlayers, player.id);
+            var playerIsSelected = !!GetPlayer.byId(self.props.selectedPlayers, player.id);
 
-            var thisPlayerOnCheck = function() {
-                self.props.onCheck(player);
+            var thisPlayerOnCheck;
+            if (self.props.onCheck) {
+                thisPlayerOnCheck = self.props.onCheck;
+            } else {
+                thisPlayerOnCheck = function() {};
             }
 
             boxes.push(<CheckableButton
                 label={player.name}
                 checked={playerIsSelected}
                 onCheck={thisPlayerOnCheck}
+                key={i}
             />);
         });
         return (

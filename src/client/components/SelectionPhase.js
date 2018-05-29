@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import CaptainSelection from './CaptainSelection';
+import RoundInfoBar from './RoundInfoBar';
+
 export default class SelectionPhase extends Component {
     constructor(props) {
         super(props);

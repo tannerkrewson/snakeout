@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PlayerList from './PlayerList';
 import SOButton from './SOButton';
 import RoundInfoBar from './RoundInfoBar';
+import GetPlayer from '../utils/GetPlayer';
 
 export default class VotingResults extends Component {
     constructor(props) {
@@ -20,7 +21,7 @@ export default class VotingResults extends Component {
 		var rejectVotes = [];
 		for (var i = 0; i < round.currentMission.votes.length; i++) {
 			var ballot = round.currentMission.votes[i];
-			var player = getPlayerById(round.players, ballot.playerId);
+			var player = getPlayer.byId(round.players, ballot.playerId);
 			if (ballot.vote && player) {
 				approveVotes.push(player);
 			} else if (!ballot.vote && player){

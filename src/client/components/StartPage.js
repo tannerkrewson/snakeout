@@ -11,7 +11,7 @@ export default class StartPage extends Component {
         this.state = {};
     }
     doneViewingStart() {
-        server.doneViewingStart();
+        this.props.server.doneViewingStart();
     }
     render() {
         var me = this.props.you;
@@ -30,7 +30,7 @@ export default class StartPage extends Component {
             <p>Players:</p>
             <PlayerList players={data.players} />
             <br/>
-            <SOButton label="Begin" onClick={this.doneViewingStart} />
+            <SOButton label="Begin" onClick={this.doneViewingStart.bind(this)} />
         </div>
         );
     }
