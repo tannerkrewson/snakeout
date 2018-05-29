@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "main": "src/server/app.js",
   "scripts": {
-    "start": "node src/server/bin/www",
+    "start": "set NODE_ENV=production&& npm run build && npm run server",
     "build": "webpack --mode production",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-    "server": "set NODE_ENV=development&& nodemon --exec npm start",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "server": "node src/server/bin/www",
+    "dev": "set NODE_ENV=development&& concurrently \"nodemon --exec npm run server\" \"npm run client\""
   },
   "author": "Tanner Krewson",
   "license": "MIT",
