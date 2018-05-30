@@ -1,14 +1,18 @@
 import React, { Component } from "react";
-import SOButton from './SOButton';
-import JoinGame from './JoinGame';
-import NewGame from './NewGame';
-import Lobby from './Lobby';
-import Replace from './Replace';
+import { Link, withRouter } from 'react-router-dom';
+import SOButton from '../components/SOButton';
+import JoinGame from '../components/JoinGame';
+import NewGame from '../components/NewGame';
+import Lobby from '../components/Lobby';
+import Replace from '../components/Replace';
 
-export default class MainMenu extends Component {
+class MainMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+  goTo(path) {
+    this.props.history.push(path);
   }
   render() {
     var goToJoinGame = function() {
@@ -55,17 +59,17 @@ export default class MainMenu extends Component {
           <SOButton
             label="How to Play"
             isGroup={true}
-            onClick={goToHowToPlay.bind(this)}
+            onClick={() => this.goTo('/how-to-play')}
           />
           <SOButton
             label="Screenshots"
             isGroup={true}
-            onClick={goToScreenshots.bind(this)}
+            onClick={() => this.goTo('/screenshots')}
           />
           <SOButton
             label="More Games Like Spyout"
             isGroup={true}
-            onClick={goToMoreGames.bind(this)}
+            onClick={() => this.goTo('/more-games')}
           />
         </div>
         <br />
@@ -74,4 +78,6 @@ export default class MainMenu extends Component {
     );
   }
 }
+
+export default withRouter(MainMenu);
 

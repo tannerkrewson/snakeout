@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import SOInput from './SOInput';
 import SOButton from './SOButton';
 
-import MainMenu from './MainMenu';
+import MainMenu from '../pages/MainMenu';
 
 export default class JoinGame extends Component {
     constructor(props) {

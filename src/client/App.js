@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom';
 
-import MainMenu from './components/MainMenu';
+import MainMenu from './pages/MainMenu';
+import HowToPlay from './pages/HowToPlay';
+import MoreGames from './pages/MoreGames';
+import Screenshots from './pages/Screenshots';
+
 import Footer from './components/Footer';
 import StartPage from './components/StartPage';
 import Waiting from './components/Waiting';
@@ -152,13 +160,28 @@ export default class App extends Component {
 
   render() {
     return (
-			<div className="main-content text-xs-center" id="spyout">
-      	<p className="so-h1">SPYOUT</p>
-        <hr/>
-				<br/>
-        <this.state.page changePage={this.changePage} server={this.server} {...this.state.pageProps}/>
-				<Footer />
-			</div>
+      <Router>
+        <div>
+          <div className="main-content text-xs-center" id="spyout">
+            <p className="so-h1">SPYOUT</p>
+            <hr/>
+            <br/>
+            <Route exact path="/" render={() => (
+            <this.state.page 
+              changePage={this.changePage}
+              server={this.server}
+              {...this.state.pageProps}
+            />
+          )}/>
+          </div>
+          <Route path="/how-to-play" component={HowToPlay}/>
+          <Route path="/screenshots" component={Screenshots}/>
+          <Route path="/more-games" component={MoreGames}/>
+          <div className="text-xs-center">
+            <Footer />
+          </div>
+        </div>
+      </Router>
     );
   }
 }
