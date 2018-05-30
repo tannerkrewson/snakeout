@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import RRButton from '../components/RRButton';
+
 export default class Screenshots extends Component {
   render() {
     return (
@@ -12,7 +14,10 @@ export default class Screenshots extends Component {
         </div>
         <br />
         <div className="text-xs-center">
-          <a href="/" className="btn btn-secondary sobutton">Back to Spyout</a>
+          <RRButton
+                label="Back to Spyout"
+                path="/"
+            />
         </div>
       </div>
     );

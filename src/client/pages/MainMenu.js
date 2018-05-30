@@ -1,19 +1,12 @@
 import React, { Component } from "react";
-import { Link, withRouter } from 'react-router-dom';
 import SOButton from '../components/SOButton';
+import RRButton from '../components/RRButton';
 import JoinGame from '../components/JoinGame';
 import NewGame from '../components/NewGame';
 import Lobby from '../components/Lobby';
 import Replace from '../components/Replace';
 
-class MainMenu extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-  goTo(path) {
-    this.props.history.push(path);
-  }
+export default class MainMenu extends Component {
   render() {
     var goToJoinGame = function() {
       this.props.changePage(JoinGame);
@@ -56,20 +49,20 @@ class MainMenu extends Component {
         </p>
         <br />
         <div className="btn-group-vertical" role="group" aria-label="...">
-          <SOButton
+          <RRButton
             label="How to Play"
             isGroup={true}
-            onClick={() => this.goTo('/how-to-play')}
+            path="/how-to-play"
           />
-          <SOButton
+          <RRButton
             label="Screenshots"
             isGroup={true}
-            onClick={() => this.goTo('/screenshots')}
+            path="/screenshots"
           />
-          <SOButton
+          <RRButton
             label="More Games Like Spyout"
             isGroup={true}
-            onClick={() => this.goTo('/more-games')}
+            path="/more-games"
           />
         </div>
         <br />
@@ -78,6 +71,3 @@ class MainMenu extends Component {
     );
   }
 }
-
-export default withRouter(MainMenu);
-

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import RRButton from '../components/RRButton';
+
 export default class HowToPlay extends Component {
   render() {
     return (
@@ -82,7 +84,10 @@ export default class HowToPlay extends Component {
         <p>Spyout was programmed by myself, Tanner Krewson, with Node.js and React. Spyout is 100% free and open-source, and is available on <a href="https://github.com/tannerkrewson/spyout" target="_blank">GitHub </a>for your tinkering. If you run into any issues, or have any features you would like to see in Spyout, feel free to open an issue on the <a href="https://github.com/tannerkrewson/spyout" target="_blank">GitHub repo</a>. Hope you like it! &lt;3</p>
         <br />
         <div className="text-xs-center">
-          <a href="/" className="btn btn-secondary sobutton">Back to Spyout</a>
+          <RRButton
+              label="Back to Spyout"
+              path="/"
+          />
         </div>
         <br />
       </div>

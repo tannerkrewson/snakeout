@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import RRButton from '../components/RRButton';
+
 export default class MoreGames extends Component {
   render() {
     return (
@@ -11,7 +13,10 @@ export default class MoreGames extends Component {
         <div><a href="http://www.secrethitler.party/" target="_blank">Secret Hilter </a>by Samuel Mak</div>
         <div><a href="https://jackboxgames.com/games/" target="_blank">The Jackbox Party Packs </a>by Jackbox Games</div>
         <br />
-        <a href="/" className="btn btn-secondary sobutton">Back to Spyout</a>
+        <RRButton
+              label="Back to Spyout"
+              path="/"
+          />
       </div>
     );
   }
