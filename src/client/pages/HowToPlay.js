@@ -5,7 +5,7 @@ import RRButton from '../components/RRButton';
 export default class HowToPlay extends Component {
   render() {
     return (
-      <div className="spyout-info">
+      <div className="spyout-info instructions">
         <div className="so- so-h2"><b>tl;dr:</b></div>
         <p>Spyout is based off the board game The Resistance, so if you've played that before, you'll understand Spyout.</p>
         <p>In my opinion, the easiest way to learn how to play Spyout would be to watch someone else play, as it will help you get a feel for the dyanmic of the game. Here's a video from Tabletop on YouTube of some people playing The Resistance, which works in the same way:</p>

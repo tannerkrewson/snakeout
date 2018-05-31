@@ -101,3 +101,7 @@ hr {
   padding: 4px !important;
   font-size: 14px;
 }
+
+.instructions {
+  text-align: left;
+}
