@@ -161,25 +161,21 @@ export default class App extends Component {
   render() {
     return (
       <Router>
-        <div>
-          <div className="main-content text-xs-center" id="spyout">
-            <p className="so-h1">SPYOUT</p>
-            <hr/>
-            <br/>
-            <Route exact path="/" render={() => (
+        <div className="main-content text-xs-center" id="spyout">
+          <p className="so-h1">SPYOUT</p>
+          <hr/>
+          <br/>
+          <Route exact path="/" render={() => (
             <this.state.page 
               changePage={this.changePage}
               server={this.server}
               {...this.state.pageProps}
             />
           )}/>
-          </div>
           <Route path="/how-to-play" component={HowToPlay}/>
           <Route path="/screenshots" component={Screenshots}/>
           <Route path="/more-games" component={MoreGames}/>
-          <div className="text-xs-center">
-            <Footer />
-          </div>
+          <Footer />
         </div>
       </Router>
     );
