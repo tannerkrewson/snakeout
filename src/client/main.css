@@ -41,30 +41,8 @@ hr {
 	height: 100vh;
 }
 
-.sobutton {
-	background-color: black;
-	color: white;
-	font-weight: 100;
-}
-
 .sobutton-nongroup {
 	margin: 2px;
-}
-
-.sobutton:focus {
-	background-color: black;
-	color: white;
-	outline: none;
-}
-
-.sobutton:hover {
-	background-color: black;
-	color: white;
-}
-
-.sobutton:active {
-	background-color: black;
-	color: white;
 }
 
 .player-box {

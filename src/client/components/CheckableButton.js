@@ -16,7 +16,7 @@ export default class CheckableButton extends Component {
 			<li className="col-6">
 				<button
 					type="button"
-					className="btn btn-secondary sobutton"
+					className="btn btn-outline-light"
 					onClick={this.props.onCheck}
 				>
 					<i className={"fa " + icon} aria-hidden="true" />

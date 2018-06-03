@@ -13,7 +13,7 @@ export default class SOButton extends Component {
 		return (
 			<button
 				type={this.props.isSubmit ? "submit" : "button"}
-				className={"btn btn-secondary sobutton " + groupClass}
+				className={"btn btn-outline-light " + groupClass}
 				disabled={this.props.disabled}
 				onClick={this.props.onClick}
 			>
