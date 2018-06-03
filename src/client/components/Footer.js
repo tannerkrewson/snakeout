@@ -9,10 +9,13 @@ export default class Footer extends Component {
 		return (
 			<footer>
 				<hr />
-				Spyout by Tanner Krewson
-				<br />
+				Spyout by{" "}
 				<a href="http://www.tannerkrewson.com/" target="_blank">
-					www.tannerkrewson.com
+					Tanner Krewson
+				</a>
+				<br />
+				<a href="https://github.com/tannerkrewson/spyout" target="_blank">
+					View on GitHub
 				</a>
 			</footer>
 		);
