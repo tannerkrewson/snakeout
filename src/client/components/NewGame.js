@@ -8,9 +8,12 @@ import MainMenu from "../pages/MainMenu";
 export default class NewGame extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			name: ""
+		};
 	}
-	receiveName(name) {
+	receiveName(e) {
+		let name = e.target.value;
 		this.setState({ name });
 	}
 	onFormSubmit(event) {
@@ -30,6 +33,7 @@ export default class NewGame extends Component {
 							placeholder=""
 							onChange={this.receiveName.bind(this)}
 							autoFocus={true}
+							value={this.state.name}
 						/>
 						<br />
 						<SOButton label="Back" onClick={goToMainMenu.bind(this)} />
