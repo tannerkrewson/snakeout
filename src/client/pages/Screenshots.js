@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import RRButton from '../components/RRButton';
+import RRButton from "../components/RRButton";
 
 export default class Screenshots extends Component {
   render() {
@@ -14,10 +14,7 @@ export default class Screenshots extends Component {
         </div>
         <br />
         <div className="text-center">
-          <RRButton
-                label="Back to Spyout"
-                path="/"
-            />
+          <RRButton label="Back to Spyout" path="/" />
         </div>
       </div>
     );

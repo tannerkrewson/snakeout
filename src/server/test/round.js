@@ -1,8 +1,8 @@
-var test = require('tape');
+var test = require("tape");
 
-var Round = require('../app/round.js');
+var Round = require("../app/round.js");
 
-var Player = require('../app/player.js');
+var Player = require("../app/player.js");
 
 function MockSocket() {
   this.lastEmit;
@@ -31,24 +31,24 @@ MockSocket.prototype.once = function(eventName, next) {
   }
 };
 
-MockSocket.prototype.on = function() {}
+MockSocket.prototype.on = function() {};
 
-MockSocket.prototype.bindOnEmit = function (funcToRun) {
+MockSocket.prototype.bindOnEmit = function(funcToRun) {
   this.onEmit = funcToRun;
-}
+};
 
-MockSocket.prototype.bindOnOnce = function (funcToRun) {
+MockSocket.prototype.bindOnOnce = function(funcToRun) {
   this.onOnce = funcToRun;
-}
+};
 
-function bindOnEmitOnPlayers (players, onEmit) {
-  players.forEach(function (player) {
+function bindOnEmitOnPlayers(players, onEmit) {
+  players.forEach(function(player) {
     player.socket.bindOnEmit(onEmit);
   });
 }
 
-function bindOnOnceOnPlayers (players, onOnce) {
-  players.forEach(function (player) {
+function bindOnOnceOnPlayers(players, onOnce) {
+  players.forEach(function(player) {
     player.socket.bindOnce(onOnce);
   });
 }
@@ -62,21 +62,21 @@ var P4Socket = new MockSocket();
 var P5Socket = new MockSocket();
 var P6Socket = new MockSocket();
 
-mockPlayers.push(new Player('Player1', P1Socket, 1));
-mockPlayers.push(new Player('Player2', P2Socket, 2));
-mockPlayers.push(new Player('Player3', P3Socket, 3));
-mockPlayers.push(new Player('Player4', P4Socket, 4));
-mockPlayers.push(new Player('Player5', P5Socket, 5));
-mockPlayers.push(new Player('Player6', P6Socket, 6));
+mockPlayers.push(new Player("Player1", P1Socket, 1));
+mockPlayers.push(new Player("Player2", P2Socket, 2));
+mockPlayers.push(new Player("Player3", P3Socket, 3));
+mockPlayers.push(new Player("Player4", P4Socket, 4));
+mockPlayers.push(new Player("Player5", P5Socket, 5));
+mockPlayers.push(new Player("Player6", P6Socket, 6));
 
 var onEndCalled = false;
 
 var testRound;
-test('create round', function(t) {
+test("create round", function(t) {
   var onEnd = function() {
     onEndCalled = true;
   };
-  testRound = new Round(2, 'abcd', mockPlayers, onEnd);
+  testRound = new Round(2, "abcd", mockPlayers, onEnd);
   t.ok(testRound);
   t.equal(testRound.roundNumber, 2);
   t.equal(testRound.players, mockPlayers);
@@ -84,15 +84,15 @@ test('create round', function(t) {
   t.end();
 });
 
-test('getNumberOfSpies', function(t) {
+test("getNumberOfSpies", function(t) {
   var numSpies = testRound.getNumberOfSpies();
-  t.equal(typeof numSpies, 'number');
+  t.equal(typeof numSpies, "number");
   t.ok(numSpies > 0);
   t.ok(numSpies < testRound.players.length);
   t.end();
 });
 
-test('assignRoles', function(t) {
+test("assignRoles", function(t) {
   testRound.assignRoles();
   var spyCount = 0;
   var nonSpyCount = 0;
@@ -110,7 +110,7 @@ test('assignRoles', function(t) {
   t.end();
 });
 
-test('assignNewCaptain', function(t) {
+test("assignNewCaptain", function(t) {
   testRound.assignNewCaptain();
   var captainCount = 0;
   var nonCaptainCount = 0;
@@ -127,7 +127,7 @@ test('assignNewCaptain', function(t) {
   t.end();
 });
 
-test('prepNextMission', function(t) {
+test("prepNextMission", function(t) {
   var missionNumberBefore = testRound.missionNumber;
   testRound.prepNextMission();
   t.equal(testRound.missionNumber, missionNumberBefore + 1);
@@ -135,16 +135,16 @@ test('prepNextMission', function(t) {
   t.end();
 });
 
-test('startSelectionPhase', function (t) {
+test("startSelectionPhase", function(t) {
   testRound.startSelectionPhase();
 
-  t.equal(testRound.phase, 'selection');
+  t.equal(testRound.phase, "selection");
 
   t.end();
 });
 
 var mockSelectedPlayers = [];
-test('startVotingPhase', function (t) {
+test("startVotingPhase", function(t) {
   mockSelectedPlayers.push(mockPlayers[2]);
   mockSelectedPlayers.push(mockPlayers[0]);
 
@@ -153,18 +153,18 @@ test('startVotingPhase', function (t) {
   t.end();
 });
 
-test('startMissionPhase', function (t) {
+test("startMissionPhase", function(t) {
   testRound.getCurrentMission().putSelectedPlayersOnTheMission();
   testRound.startMissionPhase();
 
   t.end();
 });
 
-test('sendStateToAll', function (t) {
+test("sendStateToAll", function(t) {
   t.plan(mockPlayers.length);
 
-  bindOnEmitOnPlayers(mockPlayers, function () {
-    t.pass('state emitted');
+  bindOnEmitOnPlayers(mockPlayers, function() {
+    t.pass("state emitted");
   });
 
   testRound.sendStateToAll();
@@ -172,7 +172,7 @@ test('sendStateToAll', function (t) {
   t.end();
 });
 
-test('getState', function (t) {
+test("getState", function(t) {
   var state = testRound.getState();
 
   // fail the test if params are removed

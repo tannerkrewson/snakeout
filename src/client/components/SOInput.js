@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 export default class SOInput extends Component {
   constructor(props) {
@@ -10,7 +10,11 @@ export default class SOInput extends Component {
   }
   render() {
     return (
-      <input type="text" onChange={this.handleChange.bind(this)} placeholder={this.props.placeholder} />
+      <input
+        type="text"
+        onChange={this.handleChange.bind(this)}
+        placeholder={this.props.placeholder}
+      />
     );
   }
 }

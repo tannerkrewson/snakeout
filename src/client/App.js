@@ -1,26 +1,22 @@
-import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom';
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-import MainMenu from './pages/MainMenu';
-import HowToPlay from './pages/HowToPlay';
-import MoreGames from './pages/MoreGames';
-import Screenshots from './pages/Screenshots';
+import MainMenu from "./pages/MainMenu";
+import HowToPlay from "./pages/HowToPlay";
+import MoreGames from "./pages/MoreGames";
+import Screenshots from "./pages/Screenshots";
 
-import Footer from './components/Footer';
-import StartPage from './components/StartPage';
-import Waiting from './components/Waiting';
-import SelectionPhase from './components/SelectionPhase';
-import CaptainWaiting from './components/CaptainWaiting';
-import VotingPhase from './components/VotingPhase';
-import VotingResults from './components/VotingResults';
-import MissionPhase from './components/MissionPhase';
-import Results from './components/Results';
+import Footer from "./components/Footer";
+import StartPage from "./components/StartPage";
+import Waiting from "./components/Waiting";
+import SelectionPhase from "./components/SelectionPhase";
+import CaptainWaiting from "./components/CaptainWaiting";
+import VotingPhase from "./components/VotingPhase";
+import VotingResults from "./components/VotingResults";
+import MissionPhase from "./components/MissionPhase";
+import Results from "./components/Results";
 
-import Connection from './utils/Connection';
+import Connection from "./utils/Connection";
 
 export default class App extends Component {
   constructor(props) {
@@ -30,8 +26,8 @@ export default class App extends Component {
     };
 
     this.changePage = (page, pageProps) => {
-      this.setState({page, pageProps});
-    }
+      this.setState({ page, pageProps });
+    };
 
     var self = this;
     this.server = new Connection(function(data) {
@@ -154,7 +150,12 @@ export default class App extends Component {
     //join the dev game if path was /dev
     if (this.props.isDev) {
       console.log("Attempting to join dev game");
-      this.server.joinGame('ffff', Math.random().toString().substring(2, 6));
+      this.server.joinGame(
+        "ffff",
+        Math.random()
+          .toString()
+          .substring(2, 6)
+      );
     }
   }
 
@@ -163,18 +164,22 @@ export default class App extends Component {
       <Router>
         <div className="main-content text-center" id="spyout">
           <p className="so-h1">SPYOUT</p>
-          <hr/>
-          <br/>
-          <Route exact path="/" render={() => (
-            <this.state.page 
-              changePage={this.changePage}
-              server={this.server}
-              {...this.state.pageProps}
-            />
-          )}/>
-          <Route path="/how-to-play" component={HowToPlay}/>
-          <Route path="/screenshots" component={Screenshots}/>
-          <Route path="/more-games" component={MoreGames}/>
+          <hr />
+          <br />
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <this.state.page
+                changePage={this.changePage}
+                server={this.server}
+                {...this.state.pageProps}
+              />
+            )}
+          />
+          <Route path="/how-to-play" component={HowToPlay} />
+          <Route path="/screenshots" component={Screenshots} />
+          <Route path="/more-games" component={MoreGames} />
           <Footer />
         </div>
       </Router>

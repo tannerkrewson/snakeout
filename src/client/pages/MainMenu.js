@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import SOButton from '../components/SOButton';
-import RRButton from '../components/RRButton';
-import JoinGame from '../components/JoinGame';
-import NewGame from '../components/NewGame';
-import Lobby from '../components/Lobby';
-import Replace from '../components/Replace';
+import SOButton from "../components/SOButton";
+import RRButton from "../components/RRButton";
+import JoinGame from "../components/JoinGame";
+import NewGame from "../components/NewGame";
+import Lobby from "../components/Lobby";
+import Replace from "../components/Replace";
 
 export default class MainMenu extends Component {
   render() {
@@ -36,7 +36,7 @@ export default class MainMenu extends Component {
         alert("Failed to join game!");
       }
     });
-    
+
     this.props.server.on("replace", function(data) {
       self.props.changePage(Replace, data);
     });
@@ -49,16 +49,8 @@ export default class MainMenu extends Component {
         </p>
         <br />
         <div className="btn-group-vertical" role="group" aria-label="...">
-          <RRButton
-            label="How to Play"
-            isGroup={true}
-            path="/how-to-play"
-          />
-          <RRButton
-            label="Screenshots"
-            isGroup={true}
-            path="/screenshots"
-          />
+          <RRButton label="How to Play" isGroup={true} path="/how-to-play" />
+          <RRButton label="Screenshots" isGroup={true} path="/screenshots" />
           <RRButton
             label="More Games Like Spyout"
             isGroup={true}
