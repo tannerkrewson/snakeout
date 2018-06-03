@@ -1,90 +1,90 @@
 import io from "socket.io-client";
 
 function Connection(onStateUpdate) {
-  this.socket = io();
+	this.socket = io();
 
-  this.functionsToRunOnUpdateWaitingList = [];
+	this.functionsToRunOnUpdateWaitingList = [];
 
-  var self = this;
-  this.socket.on("updateState", function(data) {
-    onStateUpdate(data);
-  });
+	var self = this;
+	this.socket.on("updateState", function(data) {
+		onStateUpdate(data);
+	});
 
-  this.socket.on("disconnect", function() {
-    //refresh the page
-    location.reload();
-  });
+	this.socket.on("disconnect", function() {
+		//refresh the page
+		location.reload();
+	});
 }
 
 Connection.prototype.newGame = function(name) {
-  this.send("newGame", {
-    name
-  });
+	this.send("newGame", {
+		name
+	});
 };
 
 Connection.prototype.joinGame = function(code, name) {
-  this.send("joinGame", {
-    code,
-    name
-  });
+	this.send("joinGame", {
+		code,
+		name
+	});
 };
 
 Connection.prototype.startGame = function(code) {
-  this.send("startGame", {
-    code
-  });
+	this.send("startGame", {
+		code
+	});
 };
 
 Connection.prototype.vote = function(vote) {
-  this.send("selectionVote", {
-    vote
-  });
+	this.send("selectionVote", {
+		vote
+	});
 };
 
 Connection.prototype.missionVote = function(vote) {
-  this.send("missionVote", {
-    vote
-  });
+	this.send("missionVote", {
+		vote
+	});
 };
 
 Connection.prototype.updateSelectedPlayers = function(selectedPlayers) {
-  this.send("updateSelectedPlayers", {
-    selectedPlayers
-  });
+	this.send("updateSelectedPlayers", {
+		selectedPlayers
+	});
 };
 
 Connection.prototype.submitSelectedPlayers = function(selectedPlayers) {
-  this.send("submitSelectedPlayers", {
-    selectedPlayers
-  });
+	this.send("submitSelectedPlayers", {
+		selectedPlayers
+	});
 };
 
 Connection.prototype.doneViewingStart = function() {
-  this.send("doneViewingStart", {});
+	this.send("doneViewingStart", {});
 };
 
 Connection.prototype.doneViewingResults = function() {
-  this.send("doneViewingResults", {});
+	this.send("doneViewingResults", {});
 };
 
 Connection.prototype.doneViewingVoteResults = function() {
-  this.send("doneViewingVoteResults", {});
+	this.send("doneViewingVoteResults", {});
 };
 
 Connection.prototype.tryReplace = function(data) {
-  this.send("tryReplace", data);
+	this.send("tryReplace", data);
 };
 
 Connection.prototype.send = function(event, data) {
-  this.socket.emit(event, data);
+	this.socket.emit(event, data);
 };
 
 Connection.prototype.on = function(event, next) {
-  this.socket.on(event, next);
+	this.socket.on(event, next);
 };
 
 Connection.prototype.once = function(event, next) {
-  this.socket.once(event, next);
+	this.socket.once(event, next);
 };
 
 export default Connection;

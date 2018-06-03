@@ -24,9 +24,9 @@ app.use(express.static("dist"));
 // for any route, give index.html, and react router will handle the rest
 // only works in production mode atm
 app.get("/*", function(req, res) {
-  res.sendFile(path.resolve("dist/index.html"), function(err) {
-    if (err) res.status(500).send(err);
-  });
+	res.sendFile(path.resolve("dist/index.html"), function(err) {
+		if (err) res.status(500).send(err);
+	});
 });
 
 module.exports = app;
