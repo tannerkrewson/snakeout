@@ -4,6 +4,7 @@ import SOInput from "./SOInput";
 import SOButton from "./SOButton";
 
 import MainMenu from "../pages/MainMenu";
+import Loading from "../components/Loading";
 
 export default class JoinGame extends Component {
 	constructor(props) {
@@ -17,6 +18,7 @@ export default class JoinGame extends Component {
 		this.props.changePage(MainMenu);
 	}
 	joinGame() {
+		this.props.changePage(Loading);
 		this.props.server.joinGame(this.state.code, this.state.name);
 	}
 	onGameCode(e) {

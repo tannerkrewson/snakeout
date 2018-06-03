@@ -33,6 +33,7 @@ export default class MainMenu extends Component {
 					self.props.changePage(Lobby, data.game);
 				});
 			} else {
+				self.props.changePage(JoinGame);
 				alert("Failed to join game!");
 			}
 		});

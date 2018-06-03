@@ -4,6 +4,7 @@ import SOInput from "./SOInput";
 import SOButton from "./SOButton";
 
 import MainMenu from "../pages/MainMenu";
+import Loading from "../components/Loading";
 
 export default class NewGame extends Component {
 	constructor(props) {
@@ -18,6 +19,7 @@ export default class NewGame extends Component {
 	}
 	onFormSubmit(event) {
 		event.preventDefault();
+		this.props.changePage(Loading);
 		this.props.server.newGame(this.state.name);
 	}
 	render() {
