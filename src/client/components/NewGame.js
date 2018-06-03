@@ -22,15 +22,18 @@ export default class NewGame extends Component {
 			this.props.changePage(MainMenu);
 		};
 		return (
-			<form className="new-menu" onSubmit={this.onFormSubmit.bind(this)}>
-				<p>Enter your name:</p>
-				<SOInput placeholder="" onChange={this.receiveName.bind(this)} />
-				<br />
-				<br />
-				<SOButton label="Back" onClick={goToMainMenu.bind(this)} />
-				<SOButton label="Start" isSubmit={true} />
-				<br />
-			</form>
+			<div className="row">
+				<div className="col-sm-6 offset-sm-3 col-8 offset-2">
+					<form className="new-menu" onSubmit={this.onFormSubmit.bind(this)}>
+						<p>Enter your name:</p>
+						<SOInput placeholder="" onChange={this.receiveName.bind(this)} />
+						<br />
+						<SOButton label="Back" onClick={goToMainMenu.bind(this)} />
+						<SOButton label="Start" isSubmit={true} />
+						<br />
+					</form>
+				</div>
+			</div>
 		);
 	}
 }

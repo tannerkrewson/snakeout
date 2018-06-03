@@ -28,19 +28,20 @@ export default class JoinGame extends Component {
 	}
 	render() {
 		return (
-			<form className="join-menu" onSubmit={this.onFormSubmit.bind(this)}>
-				<p>Enter the game code:</p>
-				<SOInput placeholder="" onChange={this.onGameCode.bind(this)} />
-				<br />
-				<br />
-				<p>Enter your name:</p>
-				<SOInput placeholder="" onChange={this.onName.bind(this)} />
-				<br />
-				<br />
-				<SOButton label="Back" onClick={this.goToMainMenu.bind(this)} />
-				<SOButton isSubmit={true} label="Join" />
-				<br />
-			</form>
+			<div className="row">
+				<div className="col-sm-6 offset-sm-3 col-8 offset-2">
+					<form className="join-menu" onSubmit={this.onFormSubmit.bind(this)}>
+						<label>Enter the game code:</label>
+						<SOInput onChange={this.onGameCode.bind(this)} />
+						<label>Enter your name:</label>
+						<SOInput onChange={this.onName.bind(this)} />
+						<br />
+						<SOButton label="Back" onClick={this.goToMainMenu.bind(this)} />
+						<SOButton isSubmit={true} label="Join" />
+						<br />
+					</form>
+				</div>
+			</div>
 		);
 	}
 }
