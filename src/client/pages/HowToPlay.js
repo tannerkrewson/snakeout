@@ -83,7 +83,7 @@ export default class HowToPlay extends Component {
         <div className="so- so-h2"><b>Behind the scenes</b></div>
         <p>Spyout was programmed by myself, Tanner Krewson, with Node.js and React. Spyout is 100% free and open-source, and is available on <a href="https://github.com/tannerkrewson/spyout" target="_blank">GitHub </a>for your tinkering. If you run into any issues, or have any features you would like to see in Spyout, feel free to open an issue on the <a href="https://github.com/tannerkrewson/spyout" target="_blank">GitHub repo</a>. Hope you like it! &lt;3</p>
         <br />
-        <div className="text-xs-center">
+        <div className="text-center">
           <RRButton
               label="Back to Spyout"
               path="/"

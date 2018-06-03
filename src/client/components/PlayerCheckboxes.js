@@ -34,7 +34,7 @@ export default class PlayerCheckboxes extends Component {
         });
         return (
             <div className="row">
-                <div className="col-sm-6 offset-sm-3 col-xs-8 offset-xs-2">
+                <div className="col-sm-6 offset-sm-3 col-8 offset-2">
                     <ul className="list-unstyled row">
                     {boxes}
                     </ul>

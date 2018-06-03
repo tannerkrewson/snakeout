@@ -71,6 +71,8 @@ hr {
   background-color: black;
   color: white;
   padding: 5px;
+  margin-top: -1px;
+  margin-left: -1px;
 }
 
 .game-code {

@@ -33,7 +33,7 @@ export default class OnMissionScreen extends Component {
                 <p>All players must pass this mission for it to succeed.</p>
                 <p>This mission will fail even if just one player fails it.</p>
                 <p>The other players will not know how you voted.</p>
-                <div className="btn-toolbar">
+                <div>
                     <SOButton label="Fail" onClick={this.voteNay.bind(this)} />
                     <SOButton label="Pass" onClick={this.voteYay.bind(this)} />
                 </div>

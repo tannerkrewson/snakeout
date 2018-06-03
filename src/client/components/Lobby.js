@@ -42,7 +42,7 @@ export default class Lobby extends Component {
 				<p>Players:</p>
 				<PlayerList players={this.props.players} />
 				<p>{playersNeededMessage}</p>
-				<div className="btn-toolbar">
+				<div>
 					<SOButton label="Leave Game" onClick={function() {
 						location.reload();
 					}} />

@@ -161,7 +161,7 @@ export default class App extends Component {
   render() {
     return (
       <Router>
-        <div className="main-content text-xs-center" id="spyout">
+        <div className="main-content text-center" id="spyout">
           <p className="so-h1">SPYOUT</p>
           <hr/>
           <br/>

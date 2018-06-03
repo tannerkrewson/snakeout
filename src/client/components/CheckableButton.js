@@ -13,7 +13,7 @@ export default class CheckableButton extends Component {
 			icon = 'fa-square-o';
 		}
         return (
-            <li className="col-xs-6">
+            <li className="col-6">
                 <button
                     type="button"
                     className="btn btn-secondary sobutton"

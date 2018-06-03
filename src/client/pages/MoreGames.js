@@ -5,7 +5,7 @@ import RRButton from '../components/RRButton';
 export default class MoreGames extends Component {
   render() {
     return (
-      <div className="text-xs-center">
+      <div className="textS-center">
         <div className="so-h2"><b>Games like Spyout:</b></div>
         <br />
         <div><a href="http://spyfall.crabhat.com/" target="_blank">Spyfall </a>by Evan Brumley</div>

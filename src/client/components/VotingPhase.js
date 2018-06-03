@@ -43,7 +43,7 @@ export default class VotingPhase extends Component {
                     to go on Mission
                     <span> {currentMission.number}.</span>
                 </p>
-                <div className="btn-toolbar">
+                <div>
                     <SOButton label="Reject" onClick={this.voteNay.bind(this)} />
                     <SOButton label="Approve" onClick={this.voteYay.bind(this)} />
                 </div>

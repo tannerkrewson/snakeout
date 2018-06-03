@@ -13,7 +13,7 @@ export default class Screenshots extends Component {
           <img src="http://i.imgur.com/XdtBG7h.png" width={222} />
         </div>
         <br />
-        <div className="text-xs-center">
+        <div className="text-center">
           <RRButton
                 label="Back to Spyout"
                 path="/"
