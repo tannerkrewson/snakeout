@@ -8,7 +8,8 @@
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server": "node src/server/bin/www",
     "dev": "set NODE_ENV=development&& concurrently \"nodemon --exec npm run server\" \"npm run client\"",
-    "test": "tape src/server/test/*.js"
+    "test": "tape src/server/test/*.js",
+    "precommit": "pretty-quick --staged"
   },
   "author": "Tanner Krewson",
   "license": "MIT",
@@ -39,7 +40,10 @@
     "eslint-plugin-react": "^7.7.0",
     "exports-loader": "^0.7.0",
     "html-webpack-plugin": "^3.2.0",
+    "husky": "^0.14.3",
     "nodemon": "^1.17.3",
+    "prettier": "1.13.4",
+    "pretty-quick": "^1.6.0",
     "style-loader": "^0.20.3",
     "tape": "^4.9.0",
     "webpack": "^4.5.0",
