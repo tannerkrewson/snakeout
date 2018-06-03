@@ -32,7 +32,7 @@ export default class JoinGame extends Component {
 				<div className="col-sm-6 offset-sm-3 col-8 offset-2">
 					<form className="join-menu" onSubmit={this.onFormSubmit.bind(this)}>
 						<label>Enter the game code:</label>
-						<SOInput onChange={this.onGameCode.bind(this)} />
+						<SOInput onChange={this.onGameCode.bind(this)} autoFocus={true} />
 						<label>Enter your name:</label>
 						<SOInput onChange={this.onName.bind(this)} />
 						<br />
