@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 
 export default class CheckableButton extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		var icon;
 		if (this.props.checked) {

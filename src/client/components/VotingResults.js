@@ -6,10 +6,6 @@ import RoundInfoBar from "./RoundInfoBar";
 import GetPlayer from "../utils/GetPlayer";
 
 export default class VotingResults extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	doneViewingResults() {
 		this.props.server.doneViewingVoteResults();
 	}

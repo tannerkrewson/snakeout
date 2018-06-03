@@ -4,10 +4,6 @@ import OnMissionScreen from "./OnMissionScreen";
 import RoundInfoBar from "./RoundInfoBar";
 
 export default class MissionPhase extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		var me = this.props.you;
 		var data = this.props.round;

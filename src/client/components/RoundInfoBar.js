@@ -5,10 +5,6 @@ import RoleViewer from "./RoleViewer";
 import GameCode from "./GameCode";
 
 export default class RoundInfoBar extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		var me = this.props.me;
 		var round = this.props.round;

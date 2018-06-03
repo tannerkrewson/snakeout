@@ -3,10 +3,6 @@ import React, { Component } from "react";
 import PlayerBox from "./PlayerBox";
 
 export default class PlayerList extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		return (
 			<div className="row">

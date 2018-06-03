@@ -6,10 +6,6 @@ import PlayerList from "./PlayerList";
 import SOButton from "./SOButton";
 
 export default class StartPage extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	doneViewingStart() {
 		this.props.server.doneViewingStart();
 	}

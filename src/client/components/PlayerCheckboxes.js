@@ -8,10 +8,6 @@ import CheckableButton from "./CheckableButton";
 // selectedPlayers, the players from the above list that should be checked
 // onCheck, function that gets passed the player that was checked
 export default class PlayerCheckboxes extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		var boxes = [];
 		var self = this;

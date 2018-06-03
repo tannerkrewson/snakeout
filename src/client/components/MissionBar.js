@@ -3,10 +3,6 @@ import React, { Component } from "react";
 import MissionBox from "./MissionBox";
 
 export default class MissionBar extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		var boxes = [];
 		this.props.missions.forEach(function(mission, i) {

@@ -5,10 +5,6 @@ import PlayerList from "./PlayerList";
 import SOButton from "./SOButton";
 
 export default class Lobby extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		var gameCode = this.props.code;
 		var numPlayersInLobby = this.props.players.length;

@@ -5,10 +5,6 @@ import SOButton from "./SOButton";
 import RoundInfoBar from "./RoundInfoBar";
 
 export default class Results extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	doneViewingResults() {
 		this.props.server.doneViewingResults();
 	}

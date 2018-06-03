@@ -4,10 +4,6 @@ import PlayerList from "./PlayerList";
 import RoundInfoBar from "./RoundInfoBar";
 
 export default class Waiting extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		var me = this.props.you;
 		var data = this.props.round;

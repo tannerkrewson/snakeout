@@ -4,10 +4,6 @@ import PlayerList from "./PlayerList";
 import SOButton from "./SOButton";
 
 export default class OnMissionScreen extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	voteYay() {
 		this.props.server.missionVote(true);
 	}

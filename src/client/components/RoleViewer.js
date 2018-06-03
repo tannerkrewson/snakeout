@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 
 export default class RoleViewer extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	showPopup() {
 		//$('#role-viewer-popup').popover('show');
 	}

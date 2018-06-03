@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 
 export default class MissionBox extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		var inProgress = "";
 		if (this.props.inProgress) {

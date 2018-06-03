@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 
 export default class SOInput extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		return (
 			<div className="input-group mb-3">

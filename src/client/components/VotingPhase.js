@@ -5,10 +5,6 @@ import SOButton from "./SOButton";
 import RoundInfoBar from "./RoundInfoBar";
 
 export default class VotingPhase extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	voteYay() {
 		this.props.server.vote(true);
 	}
