@@ -42,8 +42,8 @@ export default class Lobby extends Component {
 				<div>
 					<SOButton
 						label="Leave Game"
-						onClick={function() {
-							location.reload();
+						onClick={() => {
+							this.props.server.socket.close();
 						}}
 					/>
 					<SOButton
