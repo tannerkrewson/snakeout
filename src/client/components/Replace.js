@@ -33,6 +33,7 @@ export default class Replace extends Component {
 				<p>Select a player to replace:</p>
 				<PlayerSelector
 					players={this.props.disconnectedList}
+					numPlayersToSelect={1}
 					onChange={this.updatePlayerList.bind(this)}
 				/>
 				<SOButton
