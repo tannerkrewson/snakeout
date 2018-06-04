@@ -1,11 +1,21 @@
 import React, { Component } from "react";
 
 export default class RoleViewer extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			show: false
+		};
+	}
 	showPopup() {
-		//$('#role-viewer-popup').popover('show');
+		this.setState({
+			show: true
+		});
 	}
 	hidePopup() {
-		//$('#role-viewer-popup').popover('hide');
+		this.setState({
+			show: false
+		});
 	}
 	render() {
 		var roleMessage;
@@ -22,15 +32,26 @@ export default class RoleViewer extends Component {
 				}
 			}
 		}
+
 		return (
 			<div className="role-viewer">
-				<div
-					id="role-viewer-popup"
-					data-container="body"
-					data-toggle="popover"
-					data-placement="top"
-					data-content={roleMessage}
-				/>
+				{this.state.show && (
+					// https://stackoverflow.com/a/6040258
+					// plus lot of tweaking to get it centered
+					<div style={{ position: "relative" }}>
+						<div
+							className="popover"
+							style={{
+								position: "absolute",
+								left: "50%",
+								transform: "translate(-50%, -125%)",
+								textAlign: "center"
+							}}
+						>
+							<div className="popover-body">{roleMessage}</div>
+						</div>
+					</div>
+				)}
 				<button
 					type="button"
 					className="btn btn-outline-light"
@@ -39,6 +60,7 @@ export default class RoleViewer extends Component {
 					onTouchStart={this.showPopup.bind(this)}
 					onTouchEnd={this.hidePopup.bind(this)}
 					onTouchCancel={this.hidePopup.bind(this)}
+					onMouseLeave={this.hidePopup.bind(this)}
 				>
 					Tap and hold to view your role
 				</button>
