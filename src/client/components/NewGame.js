@@ -15,7 +15,9 @@ export default class NewGame extends Component {
 	}
 	receiveName(e) {
 		let name = e.target.value;
-		this.setState({ name });
+		if (name.length <= 12) {
+			this.setState({ name });
+		}
 	}
 	onFormSubmit(event) {
 		event.preventDefault();
