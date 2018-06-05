@@ -9,35 +9,47 @@ import CheckableButton from "./CheckableButton";
 // onCheck, function that gets passed the player that was checked
 export default class PlayerCheckboxes extends Component {
 	render() {
-		var boxes = [];
-		var self = this;
-		this.props.players.forEach(function(player, i) {
+		let evens = [];
+		let odds = [];
+
+		let players = this.props.players;
+
+		for (let i = 0; i < players.length; i++) {
 			//see if this player has been selected
 			var playerIsSelected = !!GetPlayer.byId(
-				self.props.selectedPlayers,
-				player.id
+				this.props.selectedPlayers,
+				players[i].id
 			);
 
-			var thisPlayerOnCheck = function() {
-				if (self.props.onCheck) {
-					self.props.onCheck(player);
+			var thisPlayerOnCheck = () => {
+				if (this.props.onCheck) {
+					this.props.onCheck(players[i]);
 				}
 			};
 
-			boxes.push(
+			let thisBox = (
 				<CheckableButton
-					label={player.name}
+					label={players[i].name}
 					checked={playerIsSelected}
 					onCheck={thisPlayerOnCheck}
 					key={i}
 				/>
 			);
-		});
+
+			// fill two columns evenly
+			if (i % 2 === 0) {
+				evens.push(thisBox);
+			} else {
+				odds.push(thisBox);
+			}
+		}
+
 		return (
-			<div className="row">
-				<div className="col-sm-6 offset-sm-3 col-8 offset-2">
-					<ul className="list-unstyled row">{boxes}</ul>
-				</div>
+			<div style={{ paddingBottom: "16px" }}>
+				<div className="btn-group-vertical checkable-but">{evens}</div>
+				{odds.length > 0 && (
+					<div className="btn-group-vertical checkable-but">{odds}</div>
+				)}
 			</div>
 		);
 	}

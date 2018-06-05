@@ -45,6 +45,11 @@ hr {
 	margin: 2px;
 }
 
+.checkable-but {
+	vertical-align: top;
+	margin: 8px;
+}
+
 .player-box {
 	background-color: black;
 	color: white;
