@@ -33,13 +33,13 @@ module.exports = function(app) {
 				game.currentRound.disconnectedPlayers.length > 0
 			) {
 				var thisRound = game.currentRound;
-				socket.emit("replace", thisRound.getState());
+
+				thisRound.addReplaceViewer(socket);
+
+				// sent when this person selects a person to replace
 				socket.on("tryReplace", function(data_2) {
 					var id = data_2.playerIdToReplace;
-					var canBeReplaced = thisRound.canBeReplaced(id);
-					if (canBeReplaced) {
-						thisRound.replacePlayer(id, data.name, socket);
-					}
+					thisRound.replacePlayer(id, data.name, socket);
 				});
 			} else {
 				socket.emit("joinGame", {

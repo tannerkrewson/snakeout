@@ -14,6 +14,7 @@ function Round(roundNumber, code, players, onEnd) {
 	this.onEnd = onEnd;
 	this.onDoneWaiting;
 	this.disconnectedPlayers = [];
+	this.socketsViewingReplacePage = [];
 	this.playersBeingWaitedOn = [];
 	this.missionNumber = 0;
 	this.missions = [];
@@ -181,15 +182,7 @@ Round.prototype.findReplacementFor = function(player) {
 	this.disconnectedPlayers.push(player);
 
 	this.sendStateToAll();
-};
-
-Round.prototype.canBeReplaced = function(playerToReplaceId) {
-	for (var i = 0; i < this.disconnectedPlayers.length; i++) {
-		if (this.disconnectedPlayers[i].id === playerToReplaceId) {
-			return true;
-		}
-	}
-	return false;
+	this.updateReplacePageDisconnectedPlayers();
 };
 
 Round.prototype.replacePlayer = function(playerToReplaceId, name, socket) {
@@ -224,9 +217,15 @@ Round.prototype.replacePlayer = function(playerToReplaceId, name, socket) {
 				this.onAllDone = undefined;
 			}
 
+			// remove this player from the replace page
+			this.removeReplaceViewer(socket);
+			this.updateReplacePageDisconnectedPlayers();
+
 			this.sendStateToAll();
+			return true;
 		}
 	}
+	return false;
 };
 
 Round.prototype.getPlayersThatNeedToBeReplaced = function() {
@@ -530,6 +529,39 @@ Round.prototype.processResultsOfMission = function(wasMissionSuccessful) {
 	// send the results
 	this.changePhase("mission_results");
 	this.sendStateToAll();
+};
+
+Round.prototype.updateReplacePageDisconnectedPlayers = function() {
+	let currentState = this.getState();
+	for (let socket of this.socketsViewingReplacePage) {
+		socket.emit("replace", currentState);
+	}
+};
+
+Round.prototype.disconnectAllReplaceViewers = function() {
+	for (let socket of this.socketsViewingReplacePage) {
+		socket.disconnect(true);
+	}
+	this.socketsViewingReplacePage = [];
+};
+
+Round.prototype.addReplaceViewer = function(theSocket) {
+	this.socketsViewingReplacePage.push(theSocket);
+	this.updateReplacePageDisconnectedPlayers();
+};
+
+Round.prototype.removeReplaceViewer = function(theSocket) {
+	for (let i = 0; i < this.socketsViewingReplacePage.length; i++) {
+		const aSocket = this.socketsViewingReplacePage[i];
+		if (aSocket === theSocket) {
+			this.socketsViewingReplacePage.splice(i, 1);
+			if (this.disconnectedPlayers.length === 0) {
+				this.disconnectAllReplaceViewers();
+			}
+			return true;
+		}
+	}
+	return false;
 };
 
 module.exports = Round;
