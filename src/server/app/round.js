@@ -27,6 +27,7 @@ function Round(roundNumber, code, players, onEnd) {
 		voting
 		voting_results
 		mission
+		drumroll
 		mission_results
 	*/
 
@@ -472,7 +473,7 @@ Round.prototype.processResultsOfVote = function(wasVoteSuccessful) {
 Round.prototype.startMissionPhase = function() {
 	var thisMission = this.getCurrentMission();
 
-	// runs the processResultsOfVote function once everyone has voted
+	// process the results of the mission once everyone votes
 	thisMission.startMission(this.processResultsOfMission.bind(this));
 
 	// what the parameters do:
@@ -501,6 +502,32 @@ Round.prototype.processResultsOfMission = function(wasMissionSuccessful) {
 		this.getCurrentMission().status = "spy";
 	}
 
+	this.startDrumroll();
+};
+
+// "drumroll" is a phase that occurs after a mission has conculuded
+// in which the game waits for each player to be ready to view the
+// results
+Round.prototype.startDrumroll = function() {
+	// wait for everyone to be ready to view the mission results
+	this.waitFor(
+		this.players,
+		"readyToViewResults",
+		() => {
+			// ran everytime a player hits next
+			this.sendStateToAll();
+		},
+		() => {
+			// ran once everyone is done
+			this.sendMissionResults();
+		}
+	);
+
+	this.changePhase("drumroll");
+	this.sendStateToAll();
+};
+
+Round.prototype.sendMissionResults = function() {
 	var gameOver = this.checkForWin();
 
 	// wait for everyone to be done viewing the results that

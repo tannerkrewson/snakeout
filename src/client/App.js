@@ -14,6 +14,7 @@ import CaptainWaiting from "./components/CaptainWaiting";
 import VotingPhase from "./components/VotingPhase";
 import VotingResults from "./components/VotingResults";
 import MissionPhase from "./components/MissionPhase";
+import Drumroll from "./components/Drumroll";
 import Results from "./components/Results";
 
 import Connection from "./utils/Connection";
@@ -134,6 +135,15 @@ export default class App extends Component {
 						self.changePage(Waiting, data);
 					}
 
+					break;
+				case "drumroll":
+					if (isWaiting) {
+						self.changePage(Drumroll, data);
+					} else {
+						data.message =
+							"Waiting for everyone to be ready to view the results...";
+						self.changePage(Waiting, data);
+					}
 					break;
 				case "mission_results":
 					if (isWaiting) {

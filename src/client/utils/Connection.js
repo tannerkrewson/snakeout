@@ -71,6 +71,10 @@ Connection.prototype.doneViewingVoteResults = function() {
 	this.send("doneViewingVoteResults", {});
 };
 
+Connection.prototype.readyToViewResults = function() {
+	this.send("readyToViewResults", {});
+};
+
 Connection.prototype.tryReplace = function(data) {
 	this.send("tryReplace", data);
 };
