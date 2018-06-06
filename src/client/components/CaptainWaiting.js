@@ -14,6 +14,7 @@ export default class CaptainWaiting extends Component {
 				<PlayerCheckboxes
 					players={data.players}
 					selectedPlayers={data.captainsSelectedPlayers}
+					disabled={true}
 				/>
 				<p>Players being waited on:</p>
 				<PlayerList players={data.waitingList} />

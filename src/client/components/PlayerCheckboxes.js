@@ -32,6 +32,7 @@ export default class PlayerCheckboxes extends Component {
 					checked={playerIsSelected}
 					onCheck={thisPlayerOnCheck}
 					key={i}
+					disabled={this.props.disabled}
 				>
 					{players[i].name}
 				</CheckableButton>

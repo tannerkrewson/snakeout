@@ -9,7 +9,11 @@ export default class CheckableButton extends Component {
 	render() {
 		const CheckIcon = this.props.checked ? FaCheckSquareO : FaSquareO;
 		return (
-			<SOButton onClick={this.props.onCheck} isGroup={true}>
+			<SOButton
+				onClick={this.props.onCheck}
+				isGroup={true}
+				disabled={this.props.disabled}
+			>
 				<CheckIcon />
 				&nbsp;
 				{this.props.children}
