@@ -191,7 +191,7 @@ export default class HowToPlay extends Component {
 				</p>
 				<br />
 				<div className="text-center">
-					<RRButton label="Back to Spyout" path="/" />
+					<RRButton path="/">Back to Spyout</RRButton>
 				</div>
 				<br />
 			</div>

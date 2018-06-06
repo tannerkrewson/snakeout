@@ -57,10 +57,11 @@ export default class CaptainSelection extends Component {
 					onChange={this.updatePlayerList.bind(this)}
 				/>
 				<SOButton
-					label="Put it to a vote!"
 					disabled={!this.state.ready}
 					onClick={this.submitSelectedPlayers.bind(this)}
-				/>
+				>
+					Put it to a vote!
+				</SOButton>
 			</div>
 		);
 	}

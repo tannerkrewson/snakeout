@@ -14,7 +14,7 @@ export default class Screenshots extends Component {
 				</div>
 				<br />
 				<div className="text-center">
-					<RRButton label="Back to Spyout" path="/" />
+					<RRButton path="/">Back to Spyout</RRButton>
 				</div>
 			</div>
 		);

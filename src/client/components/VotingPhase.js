@@ -40,8 +40,8 @@ export default class VotingPhase extends Component {
 					<span> {currentMission.number}.</span>
 				</p>
 				<div>
-					<SOButton label="Reject" onClick={this.voteNay.bind(this)} />
-					<SOButton label="Approve" onClick={this.voteYay.bind(this)} />
+					<SOButton onClick={this.voteNay.bind(this)}>Reject</SOButton>
+					<SOButton onClick={this.voteYay.bind(this)}>Approve</SOButton>
 				</div>
 				<RoundInfoBar round={data} me={me} />
 			</div>

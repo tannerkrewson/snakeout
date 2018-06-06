@@ -7,12 +7,13 @@ class RRButton extends Component {
 	render() {
 		return (
 			<SOButton
-				label={this.props.label}
 				type={this.props.isSubmit}
 				isGroup={this.props.isGroup}
 				disabled={this.props.disabled}
 				onClick={() => this.props.history.push(this.props.path)}
-			/>
+			>
+				{this.props.children}
+			</SOButton>
 		);
 	}
 }

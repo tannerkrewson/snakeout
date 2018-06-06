@@ -45,18 +45,20 @@ export default class MainMenu extends Component {
 		return (
 			<div className="main-menu noformrefresh">
 				<p>
-					<SOButton label="Join Game" onClick={goToJoinGame.bind(this)} />
-					<SOButton label="New Game" onClick={goToNewGame.bind(this)} />
+					<SOButton onClick={goToJoinGame.bind(this)}>Join Game</SOButton>
+					<SOButton onClick={goToNewGame.bind(this)}>New Game</SOButton>
 				</p>
 				<br />
 				<div className="btn-group-vertical" role="group" aria-label="...">
-					<RRButton label="How to Play" isGroup={true} path="/how-to-play" />
-					<RRButton label="Screenshots" isGroup={true} path="/screenshots" />
-					<RRButton
-						label="More Games Like Spyout"
-						isGroup={true}
-						path="/more-games"
-					/>
+					<RRButton isGroup={true} path="/how-to-play">
+						How to Play
+					</RRButton>
+					<RRButton isGroup={true} path="/screenshots">
+						Screenshots
+					</RRButton>
+					<RRButton isGroup={true} path="/more-games">
+						More Games Like Spyout
+					</RRButton>
 				</div>
 				<br />
 				<br />

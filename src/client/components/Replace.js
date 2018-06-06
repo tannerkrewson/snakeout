@@ -37,10 +37,11 @@ export default class Replace extends Component {
 					onChange={this.updatePlayerList.bind(this)}
 				/>
 				<SOButton
-					label="Replace"
 					disabled={!this.state.ready}
 					onClick={this.tryReplace.bind(this)}
-				/>
+				>
+					Replace
+				</SOButton>
 				<br />
 			</div>
 		);

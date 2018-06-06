@@ -54,8 +54,8 @@ export default class JoinGame extends Component {
 							value={this.state.name}
 						/>
 						<br />
-						<SOButton label="Back" onClick={this.goToMainMenu.bind(this)} />
-						<SOButton isSubmit={true} label="Join" />
+						<SOButton onClick={this.goToMainMenu.bind(this)}>Back</SOButton>
+						<SOButton isSubmit={true}>Join</SOButton>
 						<br />
 					</form>
 				</div>

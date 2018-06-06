@@ -26,7 +26,7 @@ export default class StartPage extends Component {
 				<p>Players:</p>
 				<PlayerList players={data.players} />
 				<br />
-				<SOButton label="Begin" onClick={this.doneViewingStart.bind(this)} />
+				<SOButton onClick={this.doneViewingStart.bind(this)}>Begin</SOButton>
 			</div>
 		);
 	}

@@ -46,7 +46,7 @@ export default class VotingResults extends Component {
 				<PlayerList players={approveVotes} />
 				<p>Reject votes:</p>
 				<PlayerList players={rejectVotes} />
-				<SOButton label="Next" onClick={this.doneViewingResults.bind(this)} />
+				<SOButton onClick={this.doneViewingResults.bind(this)}>Next</SOButton>
 				<RoundInfoBar round={round} me={me} />
 			</div>
 		);

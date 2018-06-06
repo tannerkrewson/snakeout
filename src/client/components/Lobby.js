@@ -41,16 +41,15 @@ export default class Lobby extends Component {
 				<p>{playersNeededMessage}</p>
 				<div>
 					<SOButton
-						label="Leave Game"
 						onClick={() => {
 							this.props.server.socket.close();
 						}}
-					/>
-					<SOButton
-						label="Start Game"
-						onClick={startGame}
-						disabled={notReady}
-					/>
+					>
+						Leave Game
+					</SOButton>
+					<SOButton onClick={startGame} disabled={notReady}>
+						Start Game
+					</SOButton>
 				</div>
 				<br />
 			</div>

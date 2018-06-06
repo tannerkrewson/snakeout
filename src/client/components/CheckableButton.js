@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 
+import FaCheckSquareO from "react-icons/lib/fa/check-square-o";
+import FaSquareO from "react-icons/lib/fa/square-o";
+
 import SOButton from "./SOButton";
 
 export default class CheckableButton extends Component {
 	render() {
-		/*var icon;
-		if (this.props.checked) {
-			icon = "fa-check-square-o";
-		} else {
-			icon = "fa-square-o";
-		}*/
-		let label = this.props.checked ? "X  " : "   ";
-		label += this.props.label;
+		const CheckIcon = this.props.checked ? FaCheckSquareO : FaSquareO;
 		return (
-			<SOButton onClick={this.props.onCheck} label={label} isGroup={true} />
+			<SOButton onClick={this.props.onCheck} isGroup={true}>
+				<CheckIcon />
+				&nbsp;
+				{this.props.children}
+			</SOButton>
 		);
 	}
 }

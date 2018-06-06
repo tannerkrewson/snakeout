@@ -40,8 +40,8 @@ export default class NewGame extends Component {
 							value={this.state.name}
 						/>
 						<br />
-						<SOButton label="Back" onClick={goToMainMenu.bind(this)} />
-						<SOButton label="Start" isSubmit={true} />
+						<SOButton onClick={goToMainMenu.bind(this)}>Back</SOButton>
+						<SOButton isSubmit={true}>Start</SOButton>
 						<br />
 					</form>
 				</div>

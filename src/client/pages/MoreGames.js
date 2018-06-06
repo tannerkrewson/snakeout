@@ -31,7 +31,7 @@ export default class MoreGames extends Component {
 					</a>by Jackbox Games
 				</div>
 				<br />
-				<RRButton label="Back to Spyout" path="/" />
+				<RRButton path="/">Back to Spyout</RRButton>
 			</div>
 		);
 	}

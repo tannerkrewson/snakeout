@@ -29,11 +29,12 @@ export default class PlayerCheckboxes extends Component {
 
 			let thisBox = (
 				<CheckableButton
-					label={players[i].name}
 					checked={playerIsSelected}
 					onCheck={thisPlayerOnCheck}
 					key={i}
-				/>
+				>
+					{players[i].name}
+				</CheckableButton>
 			);
 
 			// fill two columns evenly

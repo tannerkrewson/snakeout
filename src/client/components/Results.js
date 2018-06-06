@@ -101,7 +101,7 @@ export default class Results extends Component {
 				</p>
 				<p className="so-h3">{bodyMessage}</p>
 				{SpyList}
-				<SOButton label="Next" onClick={this.doneViewingResults.bind(this)} />
+				<SOButton onClick={this.doneViewingResults.bind(this)}>Next</SOButton>
 				<RoundInfoBar round={data} me={me} />
 			</div>
 		);

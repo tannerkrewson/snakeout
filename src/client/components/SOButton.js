@@ -13,7 +13,7 @@ export default class SOButton extends Component {
 				disabled={this.props.disabled}
 				onClick={this.props.onClick}
 			>
-				{this.props.label}
+				{this.props.children}
 			</button>
 		);
 	}
