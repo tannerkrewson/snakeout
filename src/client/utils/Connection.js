@@ -39,11 +39,17 @@ Connection.prototype.vote = function(vote) {
 	this.send("selectionVote", {
 		vote
 	});
+	gtag("event", "pre_mission_vote", {
+		event_label: vote
+	});
 };
 
 Connection.prototype.missionVote = function(vote) {
 	this.send("missionVote", {
 		vote
+	});
+	gtag("event", "mission_vote", {
+		event_label: vote
 	});
 };
 

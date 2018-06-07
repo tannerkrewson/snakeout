@@ -13,6 +13,7 @@ export default class Replace extends Component {
 		this.props.server.tryReplace({
 			playerIdToReplace: this.selectedPlayers[0].id
 		});
+		gtag("event", "try_replace");
 	}
 	getInitialState() {
 		return {

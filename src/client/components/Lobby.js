@@ -11,8 +11,9 @@ export default class Lobby extends Component {
 
 		var startGame = () => {
 			this.props.server.startGame(gameCode);
-			gtag("event", "game_start", {
-				number_of_players: numPlayersInLobby
+			gtag("event", "game_start");
+			gtag("event", "number_of_players", {
+				event_label: numPlayersInLobby
 			});
 		};
 

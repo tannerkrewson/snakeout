@@ -32,9 +32,10 @@ export default class MainMenu extends Component {
 				self.props.server.on("updatePlayerList", function(data) {
 					self.props.changePage(Lobby, data.game);
 				});
+				gtag("event", "game_joined");
 			} else {
 				self.props.changePage(JoinGame);
-				alert("Failed to join game!");
+				gtag("event", "game_join_failed");
 			}
 		});
 

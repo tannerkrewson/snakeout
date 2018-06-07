@@ -49,14 +49,17 @@ export default class Results extends Component {
 			}
 		}
 
-		if (passedMissionsToLoyalistWin === 0) {
+		const loyalistsWin = passedMissionsToLoyalistWin === 0;
+		const spiesWin = failedMissionsToSpyWin === 0;
+
+		if (loyalistsWin) {
 			// loyalists won
 			topMessage = "Loyalists win!";
 			bodyMessage +=
 				"Spies needed " +
 				failedMissionsToSpyWin +
 				" more failing missions to win.\n";
-		} else if (failedMissionsToSpyWin === 0) {
+		} else if (spiesWin) {
 			// spies won
 			topMessage = "Spies win!";
 			bodyMessage +=
@@ -91,6 +94,19 @@ export default class Results extends Component {
 					<PlayerList players={spies} />
 				</div>
 			);
+		}
+
+		if (me.isAdmin && (loyalistsWin || spiesWin)) {
+			let winner = loyalistsWin ? "loyalist" : "spy";
+			gtag("event", "game_result", {
+				event_label: winner
+			});
+		}
+
+		if (me.isAdmin) {
+			gtag("event", "mission_result", {
+				event_label: currentMission.status
+			});
 		}
 
 		return (

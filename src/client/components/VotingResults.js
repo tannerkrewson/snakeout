@@ -38,6 +38,12 @@ export default class VotingResults extends Component {
 			bodyMessage += "A new captain will now select players.";
 		}
 
+		if (me.isAdmin) {
+			gtag("event", "pre_mission_vote_result", {
+				event_label: votePassed
+			});
+		}
+
 		return (
 			<div className="selection-phase">
 				<p className="so-h2">{topMessage}</p>
