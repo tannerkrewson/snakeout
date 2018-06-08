@@ -8,6 +8,7 @@
 		"client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
 		"server": "node src/server/bin/www",
 		"dev": "concurrently \"nodemon --exec npm run server\" \"npm run client\"",
+		"dev2": "webpack --mode development && nodemon --exec node --inspect src/server/bin/www",
 		"test": "tape src/server/test/*.js",
 		"precommit": "pretty-quick --staged"
 	},
