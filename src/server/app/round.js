@@ -130,8 +130,9 @@ Round.prototype.waitFor = function(
 				self.playersBeingWaitedOn.length === 0 &&
 				self.disconnectedPlayers.length === 0
 			) {
-				self.onAllDone();
-				self.onAllDone = undefined;
+				var temp = self.onAllDone;
+				self.onAllDone = () => {};
+				temp();
 			}
 		});
 	});
@@ -214,8 +215,9 @@ Round.prototype.replacePlayer = function(playerToReplaceId, name, socket) {
 				this.playersBeingWaitedOn.length === 0 &&
 				this.disconnectedPlayers.length === 0
 			) {
-				this.onAllDone();
-				this.onAllDone = undefined;
+				var temp = this.onAllDone;
+				this.onAllDone = () => {};
+				temp();
 			}
 
 			// remove this player from the replace page
