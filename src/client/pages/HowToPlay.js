@@ -37,8 +37,8 @@ export default class HowToPlay extends Component {
 					identity.
 				</p>
 				<p>
-					The game is seperated into five missions. The first team to get three
-					missions wins the game.
+					The game is seperated into five missions. The first team to "win"
+					three missions wins the game.
 				</p>
 				<div className="so- so-h2">
 					<b>How it works</b>
@@ -46,13 +46,14 @@ export default class HowToPlay extends Component {
 				<p>Here's a rundown of a round of Spyout:</p>
 				<ol>
 					<li>Start a new game, and give the code to your friends to join.</li>
-					<li>When everyone has joined in, the host may start the game.</li>
+					<li>When everyone has joined in, anyone may start the game.</li>
 					<li>
-						Each player can now view their role, either a loyalist or a spy.
+						Each player can now view their role: either loyalist or spy.
 						<ul>
 							<li>
-								The loyalists don't know who the spies are, but the spies{" "}
-							</li>are told who the other spies are.
+								The loyalists don't know who the spies are, but the spies are
+								told who the other spies are.
+							</li>
 						</ul>
 					</li>
 					<li>
@@ -96,8 +97,8 @@ export default class HowToPlay extends Component {
 						</ul>
 					</li>
 					<li>
-						During the mission, the selected player will get to choose to either
-						pass or fail the mission.
+						During the mission, the players selected to go on the mission will
+						get to choose to either pass or fail the mission.
 						<ul>
 							<li>
 								If one or more players vote to fail the mission, it will fail.
@@ -112,15 +113,15 @@ export default class HowToPlay extends Component {
 								it to fail.
 							</li>
 							<li>
-								If one is a loyalist, it will always be in their best interest
+								If you are a loyalist, it will always be in their best interest
 								to pass the mission. Again, although the game will allow it, do
 								not fail the mission as a loyalist, because it just hurts your
 								team.
 							</li>
 							<li>
-								If one is a spy, although it would sometimes be in one's best
-								interest to vote to fail the mission, other times they may want
-								to pass the mission to throw the other players off their scent.
+								If you are a spy, although it will sometimes be in your best
+								interest to fail the mission, other times you may want to pass
+								the mission to throw the other players off their scent.
 							</li>
 						</ul>
 					</li>
@@ -185,7 +186,10 @@ export default class HowToPlay extends Component {
 					</a>for your tinkering. If you run into any issues, or have any
 					features you would like to see in Spyout, feel free to open an issue
 					on the{" "}
-					<a href="https://github.com/tannerkrewson/spyout" target="_blank">
+					<a
+						href="https://github.com/tannerkrewson/spyout/issues"
+						target="_blank"
+					>
 						GitHub repo
 					</a>. Hope you like it! &lt;3
 				</p>
