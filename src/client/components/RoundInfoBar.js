@@ -17,26 +17,25 @@ export default class RoundInfoBar extends Component {
 				<br />
 				<hr />
 				<p>Missions:</p>
-				<p>
-					<MissionBar missions={round.missions} />
-					{twoFailNotice && (
-						<div className="card border-light bg-transparent text-white mb-3">
-							<div className="card-body">
-								<p className="card-text">
-									Because this game has 7 or more players, the 4th mission will
-									require two fails to fail, instead of just one. So, if just
-									one player fails the 4th mission, the mission will still be
-									won by the loyalists.
-								</p>
-							</div>
+				<MissionBar missions={round.missions} />
+				{twoFailNotice && (
+					<div className="card border-light bg-transparent text-white mb-3">
+						<div className="card-body">
+							<p className="card-text">
+								Because this game has 7 or more players, the 4th mission will
+								require two fails to fail, instead of just one. So, if just one
+								player fails the 4th mission, the mission will still be won by
+								the loyalists.
+							</p>
 						</div>
-					)}
-				</p>
+					</div>
+				)}
+				<p />
+				<RoleViewer role={ourRole} players={round.players} me={me} />
+				<p />
 				<p>
-					<RoleViewer role={ourRole} players={round.players} me={me} />
-				</p>
-				<p>
-					{round.players.length} players | {round.spyCount} spies
+					{round.players.length - round.spyCount} loyalists | {round.spyCount}{" "}
+					spies
 				</p>
 				<GameCode code={round.gameCode} />
 			</div>
