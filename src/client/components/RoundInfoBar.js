@@ -19,7 +19,7 @@ export default class RoundInfoBar extends Component {
 				<p>Missions:</p>
 				<MissionBar missions={round.missions} />
 				{twoFailNotice && (
-					<div className="card border-light bg-dark text-white mb-3">
+					<div className="card border-light bg-transparent text-white mb-3">
 						<div className="card-body">
 							<p className="card-text">
 								Because this game has 7 or more players, the 4th mission will

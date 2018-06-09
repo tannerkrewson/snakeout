@@ -53,6 +53,20 @@ export default class Lobby extends Component {
 					</SOButton>
 				</div>
 				<br />
+				<div className="card border-light bg-transparent text-white mb-3">
+					<div className="card-body">
+						<p className="card-text">Thanks for playing Spyout!</p>
+						<p className="card-text">
+							If you're having fun, try out my other game:
+						</p>
+						<a
+							href="http://drawphone.tannerkrewson.com/"
+							className="btn btn-outline-light"
+						>
+							Play Drawphone
+						</a>
+					</div>
+				</div>
 			</div>
 		);
 	}
