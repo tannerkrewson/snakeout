@@ -20,6 +20,7 @@ function Round(roundNumber, code, players, onEnd) {
 	this.missions = [];
 	this.currentCaptain;
 	this.captainsSelectedPlayers = [];
+	this.spyCount = this.getNumberOfSpies();
 	this.phase = "lobby";
 	/* Phase List:
 		lobby
@@ -262,13 +263,14 @@ Round.prototype.getState = function() {
 	var currentMission = this.getCurrentMission();
 	return {
 		captainsSelectedPlayers: this.captainsSelectedPlayers,
-		gameCode: this.code,
 		currentMission,
 		disconnectedList: this.getJsonDisconnectedPlayers(),
+		gameCode: this.code,
 		missions: this.missions,
 		phase: this.phase,
 		players: this.getJsonPlayers(),
 		potentialPlayersOnMission: currentMission.potentialPlayersOnMission,
+		spyCount: this.spyCount,
 		waitingList: this.getJsonWaitingPlayers()
 	};
 };
@@ -289,7 +291,7 @@ Round.prototype.getNumberOfSpies = function() {
 };
 
 Round.prototype.assignRoles = function() {
-	var numOfSpies = this.getNumberOfSpies();
+	var numOfSpies = this.spyCount;
 
 	//shuffle the players in place so that the same
 	//	people are not spies everytime
