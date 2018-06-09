@@ -9,7 +9,7 @@
 		"server": "node src/server/bin/www",
 		"dev": "concurrently \"nodemon --exec npm run server\" \"npm run client\"",
 		"dev2": "webpack --mode development && node --inspect src/server/bin/www",
-		"dev2mon": "nodemon --exec npm run dev2",
+		"dev2mon": "nodemon --watch src --exec npm run dev2",
 		"test": "tape src/server/test/*.js",
 		"precommit": "pretty-quick --staged"
 	},
