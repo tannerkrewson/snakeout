@@ -42,6 +42,7 @@ Connection.prototype.vote = function(vote) {
 	gtag("event", "pre_mission_vote", {
 		event_label: vote
 	});
+	gtag("event", "vote");
 };
 
 Connection.prototype.missionVote = function(vote) {
@@ -51,6 +52,7 @@ Connection.prototype.missionVote = function(vote) {
 	gtag("event", "mission_vote", {
 		event_label: vote
 	});
+	gtag("event", "vote");
 };
 
 Connection.prototype.updateSelectedPlayers = function(selectedPlayers) {
