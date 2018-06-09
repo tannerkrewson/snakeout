@@ -18,6 +18,8 @@ export default class OnMissionScreen extends Component {
 		// data.players is all of the players in the game
 		// currentMission.playersOnMission is only the players on the mission
 
+		let twoFailNotice = currentMission.number === 4 && data.players.length >= 7;
+
 		return (
 			<div className="on-mission-screen">
 				<p className="so-h3">
@@ -26,9 +28,22 @@ export default class OnMissionScreen extends Component {
 					with:
 				</p>
 				<PlayerList players={currentMission.playersOnMission} />
-				<p>All players must pass this mission for it to succeed.</p>
-				<p>This mission will fail even if just one player fails it.</p>
-				<p>The other players will not know how you voted.</p>
+				{!twoFailNotice && (
+					<p>
+						All players must pass this mission for it to succeed. This mission
+						will fail even if just one player fails it.
+					</p>
+				)}
+				{twoFailNotice && (
+					<p>
+						All but one player must pass this mission for it to succeed. This
+						mission will fail if two or more players fail it.
+					</p>
+				)}
+				<p>
+					The other players will not know how you voted, but they will know how
+					many pass and fail votes were cast.
+				</p>
 				<div>
 					<SOButton onClick={this.voteNay.bind(this)}>Fail</SOButton>
 					<SOButton onClick={this.voteYay.bind(this)}>Pass</SOButton>
