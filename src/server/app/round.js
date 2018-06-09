@@ -476,7 +476,7 @@ Round.prototype.startMissionPhase = function() {
 	var thisMission = this.getCurrentMission();
 
 	// process the results of the mission once everyone votes
-	thisMission.startMission(this.processResultsOfMission.bind(this));
+	thisMission.startMission(this.startDrumroll.bind(this));
 
 	// what the parameters do:
 	// (playersToWaitOn, eventToWaitFor, onPlayerDone, onAllDone)
@@ -503,8 +503,6 @@ Round.prototype.processResultsOfMission = function(wasMissionSuccessful) {
 		// spies win this mission
 		this.getCurrentMission().status = "spy";
 	}
-
-	this.startDrumroll();
 };
 
 // "drumroll" is a phase that occurs after a mission has conculuded
@@ -521,6 +519,7 @@ Round.prototype.startDrumroll = function() {
 		},
 		() => {
 			// ran once everyone is done
+			this.processResultsOfMission();
 			this.sendMissionResults();
 		}
 	);
