@@ -510,7 +510,7 @@ Round.prototype.processResultsOfMission = function(wasMissionSuccessful) {
 // "drumroll" is a phase that occurs after a mission has conculuded
 // in which the game waits for each player to be ready to view the
 // results
-Round.prototype.startDrumroll = function() {
+Round.prototype.startDrumroll = function(wasMissionSuccessful) {
 	// wait for everyone to be ready to view the mission results
 	this.waitFor(
 		this.players,
@@ -521,7 +521,7 @@ Round.prototype.startDrumroll = function() {
 		},
 		() => {
 			// ran once everyone is done
-			this.processResultsOfMission();
+			this.processResultsOfMission(wasMissionSuccessful);
 			this.sendMissionResults();
 		}
 	);
