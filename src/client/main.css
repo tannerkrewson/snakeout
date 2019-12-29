@@ -123,3 +123,10 @@ hr {
 footer {
 	text-shadow: 2px 2px black;
 }
+
+.soalert {
+	font-size: 0.8em;
+	width: 80%;
+	margin: -1em auto 2em;
+	text-align: left;
+}
