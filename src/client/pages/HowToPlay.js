@@ -16,7 +16,7 @@ export default class HowToPlay extends Component {
 				<p>
 					In my opinion, the easiest way to learn how to play Spyout would be to
 					watch someone else play, as it will help you get a feel for the
-					dyanmic of the game. Here's a video from Tabletop on YouTube of some
+					dynamic of the game. Here's a video from Tabletop on YouTube of some
 					people playing The Resistance, which works in the same way:
 				</p>
 				<div className="embed-responsive embed-responsive-16by9">
@@ -31,13 +31,13 @@ export default class HowToPlay extends Component {
 					<b>About</b>
 				</div>
 				<p>
-					Spyout is a game in which a team of loyalists is infultrated by a
+					Spyout is a game in which a team of loyalists is infiltrated by a
 					group of spies. The loyalists must try to figure out who the spies
 					are, and the spies must try to keep them from figuring out their
 					identity.
 				</p>
 				<p>
-					The game is seperated into five missions. The first team to "win"
+					The game is separated into five missions. The first team to "win"
 					three missions wins the game.
 				</p>
 				<div className="so- so-h2">
@@ -183,15 +183,16 @@ export default class HowToPlay extends Component {
 					React. Spyout is 100% free and open-source, and is available on{" "}
 					<a href="https://github.com/tannerkrewson/spyout" target="_blank">
 						GitHub{" "}
-					</a>for your tinkering. If you run into any issues, or have any
-					features you would like to see in Spyout, feel free to open an issue
-					on the{" "}
+					</a>
+					for your tinkering. If you run into any issues, or have any features
+					you would like to see in Spyout, feel free to open an issue on the{" "}
 					<a
 						href="https://github.com/tannerkrewson/spyout/issues"
 						target="_blank"
 					>
 						GitHub repo
-					</a>. Hope you like it! &lt;3
+					</a>
+					. Hope you like it! &lt;3
 				</p>
 				<br />
 				<div className="text-center">
