@@ -173,7 +173,7 @@ export default class App extends Component {
 		return (
 			<Router>
 				<div className="main-content text-center" id="spyout">
-					<p className="so-h1">SPYOUT</p>
+					<div className="so-h1">SPYOUT</div>
 					<hr />
 					<br />
 					<Route

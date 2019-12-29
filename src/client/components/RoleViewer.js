@@ -54,7 +54,7 @@ export default class RoleViewer extends Component {
 				)}
 				<button
 					type="button"
-					className="btn btn-outline-light"
+					className="btn btn-secondary"
 					onMouseDown={this.showPopup.bind(this)}
 					onMouseUp={this.hidePopup.bind(this)}
 					onTouchStart={this.showPopup.bind(this)}

@@ -53,7 +53,7 @@ export default class Lobby extends Component {
 					</SOButton>
 				</div>
 				<br />
-				<div className="card border-light bg-transparent text-white mb-3">
+				<div className="card text-white mb-3">
 					<div className="card-body">
 						<p className="card-text">Thanks for playing Spyout!</p>
 						<p className="card-text">
@@ -61,7 +61,7 @@ export default class Lobby extends Component {
 						</p>
 						<a
 							href="http://drawphone.tannerkrewson.com/"
-							className="btn btn-outline-light"
+							className="btn btn-secondary"
 						>
 							Play Drawphone
 						</a>

@@ -49,8 +49,7 @@ export default class MainMenu extends Component {
 					<SOButton onClick={goToJoinGame.bind(this)}>Join Game</SOButton>
 					<SOButton onClick={goToNewGame.bind(this)}>New Game</SOButton>
 				</p>
-				<br />
-				<div className="btn-group-vertical" role="group" aria-label="...">
+				<div className="sogroup" role="group" aria-label="...">
 					<RRButton isGroup={true} path="/how-to-play">
 						How to Play
 					</RRButton>
@@ -58,7 +57,7 @@ export default class MainMenu extends Component {
 						Screenshots
 					</RRButton>
 					<RRButton isGroup={true} path="/more-games">
-						More Games Like Spyout
+						Games Like Spyout
 					</RRButton>
 				</div>
 				<br />

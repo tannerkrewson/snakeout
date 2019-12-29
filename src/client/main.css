@@ -1,5 +1,5 @@
 body {
-	background-color: black !important;
+	background-color: #282828 !important;
 	color: white;
 }
 
@@ -15,9 +15,33 @@ hr {
 	padding: 0;
 }
 
+.card {
+	background-color: #181818;
+}
+
+.btn-secondary {
+	background-color: #404040;
+	border: 0;
+	box-shadow: 4px 4px 0px 1px black;
+	margin: 6px 4px;
+}
+
+.form-control {
+	background-color: #161616;
+	color: white;
+}
+
+.form-control:focus {
+	background-color: #161616;
+	color: white;
+}
+
 .so-h1 {
-	font-size: 3.5rem;
+	font-size: 2.5rem;
 	font-family: "Lato", sans-serif;
+	font-weight: 400;
+	font-style: italic;
+	text-shadow: 3px 3px black;
 }
 
 .so-h2 {
@@ -40,8 +64,17 @@ hr {
 	height: 100vh;
 }
 
-.sobutton-nongroup {
-	margin: 2px;
+.sogroup {
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	position: relative;
+	display: inline-flex;
+	vertical-align: middle;
+}
+
+.sogroupbut {
+	width: 100%;
 }
 
 .checkable-but {
@@ -50,7 +83,7 @@ hr {
 }
 
 .player-box {
-	background-color: black;
+	background-color: #181818;
 	color: white;
 	padding: 5px;
 	margin-top: -1px;
@@ -85,4 +118,8 @@ hr {
 
 .instructions {
 	text-align: left;
+}
+
+footer {
+	text-shadow: 2px 2px black;
 }
