@@ -1,13 +1,6 @@
-<div align="center">
-  <img src="http://i.imgur.com/7ygjjn8.png"></img>
-  <br>
-  <h2>
-    Play now at: <a href="http://snakeout.tannerkrewson.com/">snakeout.tannerkrewson.com</a>
-  </h2>
-  <br>
-  <img src="http://i.imgur.com/QHHm5Ri.png" width="222"/><img src="http://i.imgur.com/xEGpyR1.png" width="222"/><img src="http://i.imgur.com/APJiF8d.png" width="222"/><img src="http://i.imgur.com/XdtBG7h.png" width="222"/>
-</div>
-<br>
+# Snakeout 🐍
+
+#### Play now: [snakeout.tannerkrewson.com](https://snakeout.tannerkrewson.com/)
 
 ## About
 
