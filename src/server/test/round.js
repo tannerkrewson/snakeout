@@ -84,11 +84,11 @@ test("create round", function(t) {
 	t.end();
 });
 
-test("getNumberOfSpies", function(t) {
-	var numSpies = testRound.getNumberOfSpies();
-	t.equal(typeof numSpies, "number");
-	t.ok(numSpies > 0);
-	t.ok(numSpies < testRound.players.length);
+test("getNumberOfSnakes", function(t) {
+	var numSnakes = testRound.getNumberOfSnakes();
+	t.equal(typeof numSnakes, "number");
+	t.ok(numSnakes > 0);
+	t.ok(numSnakes < testRound.players.length);
 	t.end();
 });
 
@@ -104,7 +104,7 @@ test("assignRoles", function(t) {
 		}
 	});
 
-	var snakeCountShouldBe = testRound.getNumberOfSpies();
+	var snakeCountShouldBe = testRound.getNumberOfSnakes();
 	t.equal(snakeCount, snakeCountShouldBe);
 	t.equal(nonSnakeCount, testRound.players.length - snakeCountShouldBe);
 	t.end();

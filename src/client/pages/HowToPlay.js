@@ -32,8 +32,8 @@ export default class HowToPlay extends Component {
 				</div>
 				<p>
 					Snakeout is a game in which a team of loyalists is infiltrated by a
-					group of spies. The loyalists must try to figure out who the spies
-					are, and the spies must try to keep them from figuring out their
+					group of snakes. The loyalists must try to figure out who the snakes
+					are, and the snakes must try to keep them from figuring out their
 					identity.
 				</p>
 				<p>
@@ -51,8 +51,8 @@ export default class HowToPlay extends Component {
 						Each player can now view their role: either loyalist or snake.
 						<ul>
 							<li>
-								The loyalists don't know who the spies are, but the spies are
-								told who the other spies are.
+								The loyalists don't know who the snakes are, but the snakes are
+								told who the other snakes are.
 							</li>
 						</ul>
 					</li>
@@ -62,7 +62,7 @@ export default class HowToPlay extends Component {
 						<ul>
 							<li>
 								If the captain is a loyalist, they should try to select players
-								who they believe are not spies to go on the mission.
+								who they believe are not snakes to go on the mission.
 							</li>
 							<li>
 								The captain may also select themselves to go on the mission.
@@ -75,7 +75,7 @@ export default class HowToPlay extends Component {
 						<ul>
 							<li>
 								Loyalists will want to approve mission teams of people who they
-								believe to be loyalists. They will want to keep spies off the
+								believe to be loyalists. They will want to keep snakes off the
 								team, because it takes just one snake to fail the mission
 								altogether.
 							</li>
@@ -148,15 +148,15 @@ export default class HowToPlay extends Component {
 						process of picking a random captain and having them select players.
 					</li>
 					<li>
-						Once either team, loyalists or spies, has gotten 3 missions, they
+						Once either team, loyalists or snakes, has gotten 3 missions, they
 						win the game. To clarify:
 						<ul>
 							<li>Once 3 missions are passed, the loyalists win.</li>
-							<li>Once 3 missions fail, the spies win.</li>
+							<li>Once 3 missions fail, the snakes win.</li>
 						</ul>
 					</li>
 					<li>
-						When a team is declared winner, the spies that round are displayed
+						When a team is declared winner, the snakes that round are displayed
 						on the screen for public scrutiny.
 					</li>
 				</ol>

@@ -27,7 +27,7 @@ export default class StartPage extends Component {
 				<PlayerList players={data.players} />
 				<p>
 					{data.players.length - data.snakeCount} loyalists | {data.snakeCount}{" "}
-					spies
+					snakes
 				</p>
 				<SOButton onClick={this.doneViewingStart.bind(this)}>Begin</SOButton>
 			</div>

@@ -35,7 +35,7 @@ export default class RoundInfoBar extends Component {
 				<p />
 				<p>
 					{round.players.length - round.snakeCount} loyalists |{" "}
-					{round.snakeCount} spies
+					{round.snakeCount} snakes
 				</p>
 				<GameCode code={round.gameCode} />
 			</div>

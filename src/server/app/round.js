@@ -20,7 +20,7 @@ function Round(roundNumber, code, players, onEnd) {
 	this.missions = [];
 	this.currentCaptain;
 	this.captainsSelectedPlayers = [];
-	this.snakeCount = this.getNumberOfSpies();
+	this.snakeCount = this.getNumberOfSnakes();
 	this.phase = "lobby";
 	/* Phase List:
 		lobby
@@ -275,7 +275,7 @@ Round.prototype.getState = function() {
 	};
 };
 
-Round.prototype.getNumberOfSpies = function() {
+Round.prototype.getNumberOfSnakes = function() {
 	var numOfPlayers = this.players.length;
 	if (numOfPlayers === 5 || numOfPlayers === 6) {
 		return 2;
@@ -291,16 +291,16 @@ Round.prototype.getNumberOfSpies = function() {
 };
 
 Round.prototype.assignRoles = function() {
-	var numOfSpies = this.snakeCount;
+	var numOfSnakes = this.snakeCount;
 
 	//shuffle the players in place so that the same
-	//	people are not spies everytime
+	//	people are not snakes everytime
 	shuffle(this.players);
 
 	for (var i = 0; i < this.players.length; i++) {
-		if (numOfSpies > 0) {
+		if (numOfSnakes > 0) {
 			this.players[i].isSnake = true;
-			numOfSpies--;
+			numOfSnakes--;
 		} else {
 			this.players[i].isSnake = false;
 		}
@@ -462,7 +462,7 @@ Round.prototype.processResultsOfVote = function(wasVoteSuccessful) {
 			} else {
 				// since the vote failed, we'll try the vote again with a new captain
 				// to select players.
-				// the spies win if the team votes fail 5 times in a row.
+				// the snakes win if the team votes fail 5 times in a row.
 				self.assignNewCaptain();
 				self.startSelectionPhase();
 			}
@@ -502,7 +502,7 @@ Round.prototype.processResultsOfMission = function(wasMissionSuccessful) {
 		// loyalists win this mission
 		this.getCurrentMission().status = "loyalist";
 	} else {
-		// spies win this mission
+		// snakes win this mission
 		this.getCurrentMission().status = "snake";
 	}
 };
