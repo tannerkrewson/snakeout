@@ -1,5 +1,6 @@
 body {
-	background-color: #282828 !important;
+	background-color: #222222;
+	background-image: radial-gradient(#222822, #222222);
 	color: white;
 }
 
@@ -20,7 +21,7 @@ hr {
 }
 
 .btn-secondary {
-	background-color: #404040;
+	background-color: #4a534c;
 	border: 0;
 	box-shadow: 4px 4px 0px 1px black;
 	margin: 6px 4px;

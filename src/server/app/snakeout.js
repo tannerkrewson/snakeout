@@ -1,10 +1,10 @@
 //
-// Spyout itself
+// Snakeout itself
 //
 
 var Game = require("./game");
 
-function Spyout(devModeEnabled) {
+function Snakeout(devModeEnabled) {
 	this.games = [];
 
 	//add the dev game
@@ -13,7 +13,7 @@ function Spyout(devModeEnabled) {
 	}
 }
 
-Spyout.prototype.newGame = function(forceCode) {
+Snakeout.prototype.newGame = function(forceCode) {
 	var newCode;
 	if (forceCode) {
 		newCode = forceCode;
@@ -31,7 +31,7 @@ Spyout.prototype.newGame = function(forceCode) {
 	return newGame;
 };
 
-Spyout.prototype.findGame = function(code) {
+Snakeout.prototype.findGame = function(code) {
 	for (var i = 0; i < this.games.length; i++) {
 		if (this.games[i].code === code.toLowerCase()) {
 			return this.games[i];
@@ -40,7 +40,7 @@ Spyout.prototype.findGame = function(code) {
 	return false;
 };
 
-Spyout.prototype.generateCode = function() {
+Snakeout.prototype.generateCode = function() {
 	var code;
 	do {
 		//generate 4 letter code
@@ -54,7 +54,7 @@ Spyout.prototype.generateCode = function() {
 	return code;
 };
 
-Spyout.prototype.removeGame = function(code) {
+Snakeout.prototype.removeGame = function(code) {
 	var game = this.findGame(code);
 
 	if (game.code === "ffff") {
@@ -69,4 +69,4 @@ Spyout.prototype.removeGame = function(code) {
 	}
 };
 
-module.exports = Spyout;
+module.exports = Snakeout;

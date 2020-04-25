@@ -1,5 +1,5 @@
 //
-// Spyout Round
+// Snakeout Round
 //
 
 var Mission = require("./mission");
@@ -20,7 +20,7 @@ function Round(roundNumber, code, players, onEnd) {
 	this.missions = [];
 	this.currentCaptain;
 	this.captainsSelectedPlayers = [];
-	this.spyCount = this.getNumberOfSpies();
+	this.snakeCount = this.getNumberOfSpies();
 	this.phase = "lobby";
 	/* Phase List:
 		lobby
@@ -140,17 +140,17 @@ Round.prototype.waitFor = function(
 };
 
 Round.prototype.checkForWin = function() {
-	var spyWins = 0;
+	var snakeWins = 0;
 	var loyalistWins = 0;
 	for (var i = 0; i < this.missions.length; i++) {
 		var thisMission = this.missions[i];
-		if (thisMission.status === "spy") {
-			spyWins++;
+		if (thisMission.status === "snake") {
+			snakeWins++;
 		} else if (thisMission.status === "loyalist") {
 			loyalistWins++;
 		}
 	}
-	if (spyWins === 3 || loyalistWins === 3) {
+	if (snakeWins === 3 || loyalistWins === 3) {
 		return true;
 	} else {
 		return false;
@@ -270,7 +270,7 @@ Round.prototype.getState = function() {
 		phase: this.phase,
 		players: this.getJsonPlayers(),
 		potentialPlayersOnMission: currentMission.potentialPlayersOnMission,
-		spyCount: this.spyCount,
+		snakeCount: this.snakeCount,
 		waitingList: this.getJsonWaitingPlayers()
 	};
 };
@@ -291,7 +291,7 @@ Round.prototype.getNumberOfSpies = function() {
 };
 
 Round.prototype.assignRoles = function() {
-	var numOfSpies = this.spyCount;
+	var numOfSpies = this.snakeCount;
 
 	//shuffle the players in place so that the same
 	//	people are not spies everytime
@@ -299,10 +299,10 @@ Round.prototype.assignRoles = function() {
 
 	for (var i = 0; i < this.players.length; i++) {
 		if (numOfSpies > 0) {
-			this.players[i].isSpy = true;
+			this.players[i].isSnake = true;
 			numOfSpies--;
 		} else {
-			this.players[i].isSpy = false;
+			this.players[i].isSnake = false;
 		}
 	}
 };
@@ -503,7 +503,7 @@ Round.prototype.processResultsOfMission = function(wasMissionSuccessful) {
 		this.getCurrentMission().status = "loyalist";
 	} else {
 		// spies win this mission
-		this.getCurrentMission().status = "spy";
+		this.getCurrentMission().status = "snake";
 	}
 };
 

@@ -94,19 +94,19 @@ test("getNumberOfSpies", function(t) {
 
 test("assignRoles", function(t) {
 	testRound.assignRoles();
-	var spyCount = 0;
-	var nonSpyCount = 0;
+	var snakeCount = 0;
+	var nonSnakeCount = 0;
 	testRound.players.forEach(function(player) {
-		if (player.isSpy) {
-			spyCount++;
+		if (player.isSnake) {
+			snakeCount++;
 		} else {
-			nonSpyCount++;
+			nonSnakeCount++;
 		}
 	});
 
-	var spyCountShouldBe = testRound.getNumberOfSpies();
-	t.equal(spyCount, spyCountShouldBe);
-	t.equal(nonSpyCount, testRound.players.length - spyCountShouldBe);
+	var snakeCountShouldBe = testRound.getNumberOfSpies();
+	t.equal(snakeCount, snakeCountShouldBe);
+	t.equal(nonSnakeCount, testRound.players.length - snakeCountShouldBe);
 	t.end();
 });
 

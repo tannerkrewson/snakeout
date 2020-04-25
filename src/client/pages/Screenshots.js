@@ -5,7 +5,7 @@ import RRButton from "../components/RRButton";
 export default class Screenshots extends Component {
 	render() {
 		return (
-			<div className="spyout-screenshots">
+			<div className="snakeout-screenshots">
 				<div align="center">
 					<img src="http://i.imgur.com/QHHm5Ri.png" width={222} />
 					<img src="http://i.imgur.com/xEGpyR1.png" width={222} />
@@ -14,7 +14,7 @@ export default class Screenshots extends Component {
 				</div>
 				<br />
 				<div className="text-center">
-					<RRButton path="/">Back to Spyout</RRButton>
+					<RRButton path="/">Back to Snakeout</RRButton>
 				</div>
 			</div>
 		);

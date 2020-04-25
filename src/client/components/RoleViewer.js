@@ -21,13 +21,13 @@ export default class RoleViewer extends Component {
 		var roleMessage;
 		if (this.props.role === "loyalist") {
 			roleMessage = "You are a loyalist!";
-		} else if (this.props.role === "spy") {
-			roleMessage = "You are a spy!";
+		} else if (this.props.role === "snake") {
+			roleMessage = "You are a snake!";
 			roleMessage += "\nOther spies:";
 			for (var i = 0; i < this.props.players.length; i++) {
 				var thisPlayer = this.props.players[i];
-				// if the player is a spy and it's not us
-				if (thisPlayer.isSpy && thisPlayer.id !== this.props.me.id) {
+				// if the player is a snake and it's not us
+				if (thisPlayer.isSnake && thisPlayer.id !== this.props.me.id) {
 					roleMessage += "\n" + thisPlayer.name;
 				}
 			}

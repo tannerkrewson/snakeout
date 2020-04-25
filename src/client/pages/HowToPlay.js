@@ -5,17 +5,17 @@ import RRButton from "../components/RRButton";
 export default class HowToPlay extends Component {
 	render() {
 		return (
-			<div className="spyout-info instructions">
+			<div className="snakeout-info instructions">
 				<div className="so- so-h2">
 					<b>tl;dr:</b>
 				</div>
 				<p>
-					Spyout is based off the board game The Resistance, so if you've played
-					that before, you'll understand Spyout.
+					Snakeout is based off the board game The Resistance, so if you've
+					played that before, you'll understand Snakeout.
 				</p>
 				<p>
-					In my opinion, the easiest way to learn how to play Spyout would be to
-					watch someone else play, as it will help you get a feel for the
+					In my opinion, the easiest way to learn how to play Snakeout would be
+					to watch someone else play, as it will help you get a feel for the
 					dynamic of the game. Here's a video from Tabletop on YouTube of some
 					people playing The Resistance, which works in the same way:
 				</p>
@@ -31,7 +31,7 @@ export default class HowToPlay extends Component {
 					<b>About</b>
 				</div>
 				<p>
-					Spyout is a game in which a team of loyalists is infiltrated by a
+					Snakeout is a game in which a team of loyalists is infiltrated by a
 					group of spies. The loyalists must try to figure out who the spies
 					are, and the spies must try to keep them from figuring out their
 					identity.
@@ -43,12 +43,12 @@ export default class HowToPlay extends Component {
 				<div className="so- so-h2">
 					<b>How it works</b>
 				</div>
-				<p>Here's a rundown of a round of Spyout:</p>
+				<p>Here's a rundown of a round of Snakeout:</p>
 				<ol>
 					<li>Start a new game, and give the code to your friends to join.</li>
 					<li>When everyone has joined in, anyone may start the game.</li>
 					<li>
-						Each player can now view their role: either loyalist or spy.
+						Each player can now view their role: either loyalist or snake.
 						<ul>
 							<li>
 								The loyalists don't know who the spies are, but the spies are
@@ -76,7 +76,7 @@ export default class HowToPlay extends Component {
 							<li>
 								Loyalists will want to approve mission teams of people who they
 								believe to be loyalists. They will want to keep spies off the
-								team, because it takes just one spy to fail the mission
+								team, because it takes just one snake to fail the mission
 								altogether.
 							</li>
 							<li>
@@ -119,7 +119,7 @@ export default class HowToPlay extends Component {
 								team.
 							</li>
 							<li>
-								If you are a spy, although it will sometimes be in your best
+								If you are a snake, although it will sometimes be in your best
 								interest to fail the mission, other times you may want to pass
 								the mission to throw the other players off their scent.
 							</li>
@@ -139,7 +139,7 @@ export default class HowToPlay extends Component {
 							<li>
 								For example, if a mission has two players on it, and one player
 								votes pass, and the other votes fail, the other players will now
-								know that one of the two of you is a spy.
+								know that one of the two of you is a snake.
 							</li>
 						</ul>
 					</li>
@@ -166,7 +166,7 @@ export default class HowToPlay extends Component {
 					<b>Tips</b>
 				</div>
 				<ul>
-					<li>To play Spyout, you must have 5 to 10 players.</li>
+					<li>To play Snakeout, you must have 5 to 10 players.</li>
 					<li>
 						Don't worry if someone disconnects in the middle of the game. Just
 						have someone (doesn't have to be the same person) join with the same
@@ -179,15 +179,15 @@ export default class HowToPlay extends Component {
 					<b>Behind the scenes</b>
 				</div>
 				<p>
-					Spyout was programmed by myself, Tanner Krewson, with Node.js and
-					React. Spyout is 100% free and open-source, and is available on{" "}
-					<a href="https://github.com/tannerkrewson/spyout" target="_blank">
+					Snakeout was programmed by myself, Tanner Krewson, with Node.js and
+					React. Snakeout is 100% free and open-source, and is available on{" "}
+					<a href="https://github.com/tannerkrewson/snakeout" target="_blank">
 						GitHub{" "}
 					</a>
 					for your tinkering. If you run into any issues, or have any features
-					you would like to see in Spyout, feel free to open an issue on the{" "}
+					you would like to see in Snakeout, feel free to open an issue on the{" "}
 					<a
-						href="https://github.com/tannerkrewson/spyout/issues"
+						href="https://github.com/tannerkrewson/snakeout/issues"
 						target="_blank"
 					>
 						GitHub repo
@@ -196,7 +196,7 @@ export default class HowToPlay extends Component {
 				</p>
 				<br />
 				<div className="text-center">
-					<RRButton path="/">Back to Spyout</RRButton>
+					<RRButton path="/">Back to Snakeout</RRButton>
 				</div>
 				<br />
 			</div>

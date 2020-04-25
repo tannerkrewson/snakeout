@@ -45,18 +45,6 @@ export default class MainMenu extends Component {
 
 		return (
 			<div className="main-menu noformrefresh">
-				<div class="alert alert-dark soalert" role="alert">
-					I've fixed the bug that caused missions to always fail. My apologies
-					to anyone who has played before! The game should work now.
-					<br />
-					<br />
-					To make up for this, I've updated Spyout with a new design and other
-					fixes. :D
-					<br />
-					<br />
-					Please email me at tannerkrewson@gmail.com if you find any other
-					issues in the future. Thanks!
-				</div>
 				<p>
 					<SOButton onClick={goToJoinGame.bind(this)}>Join Game</SOButton>
 					<SOButton onClick={goToNewGame.bind(this)}>New Game</SOButton>
@@ -69,7 +57,7 @@ export default class MainMenu extends Component {
 						Screenshots
 					</RRButton>
 					<RRButton isGroup={true} path="/more-games">
-						Games Like Spyout
+						Games Like Snakeout
 					</RRButton>
 				</div>
 				<br />

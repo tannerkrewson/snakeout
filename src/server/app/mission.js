@@ -1,5 +1,5 @@
 //
-// Spyout Mission
+// Snakeout Mission
 //
 
 function Mission(number, playersNeeded, numberOfPlayersInTheGame) {

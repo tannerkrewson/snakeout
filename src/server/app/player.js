@@ -1,5 +1,5 @@
 //
-// Spyout Player
+// Snakeout Player
 //
 
 function Player(name, socket, id) {
@@ -8,7 +8,7 @@ function Player(name, socket, id) {
 	this.id = id;
 	this.isAdmin = false;
 	this.isConnected = true;
-	this.isSpy;
+	this.isSnake;
 	this.isCaptain = false;
 	this.hasBeenCaptain = false;
 }
@@ -19,7 +19,7 @@ Player.prototype.getJson = function() {
 		id: this.id,
 		isAdmin: this.isAdmin,
 		isConnected: this.isConnected,
-		isSpy: this.isSpy,
+		isSnake: this.isSnake,
 		isCaptain: this.isCaptain,
 		isOnMission: this.isOnMission,
 		hasBeenCaptain: this.hasBeenCaptain

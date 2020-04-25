@@ -17,7 +17,7 @@ export default class Results extends Component {
 		var bodyMessage = "";
 		if (currentMission.status === "loyalist") {
 			topMessage += " passed!";
-		} else if (currentMission.status === "spy") {
+		} else if (currentMission.status === "snake") {
 			topMessage += " failed.";
 		} else {
 			console.log(
@@ -27,13 +27,13 @@ export default class Results extends Component {
 
 		// figure out how many missions each team has to pass/fail before they win
 		var passedMissionsToLoyalistWin = 3;
-		var failedMissionsToSpyWin = 3;
+		var failedMissionsToSnakeWin = 3;
 		for (var i = 0; i < data.missions.length; i++) {
 			var thisMission = data.missions[i];
 			if (thisMission.status === "loyalist") {
 				passedMissionsToLoyalistWin--;
-			} else if (thisMission.status === "spy") {
-				failedMissionsToSpyWin--;
+			} else if (thisMission.status === "snake") {
+				failedMissionsToSnakeWin--;
 			}
 		}
 
@@ -50,14 +50,14 @@ export default class Results extends Component {
 		}
 
 		const loyalistsWin = passedMissionsToLoyalistWin === 0;
-		const spiesWin = failedMissionsToSpyWin === 0;
+		const spiesWin = failedMissionsToSnakeWin === 0;
 
 		if (loyalistsWin) {
 			// loyalists won
 			topMessage = "Loyalists win!";
 			bodyMessage +=
 				"Spies needed " +
-				failedMissionsToSpyWin +
+				failedMissionsToSnakeWin +
 				" more failing missions to win.\n";
 		} else if (spiesWin) {
 			// spies won
@@ -73,22 +73,22 @@ export default class Results extends Component {
 				" more passing missions to win.\n";
 			bodyMessage +=
 				"Spies need " +
-				failedMissionsToSpyWin +
+				failedMissionsToSnakeWin +
 				" more failing missions to win.\n";
 		}
 
-		// if the game is over, reveal who was a spy
-		var SpyList = <div />;
-		if (passedMissionsToLoyalistWin === 0 || failedMissionsToSpyWin === 0) {
+		// if the game is over, reveal who was a snake
+		var SnakeList = <div />;
+		if (passedMissionsToLoyalistWin === 0 || failedMissionsToSnakeWin === 0) {
 			//get this round's spies
 			var spies = [];
 			data.players.forEach(function(player) {
-				if (player.isSpy) {
+				if (player.isSnake) {
 					spies.push(player);
 				}
 			});
 
-			SpyList = (
+			SnakeList = (
 				<div>
 					<p className="so-h3">The spies this round were:</p>
 					<PlayerList players={spies} />
@@ -97,7 +97,7 @@ export default class Results extends Component {
 		}
 
 		if (me.isAdmin && (loyalistsWin || spiesWin)) {
-			let winner = loyalistsWin ? "loyalist" : "spy";
+			let winner = loyalistsWin ? "loyalist" : "snake";
 			gtag("event", "game_result", {
 				event_label: winner
 			});
@@ -116,7 +116,7 @@ export default class Results extends Component {
 					{passVotes + " pass votes | " + failVotes + " fail votes"}
 				</p>
 				<p className="so-h3">{bodyMessage}</p>
-				{SpyList}
+				{SnakeList}
 				<SOButton onClick={this.doneViewingResults.bind(this)}>Next</SOButton>
 				<RoundInfoBar round={data} me={me} />
 			</div>

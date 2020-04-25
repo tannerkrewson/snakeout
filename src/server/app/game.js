@@ -1,5 +1,5 @@
 //
-// Spyout Game
+// Snakeout Game
 //
 
 var Round = require("./round");

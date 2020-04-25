@@ -8,7 +8,7 @@ export default class RoundInfoBar extends Component {
 	render() {
 		var me = this.props.me;
 		var round = this.props.round;
-		var ourRole = this.props.me.isSpy ? "spy" : "loyalist";
+		var ourRole = this.props.me.isSnake ? "snake" : "loyalist";
 
 		const twoFailNotice = round.players.length >= 7;
 
@@ -34,8 +34,8 @@ export default class RoundInfoBar extends Component {
 				<RoleViewer role={ourRole} players={round.players} me={me} />
 				<p />
 				<p>
-					{round.players.length - round.spyCount} loyalists | {round.spyCount}{" "}
-					spies
+					{round.players.length - round.snakeCount} loyalists |{" "}
+					{round.snakeCount} spies
 				</p>
 				<GameCode code={round.gameCode} />
 			</div>

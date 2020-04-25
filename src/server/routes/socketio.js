@@ -1,6 +1,6 @@
 module.exports = function(app) {
 	var io = app.io;
-	var so = app.spyout;
+	var so = app.snakeout;
 
 	io.on("connection", function(socket) {
 		var player;

@@ -1,5 +1,5 @@
 {
-	"name": "spyout",
+	"name": "snakeout",
 	"version": "1.0.0",
 	"main": "src/server/app.js",
 	"scripts": {
@@ -51,10 +51,10 @@
 	"description": "",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/tannerkrewson/spyout.git"
+		"url": "git+https://github.com/tannerkrewson/snakeout.git"
 	},
 	"bugs": {
-		"url": "https://github.com/tannerkrewson/spyout/issues"
+		"url": "https://github.com/tannerkrewson/snakeout/issues"
 	},
-	"homepage": "https://github.com/tannerkrewson/spyout#readme"
+	"homepage": "https://github.com/tannerkrewson/snakeout#readme"
 }

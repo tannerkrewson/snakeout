@@ -14,8 +14,8 @@ app.use(express.urlencoded({ extended: false }));
 var devModeEnabled = app.get("env") === "development";
 
 // startup the server-side code
-var Spyout = require("./app/spyout");
-app.spyout = new Spyout(devModeEnabled);
+var Snakeout = require("./app/snakeout");
+app.snakeout = new Snakeout(devModeEnabled);
 require("./routes/socketio")(app);
 
 // serve the compiled client code

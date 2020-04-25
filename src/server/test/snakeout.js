@@ -1,8 +1,8 @@
 var test = require("tape");
 
-var Spyout = require("../app/spyout.js");
+var Snakeout = require("../app/snakeout.js");
 
-var dp = new Spyout(false);
+var dp = new Snakeout(false);
 
 var testGame;
 

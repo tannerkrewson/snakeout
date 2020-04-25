@@ -55,7 +55,7 @@ export default class Lobby extends Component {
 				<br />
 				<div className="card text-white mb-3">
 					<div className="card-body">
-						<p className="card-text">Thanks for playing Spyout!</p>
+						<p className="card-text">Thanks for playing Snakeout!</p>
 						<p className="card-text">
 							If you're having fun, try out my other game:
 						</p>
