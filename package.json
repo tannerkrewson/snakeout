@@ -3,15 +3,13 @@
 	"version": "1.0.0",
 	"main": "src/server/app.js",
 	"scripts": {
-		"start": "npm run build && npm run server",
-		"build": "webpack --mode production",
-		"client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-		"server": "node src/server/bin/www",
-		"dev": "concurrently \"nodemon --exec npm run server\" \"npm run client\"",
-		"dev2": "webpack --mode development && node --inspect src/server/bin/www",
-		"dev2mon": "nodemon --watch src --exec npm run dev2",
-		"test": "tape src/server/test/*.js",
-		"precommit": "pretty-quick --staged"
+		"start": "run-s build:prod start:prod",
+		"dev": "run-p start:dev build:dev",
+		"start:dev": "nodemon --exec npm run start:prod",
+		"build:dev": "webpack --mode development --watch",
+		"start:prod": "node src/server/bin/www",
+		"build:prod": "webpack --mode production",
+		"test": "tape src/server/test/*.js"
 	},
 	"author": "Tanner Krewson",
 	"license": "MIT",
@@ -28,6 +26,7 @@
 		"html-webpack-plugin": "^3.2.0",
 		"knuth-shuffle": "^1.0.1",
 		"morgan": "~1.9.1",
+		"npm-run-all": "^4.1.5",
 		"react": "^16.3.1",
 		"react-dom": "^16.12.0",
 		"react-icons": "^3.8.0",
@@ -39,16 +38,13 @@
 		"webpack-cli": "^3.3.10"
 	},
 	"devDependencies": {
-		"concurrently": "^5.0.2",
 		"exports-loader": "^0.7.0",
 		"husky": "^3.1.0",
 		"nodemon": "^2.0.2",
 		"prettier": "1.19.1",
 		"pretty-quick": "^2.0.1",
-		"tape": "^4.9.0",
-		"webpack-dev-server": "^3.10.1"
+		"tape": "^4.9.0"
 	},
-	"description": "",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/tannerkrewson/snakeout.git"
@@ -56,5 +52,10 @@
 	"bugs": {
 		"url": "https://github.com/tannerkrewson/snakeout/issues"
 	},
-	"homepage": "https://github.com/tannerkrewson/snakeout#readme"
+	"homepage": "https://snakeout.tannerkrewson.com/",
+	"husky": {
+		"hooks": {
+			"pre-commit": "pretty-quick --staged"
+		}
+	}
 }

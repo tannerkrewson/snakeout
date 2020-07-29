@@ -2,14 +2,13 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-const outputDirectory = "dist";
+const OUTPUT_DIR = path.join(__dirname, "dist");
 
 module.exports = {
 	entry: "./src/client/index.js",
 	output: {
-		path: path.join(__dirname, outputDirectory),
-		filename: "bundle.js",
-		publicPath: "/"
+		filename: "[name].[hash].js",
+		path: OUTPUT_DIR
 	},
 	module: {
 		rules: [
@@ -25,13 +24,6 @@ module.exports = {
 				use: ["style-loader", "css-loader"]
 			}
 		]
-	},
-	devServer: {
-		port: 3000,
-		open: true,
-		proxy: {
-			"/": "http://localhost:8080"
-		}
 	},
 	plugins: [
 		new CleanWebpackPlugin(),
