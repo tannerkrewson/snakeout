@@ -10,14 +10,17 @@ export default class HowToPlay extends Component {
 					<b>tl;dr:</b>
 				</div>
 				<p>
-					Snakeout is based off the board game The Resistance, so if you've
-					played that before, you'll understand Snakeout.
+					Snakeout is a game in which a team of loyalists is infiltrated by a
+					group of snakes. The loyalists must try to figure out who the snakes
+					are, and the snakes must try to keep the loyalists from figuring out
+					their identity. The game is separated into five missions. The first
+					team to "win" three missions wins the game.
 				</p>
 				<p>
 					In my opinion, the easiest way to learn how to play Snakeout would be
 					to watch someone else play, as it will help you get a feel for the
 					dynamic of the game. Here's a video from Tabletop on YouTube of some
-					people playing The Resistance, which works in the same way:
+					people playing The Resistance:
 				</p>
 				<div className="embed-responsive embed-responsive-16by9">
 					<iframe
@@ -27,19 +30,6 @@ export default class HowToPlay extends Component {
 				</div>
 				<p />
 				<br />
-				<div className="so- so-h2">
-					<b>About</b>
-				</div>
-				<p>
-					Snakeout is a game in which a team of loyalists is infiltrated by a
-					group of snakes. The loyalists must try to figure out who the snakes
-					are, and the snakes must try to keep them from figuring out their
-					identity.
-				</p>
-				<p>
-					The game is separated into five missions. The first team to "win"
-					three missions wins the game.
-				</p>
 				<div className="so- so-h2">
 					<b>How it works</b>
 				</div>

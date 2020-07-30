@@ -4,9 +4,7 @@
 
 ## About
 
-Snakeout was inspired by the gameplay of
-[The Resistance](https://boardgamegeek.com/boardgame/41114/resistance) by Don
-Eskridge. The design of Snakeout was based off that of my previous game, [Drawphone](http://drawphone.tannerkrewson.com/).
+Snakeout was made using React, Socket.io, and Express.
 
 ## Quick Start
 
@@ -15,7 +13,7 @@ Eskridge. The design of Snakeout was based off that of my previous game, [Drawph
 npm install
 
 # Run unit tests
-npm run test
+npm test
 
 # Start development server
 npm run dev
@@ -23,3 +21,5 @@ npm run dev
 # Start production server
 npm start
 ```
+
+If `NODE_ENV=development`, you can automatically join the `ffff` dev lobby by navigating to `localhost:3000/?dev`.
