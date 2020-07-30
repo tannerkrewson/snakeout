@@ -5,52 +5,52 @@ var Round = require("../app/round.js");
 var Player = require("../app/player.js");
 
 function MockSocket() {
-	this.lastEmit;
-	this.lastOnce;
-	this.onEmit;
-	this.onOnce;
+    this.lastEmit;
+    this.lastOnce;
+    this.onEmit;
+    this.onOnce;
 }
 
-MockSocket.prototype.emit = function(eventName, data) {
-	this.lastEmit = {
-		eventName,
-		data
-	};
-	if (this.onEmit) {
-		this.onEmit(this.lastEmit);
-	}
+MockSocket.prototype.emit = function (eventName, data) {
+    this.lastEmit = {
+        eventName,
+        data,
+    };
+    if (this.onEmit) {
+        this.onEmit(this.lastEmit);
+    }
 };
 
-MockSocket.prototype.once = function(eventName, next) {
-	this.lastOnce = {
-		eventName,
-		next
-	};
-	if (this.onOnce) {
-		this.onOnce(this.lastOnce);
-	}
+MockSocket.prototype.once = function (eventName, next) {
+    this.lastOnce = {
+        eventName,
+        next,
+    };
+    if (this.onOnce) {
+        this.onOnce(this.lastOnce);
+    }
 };
 
-MockSocket.prototype.on = function() {};
+MockSocket.prototype.on = function () {};
 
-MockSocket.prototype.bindOnEmit = function(funcToRun) {
-	this.onEmit = funcToRun;
+MockSocket.prototype.bindOnEmit = function (funcToRun) {
+    this.onEmit = funcToRun;
 };
 
-MockSocket.prototype.bindOnOnce = function(funcToRun) {
-	this.onOnce = funcToRun;
+MockSocket.prototype.bindOnOnce = function (funcToRun) {
+    this.onOnce = funcToRun;
 };
 
 function bindOnEmitOnPlayers(players, onEmit) {
-	players.forEach(function(player) {
-		player.socket.bindOnEmit(onEmit);
-	});
+    players.forEach(function (player) {
+        player.socket.bindOnEmit(onEmit);
+    });
 }
 
 function bindOnOnceOnPlayers(players, onOnce) {
-	players.forEach(function(player) {
-		player.socket.bindOnce(onOnce);
-	});
+    players.forEach(function (player) {
+        player.socket.bindOnce(onOnce);
+    });
 }
 
 var mockPlayers = [];
@@ -72,110 +72,110 @@ mockPlayers.push(new Player("Player6", P6Socket, 6));
 var onEndCalled = false;
 
 var testRound;
-test("create round", function(t) {
-	var onEnd = function() {
-		onEndCalled = true;
-	};
-	testRound = new Round(2, "abcd", mockPlayers, onEnd);
-	t.ok(testRound);
-	t.equal(testRound.roundNumber, 2);
-	t.equal(testRound.players, mockPlayers);
-	t.equal(testRound.onEnd, onEnd);
-	t.end();
+test("create round", function (t) {
+    var onEnd = function () {
+        onEndCalled = true;
+    };
+    testRound = new Round(2, "abcd", mockPlayers, onEnd);
+    t.ok(testRound);
+    t.equal(testRound.roundNumber, 2);
+    t.equal(testRound.players, mockPlayers);
+    t.equal(testRound.onEnd, onEnd);
+    t.end();
 });
 
-test("getNumberOfSnakes", function(t) {
-	var numSnakes = testRound.getNumberOfSnakes();
-	t.equal(typeof numSnakes, "number");
-	t.ok(numSnakes > 0);
-	t.ok(numSnakes < testRound.players.length);
-	t.end();
+test("getNumberOfSnakes", function (t) {
+    var numSnakes = testRound.getNumberOfSnakes();
+    t.equal(typeof numSnakes, "number");
+    t.ok(numSnakes > 0);
+    t.ok(numSnakes < testRound.players.length);
+    t.end();
 });
 
-test("assignRoles", function(t) {
-	testRound.assignRoles();
-	var snakeCount = 0;
-	var nonSnakeCount = 0;
-	testRound.players.forEach(function(player) {
-		if (player.isSnake) {
-			snakeCount++;
-		} else {
-			nonSnakeCount++;
-		}
-	});
+test("assignRoles", function (t) {
+    testRound.assignRoles();
+    var snakeCount = 0;
+    var nonSnakeCount = 0;
+    testRound.players.forEach(function (player) {
+        if (player.isSnake) {
+            snakeCount++;
+        } else {
+            nonSnakeCount++;
+        }
+    });
 
-	var snakeCountShouldBe = testRound.getNumberOfSnakes();
-	t.equal(snakeCount, snakeCountShouldBe);
-	t.equal(nonSnakeCount, testRound.players.length - snakeCountShouldBe);
-	t.end();
+    var snakeCountShouldBe = testRound.getNumberOfSnakes();
+    t.equal(snakeCount, snakeCountShouldBe);
+    t.equal(nonSnakeCount, testRound.players.length - snakeCountShouldBe);
+    t.end();
 });
 
-test("assignNewCaptain", function(t) {
-	testRound.assignNewCaptain();
-	var captainCount = 0;
-	var nonCaptainCount = 0;
-	testRound.players.forEach(function(player) {
-		if (player.isCaptain) {
-			captainCount++;
-		} else {
-			nonCaptainCount++;
-		}
-	});
+test("assignNewCaptain", function (t) {
+    testRound.assignNewCaptain();
+    var captainCount = 0;
+    var nonCaptainCount = 0;
+    testRound.players.forEach(function (player) {
+        if (player.isCaptain) {
+            captainCount++;
+        } else {
+            nonCaptainCount++;
+        }
+    });
 
-	t.equal(captainCount, 1);
-	t.equal(nonCaptainCount, testRound.players.length - 1);
-	t.end();
+    t.equal(captainCount, 1);
+    t.equal(nonCaptainCount, testRound.players.length - 1);
+    t.end();
 });
 
-test("prepNextMission", function(t) {
-	var missionNumberBefore = testRound.missionNumber;
-	testRound.prepNextMission();
-	t.equal(testRound.missionNumber, missionNumberBefore + 1);
-	t.ok(testRound.missions[testRound.missionNumber - 1].inProgress);
-	t.end();
+test("prepNextMission", function (t) {
+    var missionNumberBefore = testRound.missionNumber;
+    testRound.prepNextMission();
+    t.equal(testRound.missionNumber, missionNumberBefore + 1);
+    t.ok(testRound.missions[testRound.missionNumber - 1].inProgress);
+    t.end();
 });
 
-test("startSelectionPhase", function(t) {
-	testRound.startSelectionPhase();
+test("startSelectionPhase", function (t) {
+    testRound.startSelectionPhase();
 
-	t.equal(testRound.phase, "selection");
+    t.equal(testRound.phase, "selection");
 
-	t.end();
+    t.end();
 });
 
 var mockSelectedPlayers = [];
-test("startVotingPhase", function(t) {
-	mockSelectedPlayers.push(mockPlayers[2]);
-	mockSelectedPlayers.push(mockPlayers[0]);
+test("startVotingPhase", function (t) {
+    mockSelectedPlayers.push(mockPlayers[2]);
+    mockSelectedPlayers.push(mockPlayers[0]);
 
-	testRound.startVotingPhase(mockSelectedPlayers);
+    testRound.startVotingPhase(mockSelectedPlayers);
 
-	t.end();
+    t.end();
 });
 
-test("startMissionPhase", function(t) {
-	testRound.getCurrentMission().putSelectedPlayersOnTheMission();
-	testRound.startMissionPhase();
+test("startMissionPhase", function (t) {
+    testRound.getCurrentMission().putSelectedPlayersOnTheMission();
+    testRound.startMissionPhase();
 
-	t.end();
+    t.end();
 });
 
-test("sendStateToAll", function(t) {
-	t.plan(mockPlayers.length);
+test("sendStateToAll", function (t) {
+    t.plan(mockPlayers.length);
 
-	bindOnEmitOnPlayers(mockPlayers, function() {
-		t.pass("state emitted");
-	});
+    bindOnEmitOnPlayers(mockPlayers, function () {
+        t.pass("state emitted");
+    });
 
-	testRound.sendStateToAll();
+    testRound.sendStateToAll();
 
-	t.end();
+    t.end();
 });
 
-test("getState", function(t) {
-	var state = testRound.getState();
+test("getState", function (t) {
+    var state = testRound.getState();
 
-	// fail the test if params are removed
-	t.ok(Object.keys(state).length >= 7);
-	t.end();
+    // fail the test if params are removed
+    t.ok(Object.keys(state).length >= 7);
+    t.end();
 });

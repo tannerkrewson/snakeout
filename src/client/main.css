@@ -1,133 +1,133 @@
 body {
-	background-color: #222222;
-	background-image: radial-gradient(#222822, #222222);
-	color: white;
+    background-color: #222222;
+    background-image: radial-gradient(#222822, #222222);
+    color: white;
 }
 
 hr {
-	-moz-box-sizing: content-box;
-	box-sizing: content-box;
-	height: 0;
-	display: block;
-	height: 1px;
-	border: 0;
-	border-top: 1px solid #ccc;
-	margin: 1em 0;
-	padding: 0;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
 }
 
 .card {
-	background-color: #181818;
+    background-color: #181818;
 }
 
 .btn-secondary {
-	background-color: #4a534c;
-	border: 0;
-	box-shadow: 4px 4px 0px 1px black;
-	margin: 6px 4px;
+    background-color: #4a534c;
+    border: 0;
+    box-shadow: 4px 4px 0px 1px black;
+    margin: 6px 4px;
 }
 
 .form-control {
-	background-color: #161616;
-	color: white;
+    background-color: #161616;
+    color: white;
 }
 
 .form-control:focus {
-	background-color: #161616;
-	color: white;
+    background-color: #161616;
+    color: white;
 }
 
 .so-h1 {
-	font-size: 2.5rem;
-	font-family: "Lato", sans-serif;
-	font-weight: 400;
-	font-style: italic;
-	text-shadow: 3px 3px black;
+    font-size: 2.5rem;
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+    text-shadow: 3px 3px black;
 }
 
 .so-h2 {
-	font-size: 2rem;
+    font-size: 2rem;
 }
 
 .so-h3 {
-	font-size: 1.5rem;
+    font-size: 1.5rem;
 }
 
 .main-content {
-	position: relative;
-	max-width: 500px;
-	margin: 0 auto;
-	padding: 28px;
+    position: relative;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 28px;
 }
 
 #root {
-	position: relative;
-	height: 100vh;
+    position: relative;
+    height: 100vh;
 }
 
 .sogroup {
-	flex-direction: column;
-	align-items: flex-start;
-	justify-content: center;
-	position: relative;
-	display: inline-flex;
-	vertical-align: middle;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
 }
 
 .sogroupbut {
-	width: 100%;
+    width: 100%;
 }
 
 .checkable-but {
-	vertical-align: top;
-	margin: 8px;
+    vertical-align: top;
+    margin: 8px;
 }
 
 .player-box {
-	background-color: #181818;
-	color: white;
-	padding: 5px;
-	margin-top: -1px;
-	margin-left: -1px;
+    background-color: #181818;
+    color: white;
+    padding: 5px;
+    margin-top: -1px;
+    margin-left: -1px;
 }
 
 .game-code {
-	font-family: monospace;
-	box-shadow: 0 0 10pt 1pt LightGrey;
-	padding: 5px;
-	margin: 8px;
+    font-family: monospace;
+    box-shadow: 0 0 10pt 1pt LightGrey;
+    padding: 5px;
+    margin: 8px;
 }
 
 .white-border {
-	border: 1px solid white;
-	border-collapse: collapse;
+    border: 1px solid white;
+    border-collapse: collapse;
 }
 
 .in-progress {
-	background-color: DimGrey;
+    background-color: DimGrey;
 }
 
 .popover-content {
-	color: black;
+    color: black;
 }
 
 .mission-box {
-	padding: 4px !important;
-	font-size: 14px;
-	color: white;
+    padding: 4px !important;
+    font-size: 14px;
+    color: white;
 }
 
 .instructions {
-	text-align: left;
+    text-align: left;
 }
 
 footer {
-	text-shadow: 2px 2px black;
+    text-shadow: 2px 2px black;
 }
 
 .soalert {
-	font-size: 0.8em;
-	width: 80%;
-	margin: -1em auto 2em;
-	text-align: left;
+    font-size: 0.8em;
+    width: 80%;
+    margin: -1em auto 2em;
+    text-align: left;
 }
