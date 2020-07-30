@@ -417,6 +417,7 @@ Round.prototype.startSelectionPhase = function () {
     this.waitFor(captainList, "submitSelectedPlayers", function (player, data) {
         // ran once the captain has selected players
         self.startVotingPhase(data.selectedPlayers);
+        self.currentCaptain.socket.removeAllListeners("updateSelectedPlayers");
     });
 
     this.sendStateToAll();
