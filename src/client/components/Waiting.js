@@ -23,7 +23,11 @@ export default class Waiting extends Component {
                         </p>
                     </div>
                 )}
-                <RoundInfoBar round={round} me={me} />
+                <RoundInfoBar
+                    round={round}
+                    me={me}
+                    ROCKETCRAB_MODE={this.props.server.ROCKETCRAB_MODE}
+                />
             </div>
         );
     }

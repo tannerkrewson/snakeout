@@ -160,13 +160,26 @@ export default class App extends Component {
             }
         });
 
-        //join the dev game if path was /dev
-        if (this.props.isDev) {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        //join the dev game if path was ?dev=true
+        if (urlParams.get("dev") === "true") {
             console.log("Attempting to join dev game");
             this.server.joinGame(
                 "ffff",
                 Math.random().toString().substring(2, 6)
             );
+        }
+
+        const isRocketcrab = urlParams.get("rocketcrab") === "true";
+        const name = urlParams.get("name");
+        //const isHost = urlParams.get("ishost") === "true";
+        const code = urlParams.get("code");
+
+        this.server.ROCKETCRAB_MODE = isRocketcrab && name && code;
+
+        if (this.server.ROCKETCRAB_MODE) {
+            this.server.joinGame(code, name);
         }
     }
 

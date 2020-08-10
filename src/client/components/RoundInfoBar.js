@@ -38,7 +38,9 @@ export default class RoundInfoBar extends Component {
                     {round.players.length - round.snakeCount} loyalists |{" "}
                     {round.snakeCount} snakes
                 </p>
-                <GameCode code={round.gameCode} />
+                {!this.props.ROCKETCRAB_MODE && (
+                    <GameCode code={round.gameCode} />
+                )}
             </div>
         );
     }

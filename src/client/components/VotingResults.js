@@ -55,7 +55,11 @@ export default class VotingResults extends Component {
                 <SOButton onClick={this.doneViewingResults.bind(this)}>
                     Next
                 </SOButton>
-                <RoundInfoBar round={round} me={me} />
+                <RoundInfoBar
+                    round={round}
+                    me={me}
+                    ROCKETCRAB_MODE={this.props.server.ROCKETCRAB_MODE}
+                />
             </div>
         );
     }

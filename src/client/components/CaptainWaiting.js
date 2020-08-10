@@ -18,7 +18,11 @@ export default class CaptainWaiting extends Component {
                 />
                 <p>Players being waited on:</p>
                 <PlayerList players={data.waitingList} />
-                <RoundInfoBar round={data} me={me} />
+                <RoundInfoBar
+                    round={data}
+                    me={me}
+                    ROCKETCRAB_MODE={this.props.server.ROCKETCRAB_MODE}
+                />
             </div>
         );
     }

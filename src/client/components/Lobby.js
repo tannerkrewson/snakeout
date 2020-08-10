@@ -43,7 +43,9 @@ export default class Lobby extends Component {
 
         return (
             <div className="lobby">
-                <GameCode code={this.props.code} />
+                {!this.props.server.ROCKETCRAB_MODE && (
+                    <GameCode code={this.props.code} />
+                )}
                 <p>Players:</p>
                 <PlayerList players={this.props.players} />
                 <p>{playersNeededMessage}</p>

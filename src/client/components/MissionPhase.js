@@ -13,7 +13,11 @@ export default class MissionPhase extends Component {
         return (
             <div className="selection-phase">
                 <OnMissionScreen {...this.props} />
-                <RoundInfoBar round={data} me={me} />
+                <RoundInfoBar
+                    round={data}
+                    me={me}
+                    ROCKETCRAB_MODE={this.props.server.ROCKETCRAB_MODE}
+                />
             </div>
         );
     }
