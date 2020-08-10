@@ -16,6 +16,9 @@ function Game(code, onEmpty) {
 
     this.currentId = 1;
     this.currentRoundNum = 1;
+
+    // delete this game if it does not have players after 60 seconds
+    setTimeout(() => this.checkIfTheGameHasNoPlayersLeft(), 60 * 1000);
 }
 
 Game.prototype.addPlayer = function (name, socket) {

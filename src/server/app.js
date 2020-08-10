@@ -32,6 +32,11 @@ app.get("/stats", (req, res) => {
     });
 });
 
+app.post("/new", (req, res) => {
+    const { code } = app.snakeout.newGame();
+    res.json({ gameCode: code });
+});
+
 // for any route, give index.html, and react router will handle the rest
 // only works in production mode atm
 app.get("/*", function (req, res) {
