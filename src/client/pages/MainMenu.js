@@ -8,6 +8,10 @@ import Replace from "../components/Replace";
 
 export default class MainMenu extends Component {
     render() {
+        var goToRocketCrab = function () {
+            window.location.href =
+                "https://rocketcrab.com/transfer/tk-snakeout";
+        };
         var goToJoinGame = function () {
             this.props.changePage(JoinGame);
         };
@@ -45,6 +49,11 @@ export default class MainMenu extends Component {
 
         return (
             <div className="main-menu noformrefresh">
+                <p>
+                    <SOButton onClick={goToRocketCrab.bind(this)}>
+                        Play on 🚀🦀
+                    </SOButton>
+                </p>
                 <p>
                     <SOButton onClick={goToJoinGame.bind(this)}>
                         Join Game

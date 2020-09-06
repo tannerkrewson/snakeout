@@ -17,6 +17,12 @@ export default class Lobby extends Component {
             });
         };
 
+        var requestTransferToRocketcrab = () => {
+            // TODO: disable the button after it is clicked in case there is delay
+
+            this.props.server.requestTransferToRocketcrab();
+        };
+
         // display how many more players are needed to start the game
         var playersNeededMessage = "";
         var notReady = false;
@@ -49,6 +55,13 @@ export default class Lobby extends Component {
                 <p>Players:</p>
                 <PlayerList players={this.props.players} />
                 <p>{playersNeededMessage}</p>
+                {!this.props.server.ROCKETCRAB_MODE && (
+                    <div>
+                        <SOButton onClick={requestTransferToRocketcrab}>
+                            Transfer to 🚀🦀
+                        </SOButton>
+                    </div>
+                )}
                 <div>
                     <SOButton
                         onClick={() => {

@@ -10,6 +10,10 @@ function Connection(onStateUpdate) {
         onStateUpdate(data);
     });
 
+    this.socket.on("transferToRocketcrab", function (link) {
+        window.location.href = link;
+    });
+
     this.socket.on("disconnect", function () {
         //refresh the page
         location.reload();
@@ -85,6 +89,10 @@ Connection.prototype.readyToViewResults = function () {
 
 Connection.prototype.tryReplace = function (data) {
     this.send("tryReplace", data);
+};
+
+Connection.prototype.requestTransferToRocketcrab = function () {
+    this.send("requestTransferToRocketcrab", {});
 };
 
 Connection.prototype.send = function (event, data) {

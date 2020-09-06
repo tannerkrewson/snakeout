@@ -2,6 +2,8 @@
 // Snakeout Game
 //
 
+var uuidv4 = require("uuid").v4;
+
 var Round = require("./round");
 var Player = require("./player");
 
@@ -13,6 +15,7 @@ function Game(code, onEmpty) {
     this.inProgress = false;
     this.viewingResults = false;
     this.currentRound;
+    this.uuid = uuidv4();
 
     this.currentId = 1;
     this.currentRoundNum = 1;
@@ -71,6 +74,15 @@ Game.prototype.initPlayer = function (newPlayer) {
     var self = this;
     newPlayer.socket.on("disconnect", function () {
         self.onPlayerDisconnect(newPlayer);
+    });
+    newPlayer.socket.on("requestTransferToRocketcrab", () => {
+        this.sendToAll(
+            "transferToRocketcrab",
+            "https://rocketcrab.com/transfer/tk-snakeout/" +
+                this.uuid +
+                "/?name=" +
+                newPlayer.name
+        );
     });
 };
 
