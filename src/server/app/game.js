@@ -78,7 +78,7 @@ Game.prototype.initPlayer = function (newPlayer) {
     newPlayer.socket.on("requestTransferToRocketcrab", () => {
         this.sendToAll(
             "transferToRocketcrab",
-            "https://rocketcrab.com/transfer/tk-snakeout/" +
+            "https://rocketcrab.com/transfer/snakeout/" +
                 this.uuid +
                 "/?name=" +
                 newPlayer.name

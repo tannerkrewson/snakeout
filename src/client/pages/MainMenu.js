@@ -8,25 +8,21 @@ import Replace from "../components/Replace";
 
 export default class MainMenu extends Component {
     render() {
+        var goToRocketCrabJoin = function () {
+            window.location.href = "https://rocketcrab.com/join";
+        };
         var goToRocketCrab = function () {
-            window.location.href =
-                "https://rocketcrab.com/transfer/tk-snakeout";
+            window.location.href = "https://rocketcrab.com/transfer/snakeout";
         };
-        var goToJoinGame = function () {
-            this.props.changePage(JoinGame);
-        };
-        var goToNewGame = function () {
-            this.props.changePage(NewGame);
-        };
-        var goToHowToPlay = function () {
-            window.location.href = "/how-to-play";
-        };
-        var goToMoreGames = function () {
-            window.location.href = "/more-games";
-        };
-        var goToScreenshots = function () {
-            window.location.href = "/screenshots";
-        };
+
+        // deprecated in favor of rocketcrab only
+        //var goToJoinGame = function () {
+        //    this.props.changePage(JoinGame);
+        //};
+
+        //var goToNewGame = function () {
+        //    this.props.changePage(NewGame);
+        //};
 
         var self = this;
 
@@ -50,15 +46,10 @@ export default class MainMenu extends Component {
         return (
             <div className="main-menu noformrefresh">
                 <p>
-                    <SOButton onClick={goToRocketCrab.bind(this)}>
-                        Play on 🚀🦀
-                    </SOButton>
-                </p>
-                <p>
-                    <SOButton onClick={goToJoinGame.bind(this)}>
+                    <SOButton onClick={goToRocketCrabJoin.bind(this)}>
                         Join Game
                     </SOButton>
-                    <SOButton onClick={goToNewGame.bind(this)}>
+                    <SOButton onClick={goToRocketCrab.bind(this)}>
                         New Game
                     </SOButton>
                 </p>
@@ -66,15 +57,15 @@ export default class MainMenu extends Component {
                     <RRButton isGroup={true} path="/how-to-play">
                         How to Play
                     </RRButton>
-                    <RRButton isGroup={true} path="/screenshots">
-                        Screenshots
-                    </RRButton>
-                    <RRButton isGroup={true} path="/more-games">
-                        Games Like Snakeout
-                    </RRButton>
                 </div>
-                <br />
-                <br />
+                <div
+                    style={{
+                        fontStyle: "italic",
+                        margin: "1em 0",
+                    }}
+                >
+                    Powered by 🚀🦀
+                </div>
             </div>
         );
     }

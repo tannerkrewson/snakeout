@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import MainMenu from "./pages/MainMenu";
 import HowToPlay from "./pages/HowToPlay";
-import MoreGames from "./pages/MoreGames";
-import Screenshots from "./pages/Screenshots";
 
 import Footer from "./components/Footer";
 import StartPage from "./components/StartPage";
@@ -18,6 +16,7 @@ import Drumroll from "./components/Drumroll";
 import Results from "./components/Results";
 
 import Connection from "./utils/Connection";
+import RRButton from "./components/RRButton";
 
 export default class App extends Component {
     constructor(props) {
@@ -190,20 +189,34 @@ export default class App extends Component {
                     <div className="so-h1">Snakeout 🐍</div>
                     <hr />
                     <br />
-                    <Route
-                        exact
-                        path="/"
-                        render={() => (
-                            <this.state.page
-                                changePage={this.changePage}
-                                server={this.server}
-                                {...this.state.pageProps}
-                            />
-                        )}
-                    />
-                    <Route path="/how-to-play" component={HowToPlay} />
-                    <Route path="/screenshots" component={Screenshots} />
-                    <Route path="/more-games" component={MoreGames} />
+                    <Switch>
+                        <Route
+                            exact
+                            path="/"
+                            render={() => (
+                                <this.state.page
+                                    changePage={this.changePage}
+                                    server={this.server}
+                                    {...this.state.pageProps}
+                                />
+                            )}
+                        />
+                        <Route
+                            exact
+                            path="/how-to-play"
+                            component={HowToPlay}
+                        />
+                        <Route
+                            component={() => (
+                                <div className="text-center">
+                                    <p>404 - Not Found!</p>
+                                    <RRButton path="/">
+                                        Back to Snakeout
+                                    </RRButton>
+                                </div>
+                            )}
+                        />
+                    </Switch>
                     <Footer />
                 </div>
             </Router>

@@ -74,23 +74,6 @@ export default class Lobby extends Component {
                         Start Game
                     </SOButton>
                 </div>
-                <br />
-                <div className="card text-white mb-3">
-                    <div className="card-body">
-                        <p className="card-text">
-                            Thanks for playing Snakeout!
-                        </p>
-                        <p className="card-text">
-                            If you're having fun, try out my other game:
-                        </p>
-                        <a
-                            href="http://drawphone.tannerkrewson.com/"
-                            className="btn btn-secondary"
-                        >
-                            Play Drawphone
-                        </a>
-                    </div>
-                </div>
             </div>
         );
     }
