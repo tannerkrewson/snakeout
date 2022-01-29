@@ -309,6 +309,10 @@ Round.prototype.assignRoles = function () {
             this.players[i].isSnake = false;
         }
     }
+
+    //shuffle again so that the snakes aren't
+    //  necessarily the first players
+    shuffle(this.players);
 };
 
 Round.prototype.assignNewCaptain = function () {
