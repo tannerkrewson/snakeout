@@ -8,21 +8,15 @@ import Replace from "../components/Replace";
 
 export default class MainMenu extends Component {
     render() {
-        var goToRocketCrabJoin = function () {
-            window.location.href = "https://rocketcrab.com/join";
+        var goToJoinGame = function () {
+            this.props.changePage(JoinGame);
+            // window.location.href = "https://rocketcrab.com/join";
         };
-        var goToRocketCrab = function () {
-            window.location.href = "https://rocketcrab.com/transfer/snakeout";
+        var goToNewGame = function () {
+            // DO NOT COMMIT
+            this.props.changePage(NewGame);
+            // window.location.href = "https://rocketcrab.com/transfer/snakeout";
         };
-
-        // deprecated in favor of rocketcrab only
-        //var goToJoinGame = function () {
-        //    this.props.changePage(JoinGame);
-        //};
-
-        //var goToNewGame = function () {
-        //    this.props.changePage(NewGame);
-        //};
 
         var self = this;
 
@@ -46,10 +40,10 @@ export default class MainMenu extends Component {
         return (
             <div className="main-menu noformrefresh">
                 <p>
-                    <SOButton onClick={goToRocketCrabJoin.bind(this)}>
+                    <SOButton onClick={goToJoinGame.bind(this)}>
                         Join Game
                     </SOButton>
-                    <SOButton onClick={goToRocketCrab.bind(this)}>
+                    <SOButton onClick={goToNewGame.bind(this)}>
                         New Game
                     </SOButton>
                 </p>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import MainMenu from "./pages/MainMenu";
 import HowToPlay from "./pages/HowToPlay";
@@ -189,34 +189,30 @@ export default class App extends Component {
                     <div className="so-h1">Snakeout 🐍</div>
                     <hr />
                     <br />
-                    <Switch>
+                    <Routes>
                         <Route
-                            exact
                             path="/"
-                            render={() => (
+                            element={
                                 <this.state.page
                                     changePage={this.changePage}
                                     server={this.server}
                                     {...this.state.pageProps}
                                 />
-                            )}
+                            }
                         />
+                        <Route path="/how-to-play" element={<HowToPlay />} />
                         <Route
-                            exact
-                            path="/how-to-play"
-                            component={HowToPlay}
-                        />
-                        <Route
-                            component={() => (
+                            path="*"
+                            element={
                                 <div className="text-center">
                                     <p>404 - Not Found!</p>
                                     <RRButton path="/">
                                         Back to Snakeout
                                     </RRButton>
                                 </div>
-                            )}
+                            }
                         />
-                    </Switch>
+                    </Routes>
                     <Footer />
                 </div>
             </Router>
