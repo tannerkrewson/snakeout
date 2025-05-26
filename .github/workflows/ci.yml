@@ -1,0 +1,27 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - "*"
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+            - run: npm i
+            - run: npm run build
+            - run: npm test
+
+            - if: github.ref == 'refs/heads/master'
+              name: Dokku deploy
+              uses: vitalyliber/dokku-github-action@v7.1
+              env:
+                  PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+                  HOST: 134.209.222.77
+                  PROJECT: snakeout
+                  BRANCH: master
