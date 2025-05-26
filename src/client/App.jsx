@@ -166,7 +166,7 @@ export default class App extends Component {
             console.log("Attempting to join dev game");
             this.server.joinGame(
                 "ffff",
-                Math.random().toString().substring(2, 6)
+                Math.random().toString().substring(2, 6),
             );
         }
 

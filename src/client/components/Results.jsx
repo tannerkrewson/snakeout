@@ -22,7 +22,7 @@ export default class Results extends Component {
         } else {
             console.log(
                 "Results error A: mission status bad type: " +
-                    currentMission.status
+                    currentMission.status,
             );
         }
 

@@ -32,7 +32,7 @@ export default class CaptainSelection extends Component {
     }
     submitSelectedPlayers() {
         this.props.server.submitSelectedPlayers(
-            this.props.round.captainsSelectedPlayers
+            this.props.round.captainsSelectedPlayers,
         );
     }
     render() {

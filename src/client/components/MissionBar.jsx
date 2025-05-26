@@ -18,7 +18,7 @@ export default class MissionBar extends Component {
                     status={missionStatus}
                     inProgress={mission.inProgress}
                     key={i}
-                />
+                />,
             );
         });
         return (
