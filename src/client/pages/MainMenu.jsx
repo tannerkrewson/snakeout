@@ -9,13 +9,12 @@ import Replace from "../components/Replace";
 export default class MainMenu extends Component {
     render() {
         var goToJoinGame = function () {
-            this.props.changePage(JoinGame);
-            // window.location.href = "https://rocketcrab.com/join";
+            // this.props.changePage(JoinGame);
+            window.location.href = "https://rocketcrab.com/join";
         };
         var goToNewGame = function () {
-            // DO NOT COMMIT
-            this.props.changePage(NewGame);
-            // window.location.href = "https://rocketcrab.com/transfer/snakeout";
+            // this.props.changePage(NewGame);
+            window.location.href = "https://rocketcrab.com/transfer/snakeout";
         };
 
         var self = this;
